@@ -1,0 +1,13 @@
+.container {
+  width: fit-content;
+}
+
+.row {
+  display: flex;
+  flex-flow: row;
+  justify-content: left;
+}
+
+.row > *:not(:last-child) {
+  margin-right: 0.5rem;
+}
