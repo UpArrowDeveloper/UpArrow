@@ -1,22 +1,19 @@
+const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const TargetPriceSchema = new Schema({ name: String, price: Number });
 const StockSchema = new Schema(
   {
     name: String,
     ticker: String,
-    profile_image_url: String,
-    pros: Array,
-    cons: Array,
-    industryCategory: Array,
-    commentIds: Array,
-    video_url: String,
-    advertisementId: String,
-    invest: Array,
-    notInvest: Array,
-    stockString: String,
-    posts: Array,
-    detailInfo: Array,
+    logoUrl: String,
+    backgroundImageUrl: String,
+    currentPrice: Number,
+    targetPrices: [TargetPriceSchema],
+    ideaIds: [ObjectId],
+    analysisId: ObjectId,
+    commentIds: [ObjectId],
   },
   { timestamps: true }
 );

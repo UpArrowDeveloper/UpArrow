@@ -1,30 +1,36 @@
+const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const ChartSchema = new Schema({
+  year: Number,
+  value: Number,
+});
+
+const FinancialsSchema = new Schema({
+  name: String,
+  chartValues: [ChartSchema],
+});
+
+const OpinionSchema = new Schema({
+  authorImageUrl: String,
+  author: String,
+  message: String,
+});
+
 const AnalysisSchema = new Schema(
   {
-    stockId: String,
-    ticker: String,
+    thumbnailImageUrl: String,
+    thumbnailTitle: String,
+    thumbnailDate: Date,
+    ideaIds: [ObjectId],
+    missionStatement: String,
     businessModel: String,
-    industryTrend: String,
-    competitiveAdvantages: String,
-    uniqueTechnologies: String,
-    productReviews: Array,
-    competitorsAnalysis: String,
-    management: String,
-    revenue: String,
-    netIncome: String,
-    totalAssets: String,
-    cashFlow: String,
-    profitMargins: String,
-    returnOnAssets: String,
-    marketShare: String,
-    growthOpportunities: String,
-    potentialRisks: String,
-    valuation: String,
-    analystRatings: String,
-    notableInvestors: Array,
-    video: String,
+    competitiveAdvantage: String,
+    growthOppertunities: [String],
+    potentialRisks: [String],
+    financials: [FinancialsSchema],
+    opinions: [OpinionSchema],
   },
   { timestamps: true }
 );

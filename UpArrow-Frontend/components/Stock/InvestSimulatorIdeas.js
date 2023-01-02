@@ -9,6 +9,7 @@ import { TargetIcon } from '../../components/icons';
 import color from '../../styles/color';
 import PostCard from '../../components/PostCard';
 import Viewmore from '../common/Viewmore';
+import { useEffect, useRef, useState } from 'react';
 
 const InvestSimulatorIdeasBlock = styled.div`
   display: flex;
@@ -189,20 +190,37 @@ const post = {
   updatedAt: '2022-12-15T12:19:17.233Z',
 };
 
-const InvestSimulatorIdeas = ({ className, ...restProps }) => {
+const getProfitPercent = (currentPrice, targetPrice) => {
+  const sign = currentPrice - targetPrice >= 0 ? '+' : '';
+  return `${sign}${(
+    ((targetPrice - currentPrice) / currentPrice) *
+    100
+  ).toFixed(2)}%`;
+};
+const InvestSimulatorIdeas = ({ className, stock, ...restProps }) => {
+  const [targetPriceIndex, setTargetPriceIndex] = useState(0);
+
+  const targetPrice = stock.targetPrices[targetPriceIndex];
+  useEffect(() => {
+    setInterval(() => {
+      setTargetPriceIndex((s) => (s + 1) % stock.targetPrices.length);
+    }, 1000);
+  }, []);
+
   return (
     <InvestSimulatorIdeasBlock className={className} {...restProps}>
       <div className='invest-simulator'>
         <h3>Invest Simulator</h3>
         <div className='cell'>
           <h4>Current Price</h4>
-          <div className='current-price'>$151.32</div>
+          <div className='current-price'>${stock.currentPrice}</div>
           <div className='target-price-block'>
             <TargetIcon />
             <span className='target-price'>
-              <strong>$230</strong>(+132.8%)
+              <strong>${targetPrice.price}</strong>(
+              {getProfitPercent(stock.currentPrice, targetPrice.price)})
             </span>
-            <div className='recommander'>J.P Morgan</div>
+            <div className='recommander'>{targetPrice.name}</div>
           </div>
           <div>
             <h4>Order</h4>
