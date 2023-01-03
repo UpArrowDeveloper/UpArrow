@@ -5,7 +5,7 @@ const Stock = require('../../models/Stock');
 const Advertisement = require('../../models/Advertisement');
 const Comment = require('../../models/Comment');
 const Analysis = require('../../models/Analysis');
-const Purchase = require('../../models/Purchase');
+const Order = require('../../models/Order');
 const Average = require('../../models/Config');
 var ObjectId = require('mongodb').ObjectId;
 const axios = require('axios');
@@ -468,14 +468,14 @@ router.post('/purchase', async (req, res) => {
       console.log('purchases : ', purchases);
       for (let i = 0; i < purchases.length; i++) {
         const purchaseObjectId = purchases[i];
-        const purchaseDocument = await Purchase.findById(purchaseObjectId);
+        const purchaseDocument = await Order.findById(purchaseObjectId);
         if (purchaseDocument.stockId == req.body.stockId) {
           isDuplicate = true;
         }
       }
       if (isDuplicate) {
         const purchaseQuery = { stockId: req.body.stockId };
-        const purchaseDocument = await Purchase.findOne({
+        const purchaseDocument = await Order.findOne({
           stockId: req.body.stockId,
           userId: userId,
         });
@@ -497,7 +497,7 @@ router.post('/purchase', async (req, res) => {
             quantity: updatedQuantity, // if the stock that user purchase is the same stock he/she invested, we are updating the quantity
             averagePrice: newAveragePrice,
           };
-          await Purchase.findOneAndUpdate(purchaseQuery, updatedPurchaseValue);
+          await Order.findOneAndUpdate(purchaseQuery, updatedPurchaseValue);
 
           const updatedAvailableCash =
             userDocument.availableCash - newQuantity * newPrice;
@@ -537,7 +537,7 @@ router.post('/purchase', async (req, res) => {
           return res.status(404).send('validStockDocument none');
         }
 
-        const newPurchase = new Purchase({
+        const newPurchase = new Order({
           userId: req.body.userId,
           stockId: req.body.stockId,
           quantity: req.body.quantity,
@@ -593,7 +593,7 @@ router.put('/sell', async (req, res) => {
       return res.status(400).send('Wrong stockId or userId');
     }
 
-    let purchaseDocument = await Purchase.findOne({
+    let purchaseDocument = await Order.findOne({
       stockId: req.body.stockId,
       userId: userId,
     });
@@ -629,7 +629,7 @@ router.put('/sell', async (req, res) => {
         'updatedPurchaseDocument ////////////////////////////////////////////////////////////////////',
         updatedPurchaseDocument
       );
-      await Purchase.findOneAndUpdate(purchaseQuery, updatedPurchaseDocument);
+      await Order.findOneAndUpdate(purchaseQuery, updatedPurchaseDocument);
 
       let updatedAvailableCash =
         userDocument.availableCash + req.body.quantity * req.body.price;
@@ -686,7 +686,7 @@ router.get('/fetch/stocks/purchase/:userId', async (req, res) => {
     if (user) {
       for (var i = 0; i < purchases.length; i++) {
         var purchaseObjectId = purchases[i];
-        var purchaseDocument = await Purchase.findById(purchaseObjectId);
+        var purchaseDocument = await Order.findById(purchaseObjectId);
         var stockId = purchaseDocument.stockId;
         var stockObjectId = ObjectId(stockId);
         var stockDocument = await Stock.findById(stockObjectId);
@@ -756,7 +756,7 @@ router.get('/purchases/:profileUserId', async (req, res) => {
     var stockList = [];
 
     for (var i = 0; i < purchaseList.length; i++) {
-      var purchase = await Purchase.findById(purchaseList[i]);
+      var purchase = await Order.findById(purchaseList[i]);
       var stockId = purchase.stockId;
       var stockObjectId = ObjectId(stockId);
       var stockDocument = await Stock.findById(stockObjectId);
@@ -772,7 +772,7 @@ router.get('/purchases/:profileUserId', async (req, res) => {
 // a user is getting all the stock documents he/she invested
 
 router.get('/fetch/stocks/allpurchases', async (req, res) => {
-  const allPurchases = await Purchase.find();
+  const allPurchases = await Order.find();
   return res.status(200).send(allPurchases);
 });
 
@@ -780,7 +780,7 @@ router.get('/fetch/stocks/allpurchases', async (req, res) => {
 // a user is getting all purchases in upArrow of all users
 
 router.get('/fetch/purchaes/portfolio/:userId', async (req, res) => {
-  const allPortfolio = await Purchase.find({ userId: req.params.userId });
+  const allPortfolio = await Order.find({ userId: req.params.userId });
   return res.status(200).send(allPortfolio);
 });
 
@@ -802,7 +802,7 @@ router.get('/fetch/profit/:userId', async (req, res) => {
       // 이 부분도 이해가 잘 안가요
       purchaseObjectIdList.map((objectId) => {
         // iterating through purchaseObjectIdList to extract purchase objectId
-        return Purchase.findById(objectId); // returns Purchase document
+        return Order.findById(objectId); // returns Purchase document
       })
     );
 

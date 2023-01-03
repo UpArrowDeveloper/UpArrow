@@ -7,6 +7,9 @@ import Financials from '../../components/Stock/Financials';
 import InvestSimulatorIdeas from '../../components/Stock/InvestSimulatorIdeas';
 import Overview from '../../components/Stock/Overview';
 import Opinions from '../../components/Stock/Opinions';
+import { useAppUser } from '../../hooks/useAppUser';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import api from '../../apis';
 
 const StockWrapper = styled.div`
   display: flex;
@@ -48,8 +51,15 @@ const StockWrapper = styled.div`
 `;
 
 export default function Stock({ stock, analysis }) {
-  const { user, error, isLoading } = useUser();
+  const { user, refetch: refetchUser } = useAppUser();
   const [comment, setComment] = useState('');
+  const { data: currentStockValuationData, refetch } = useQuery(
+    ['currentStockValuation', user, stock],
+    (stock && user && api.price.get(stock._id, user._id)) || {}
+  );
+  const postOrder = useMutation(api.order.post, {
+    onSuccess: () => refetch() && refetchUser(),
+  });
 
   const submitComment = async () => {
     if (comment && stock && user) {
@@ -76,6 +86,29 @@ export default function Stock({ stock, analysis }) {
     }
   };
 
+  const onBuyClick = (stockOrderQuantity) => {
+    postOrder.mutate({
+      stockId: stock._id,
+      userId: user._id,
+      price: stock.currentPrice,
+      quantity: stockOrderQuantity,
+      type: 'buy',
+    });
+  };
+
+  const onSellClick = (stockOrderQuantity) => {
+    postOrder.mutate({
+      stockId: stock._id,
+      userId: user._id,
+      price: stock.currentPrice,
+      quantity: stockOrderQuantity,
+      type: 'sell',
+    });
+  };
+
+  if (!user) return 'please login';
+  if (!currentStockValuationData) return 'no stock data';
+
   return (
     <StockWrapper>
       <div className='stock-content'>
@@ -84,7 +117,14 @@ export default function Stock({ stock, analysis }) {
           stockCoverImageUrl={stock.backgroundImageUrl}
           stockName={stock.name}
         />
-        <InvestSimulatorIdeas stock={stock} className='section' />
+        <InvestSimulatorIdeas
+          stock={stock}
+          user={user}
+          onBuyClick={onBuyClick}
+          onSellClick={onSellClick}
+          currentStockValuation={currentStockValuationData.price}
+          className='section'
+        />
         <Overview className='section' />
         <Financials className='section' />
         <Opinions

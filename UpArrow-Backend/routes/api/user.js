@@ -5,7 +5,7 @@ const Stock = require('../../models/Stock');
 const Advertisement = require('../../models/Advertisement');
 const Comment = require('../../models/Comment');
 const Analysis = require('../../models/Analysis');
-const Purchase = require('../../models/Purchase');
+const Order = require('../../models/Order');
 const Average = require('../../models/Config');
 var ObjectId = require('mongodb').ObjectId;
 const axios = require('axios');
@@ -112,7 +112,7 @@ router.get('/:userId/profit-percentage', async (req, res) => {
 
     const purchaseList = await Promise.all(
       userDocument.purchases.map((purchaseId) => {
-        return Purchase.findById(purchaseId);
+        return Order.findById(purchaseId);
       })
     );
     const purchase2List = await Promise.all(

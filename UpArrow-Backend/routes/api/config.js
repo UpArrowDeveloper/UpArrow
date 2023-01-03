@@ -1,23 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const Config = require('../../models/Config');
+const { getConfig } = require('../../services/config');
 
 router.get('/', async (req, res) => {
-  const config = await Config.find();
-  return res.status(200).send(config[0]);
+  const config = await getConfig();
+  return res.status(200).send(config);
 });
 
 router.put('/', async (req, res) => {
   const { prices, board, bannerImageUrl } = req.body;
-  const originConfig = await Config.find();
+  const originConfig = await getConfig();
   const config = await Config.updateOne(
-    { _id: originConfig[0]._id },
+    { _id: originConfig._id },
     {
-      prices: prices ? prices : originConfig[0].prices,
+      prices: prices ? prices : originConfig.prices,
       bannerImageUrl: bannerImageUrl
         ? bannerImageUrl
-        : originConfig[0].bannerImageUrl,
-      board: board ? board : originConfig[0].board,
+        : originConfig.bannerImageUrl,
+      board: board ? board : originConfig.board,
     }
   );
   return res.status(200).send('update success');

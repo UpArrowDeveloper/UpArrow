@@ -10,6 +10,9 @@ import color from '../../styles/color';
 import PostCard from '../../components/PostCard';
 import Viewmore from '../common/Viewmore';
 import { useEffect, useRef, useState } from 'react';
+import { isNumber } from '../../utils/number';
+import { useMutation } from '@tanstack/react-query';
+import api from '../../apis';
 
 const InvestSimulatorIdeasBlock = styled.div`
   display: flex;
@@ -197,7 +200,15 @@ const getProfitPercent = (currentPrice, targetPrice) => {
     100
   ).toFixed(2)}%`;
 };
-const InvestSimulatorIdeas = ({ className, stock, ...restProps }) => {
+const InvestSimulatorIdeas = ({
+  className,
+  stock,
+  user,
+  onBuyClick,
+  onSellClick,
+  currentStockValuation,
+  ...restProps
+}) => {
   const [targetPriceIndex, setTargetPriceIndex] = useState(0);
 
   const targetPrice = stock.targetPrices[targetPriceIndex];
@@ -206,6 +217,7 @@ const InvestSimulatorIdeas = ({ className, stock, ...restProps }) => {
       setTargetPriceIndex((s) => (s + 1) % stock.targetPrices.length);
     }, 1000);
   }, []);
+  const [stockOrderQuantity, setStockOrderQuantity] = useState(0);
 
   return (
     <InvestSimulatorIdeasBlock className={className} {...restProps}>
@@ -227,26 +239,48 @@ const InvestSimulatorIdeas = ({ className, stock, ...restProps }) => {
             <div className='price-calculate'>
               <div className='stocks'>
                 <div>Stocks</div>
-                <input />
+                <input
+                  value={stockOrderQuantity.toLocaleString()}
+                  onChange={(e) => {
+                    const v = e.target.value.replaceAll(',', '');
+                    isNumber(v) && setStockOrderQuantity(Number(v));
+                  }}
+                />
               </div>
               <div className='total'>
                 <div>Total</div>
-                <input value='$1513.2' />
+                <input
+                  value={`$${(
+                    stock.currentPrice * stockOrderQuantity
+                  ).toLocaleString()}`}
+                />
               </div>
             </div>
           </div>
           <div className='button-group'>
-            <button className='sell'>Sell</button>
-            <button className='buy'>Buy</button>
+            <button
+              className='sell'
+              onClick={() => onSellClick(stockOrderQuantity)}
+            >
+              Sell
+            </button>
+            <button
+              className='buy'
+              onClick={() => onBuyClick(stockOrderQuantity)}
+            >
+              Buy
+            </button>
           </div>
           <div className='cash-info'>
             <div>
               <h4>My Current Simulation Cash</h4>
-              <div className='cash'>$12,020</div>
+              <div className='cash'>${user.cash.toLocaleString()}</div>
             </div>
             <div>
               <h4>My Current Stock Valuation</h4>
-              <div className='cash'>$1,102,024</div>
+              <div className='cash'>
+                ${currentStockValuation.toLocaleString()}
+              </div>
             </div>
           </div>
         </div>

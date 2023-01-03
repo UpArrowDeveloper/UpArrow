@@ -4,6 +4,8 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema(
   {
     name: String,
+    cash: Number,
+    //check
     profile_image_url: String,
     username: String,
     email: String,
@@ -18,7 +20,6 @@ const UserSchema = new Schema(
     totalAssets: Number,
     followers: Array,
     followings: Array,
-    availableCash: Number,
   },
   { timestamps: true }
 );

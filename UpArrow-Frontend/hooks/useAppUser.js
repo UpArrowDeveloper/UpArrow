@@ -17,9 +17,12 @@ export const useAppUser = () => {
     }
   };
 
-  useEffect(() => {
+  const refetch = () => {
     getUser();
-  }, []);
+  };
+  useEffect(() => {
+    refetch();
+  }, [user]);
 
-  return { user: appUser };
+  return { user: appUser, refetch };
 };
