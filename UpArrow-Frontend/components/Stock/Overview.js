@@ -149,50 +149,27 @@ const Card = styled.div`
   }
 `;
 
-const Layer1 = () => {
+const Layer1 = ({ analysis, ideaList }) => {
   return (
     <div className='layer-1'>
       <div>
         <h6>Analyses</h6>
         <Card>
           <div className='image-wrapper'>
-            <Image src='/images/elon.png' layout='fill' />
+            <Image src={analysis.thumbnailImageUrl} layout='fill' />
           </div>
           <div className='card-content'>
-            <h4 className='bold'>
-              Reasons Why Tesla will Become the Most Valuable Company
-            </h4>
-            <div className='date'>2022.11.30</div>
+            <h4 className='bold'>{analysis.thumbnailTitle}</h4>
+            <div className='date'>{analysis.thumbnailDate}</div>
           </div>
         </Card>
       </div>
       <div className='insights-of-giants'>
         <h6>Insights of Giants</h6>
         <div className='item-list'>
-          {[
-            {
-              text: 'Reasons Why Tesla will Become the Most Valuable',
-              date: '2022.11.30',
-            },
-            {
-              text: 'Reasons Why Tesla will Become the Most Valuable',
-              date: '2022.11.30',
-            },
-            {
-              text: 'Reasons Why Tesla will Become the Most Valuable',
-              date: '2022.11.30',
-            },
-            {
-              text: 'Reasons Why Tesla will Become the Most Valuable',
-              date: '2022.11.30',
-            },
-            {
-              text: 'Reasons Why Tesla will Become the Most Valuable',
-              date: '2022.11.30',
-            },
-          ].map((item, index) => (
+          {ideaList.map((item, index) => (
             <div className='item' key={index}>
-              <h4 className='bold'>{item.text}</h4>
+              <h4 className='bold'>{item.title}</h4>
               <div className='item-date'>{item.date}</div>
             </div>
           ))}
@@ -203,38 +180,23 @@ const Layer1 = () => {
   );
 };
 
-const Layer2 = () => {
+const Layer2 = ({ analysis }) => {
   return (
     <div className='layer-2'>
       <div className='top-message'>
         <div className='message'>
           <h6>Mission Statement</h6>
-          <p>
-            Bringing the best user experience to its customers through
-            innovative hardware, software and services. Apple's vision statement
-            is clear, concise, and to the point
-          </p>
+          <p>{analysis.missionStatement}</p>
         </div>
         <div className='message'>
           <h6>Business Model</h6>
-          <p>
-            Selling as many iPhones, iPads, Macs, Watches, AirPods, and Apps
-            around the world.
-          </p>
+          <p>{analysis.businessModel}</p>
         </div>
       </div>
       <div className='bottom-message'>
         <div className='message'>
           <h6>Competitive Advantages</h6>
-          <p>
-            Once you use an iPhone, it’s difficult to switch to other brand as
-            you get use to its user experience. Furthermore, Apple has a great
-            ecosystem. iPhones, iPads, Macs, Watches, AirPods works together
-            seamlessly. Which cause iPhone users to buy other Apple products.
-            Premium brand image thanks to beautiful product design. Apple users
-            are loyal and they re likely to buy Apple products even if the
-            prices are increased. Apple charges 30% cut from app developers.
-          </p>
+          <p>{analysis.competitiveAdvantage}</p>
         </div>
       </div>
     </div>
@@ -256,35 +218,18 @@ const IconMessage = ({ isRisk = false, message }) => {
   );
 };
 
-const growthMessages = [
-  {
-    message:
-      'Apple products will continue to thrive as the world transforms into the digital society.',
-  },
-];
-const riskMessages = [
-  {
-    message:
-      'Apple is rumored to be working on AR/VR devices. It could be a massive hit or failure.',
-  },
-  {
-    message:
-      'Apple is rumored to be working on electric cars but they might be too late into the game as Tesla has been leading the market for over a decade.',
-  },
-];
-
-const Layer3 = () => {
+const Layer3 = ({ growthMessages, riskMessages }) => {
   return (
     <div className='layer-3'>
       <div className='message'>
         <h6>Growth Opportunities</h6>
-        {growthMessages.map(({ message }) => (
+        {growthMessages.map((message) => (
           <IconMessage message={message} />
         ))}
       </div>
       <div className='message'>
         <h6>Potential Risks</h6>
-        {riskMessages.map(({ message }) => (
+        {riskMessages.map((message) => (
           <IconMessage isRisk={true} message={message} />
         ))}
       </div>
@@ -292,14 +237,17 @@ const Layer3 = () => {
   );
 };
 
-const Overview = ({ ...rest }) => {
+const Overview = ({ analysis, analysisIdeaList, ...rest }) => {
   return (
     <OverviewBlock {...rest}>
       <h3>Overview</h3>
       <div className='overview-content-wrapper'>
-        <Layer1 />
-        <Layer2 />
-        <Layer3 />
+        <Layer1 analysis={analysis} ideaList={analysisIdeaList} />
+        <Layer2 analysis={analysis} />
+        <Layer3
+          growthMessages={analysis.growthOppertunities || []}
+          riskMessages={analysis.potentialRisks || []}
+        />
       </div>
     </OverviewBlock>
   );

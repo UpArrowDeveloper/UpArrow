@@ -57,6 +57,21 @@ export default function Stock({ stock, analysis }) {
     ['currentStockValuation', user, stock],
     (stock && user && api.price.get(stock._id, user._id)) || {}
   );
+  console.log('stock ideaIds : ', stock.ideaIds);
+  const { data: ideaList } = useQuery(
+    ['ideaList', stock?.ideaIds],
+    (stock?.ideaIds?.length > 0 && api.idea.getIds(stock.ideaIds.join(','))) ||
+      []
+  );
+
+  const { data: analysisIdeaList } = useQuery(
+    ['analysisIdeaList', stock?.ideaIds],
+    (analysis?.ideaIds?.length > 0 &&
+      api.idea.getIds(analysis.ideaIds.join(','))) ||
+      []
+  );
+  console.log('idea list : ', ideaList);
+
   const postOrder = useMutation(api.order.post, {
     onSuccess: () => refetch() && refetchUser(),
   });
@@ -120,13 +135,18 @@ export default function Stock({ stock, analysis }) {
         <InvestSimulatorIdeas
           stock={stock}
           user={user}
+          ideaList={ideaList}
           onBuyClick={onBuyClick}
           onSellClick={onSellClick}
           currentStockValuation={currentStockValuationData.price}
           className='section'
         />
-        <Overview className='section' />
-        <Financials className='section' />
+        <Overview
+          className='section'
+          analysis={analysis}
+          analysisIdeaList={analysisIdeaList || []}
+        />
+        <Financials className='section' analysis={analysis} />
         <Opinions
           className='section'
           comment={comment}
@@ -151,6 +171,7 @@ export async function getServerSideProps(context) {
       `${process.env.NEXT_PUBLIC_SERVER_URL}/analysis/${analysisId}`
     )
   ).data;
+  console.log('\n\n\n\n\n\nanalysis : ', JSON.stringify(analysis));
 
   return {
     props: { stock, analysis },

@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const Post = require('../../models/Post');
+const Post = require('../../models/Idea');
 
 const addComment = async (postId, commentId) => {
   const postObjectId = ObjectId(postId);

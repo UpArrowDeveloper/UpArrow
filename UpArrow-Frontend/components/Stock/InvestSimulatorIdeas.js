@@ -7,7 +7,7 @@ import {
 } from '../../styles/typography';
 import { TargetIcon } from '../../components/icons';
 import color from '../../styles/color';
-import PostCard from '../../components/PostCard';
+import IdeaCard from '../../components/IdeaCard';
 import Viewmore from '../common/Viewmore';
 import { useEffect, useRef, useState } from 'react';
 import { isNumber } from '../../utils/number';
@@ -200,6 +200,7 @@ const getProfitPercent = (currentPrice, targetPrice) => {
     100
   ).toFixed(2)}%`;
 };
+
 const InvestSimulatorIdeas = ({
   className,
   stock,
@@ -207,6 +208,7 @@ const InvestSimulatorIdeas = ({
   onBuyClick,
   onSellClick,
   currentStockValuation,
+  ideaList,
   ...restProps
 }) => {
   const [targetPriceIndex, setTargetPriceIndex] = useState(0);
@@ -288,33 +290,18 @@ const InvestSimulatorIdeas = ({
       <div className='ideas'>
         <h3>Ideas</h3>
         <div className='cell post-cell'>
-          <PostCard
-            postId={post._id}
-            postImage={post.thumbnailImageUrl}
-            postTitle={post.title}
-            postAuthor={post.username}
-            postDate={post.date}
-            postLikes={post.likes.length}
-            stockId={post.stockId}
-          />
-          <PostCard
-            postId={post._id}
-            postImage={post.thumbnailImageUrl}
-            postTitle={post.title}
-            postAuthor={post.username}
-            postDate={post.date}
-            postLikes={post.likes.length}
-            stockId={post.stockId}
-          />
-          <PostCard
-            postId={post._id}
-            postImage={post.thumbnailImageUrl}
-            postTitle={post.title}
-            postAuthor={post.username}
-            postDate={post.date}
-            postLikes={post.likes.length}
-            stockId={post.stockId}
-          />
+          {ideaList.map((idea) => (
+            <IdeaCard
+              ideaId={idea._id}
+              ideaImage={idea.thumbnailImageUrl}
+              ideaTitle={idea.title}
+              ideaAuthor={idea.username}
+              ideaDate={idea.date}
+              ideaLikes={idea.likes.length}
+              ideaStockIds={idea.stockIds}
+            />
+          ))}
+
           <Viewmore className='mt-5' />
         </div>
       </div>

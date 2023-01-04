@@ -13,7 +13,7 @@ import TimeAgo from 'javascript-time-ago';
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
 
-const PostWrapper = styled.div`
+const IdeaWrapper = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -52,37 +52,40 @@ const Img = styled.img`
   border-radius: 0.8rem;
 `;
 
-const PostCard = ({
+const IdeaCard = ({
   theme,
-  postId,
-  postImage,
-  postTitle,
-  postAuthor,
-  postDate,
-  stockId,
+  ideaId,
+  ideaImage,
+  ideaTitle,
+  ideaAuthor,
+  ideaDate,
+  ideaStockIds,
 }) => {
   const router = useRouter();
-  const { data } = useQuery(['stock', stockId], api.stock.getId(stockId));
-  const { agreeCount, disagreeCount } = useVoteData(postId);
+  const { data } = useQuery(
+    ['stock', ideaStockIds],
+    api.stock.getId(ideaStockIds)
+  );
+  const { agreeCount, disagreeCount } = useVoteData(ideaId);
 
   return (
-    <PostWrapper theme={theme} onClick={() => router.push(`/ideas/${postId}`)}>
+    <IdeaWrapper theme={theme} onClick={() => router.push(`/ideas/${ideaId}`)}>
       <div className='image'>
-        {postImage ? <Img alt='post-card-image' src={postImage} /> : null}
+        {ideaImage ? <Img alt='idea-card-image' src={ideaImage} /> : null}
       </div>
 
       <div className='textBlock'>
-        <div className='title'>{postTitle}</div>
+        <div className='title'>{ideaTitle}</div>
         <div className='author'>
-          by {postAuthor} · {timeAgo.format(new Date(postDate))}
+          by {ideaAuthor} · {timeAgo.format(new Date(ideaDate))}
         </div>
         <div className='tag-wrapper'>
           <Tag>{data?.name}</Tag>
         </div>
         <IdeaVote agreeCount={agreeCount} disagreeCount={disagreeCount} />
       </div>
-    </PostWrapper>
+    </IdeaWrapper>
   );
 };
 
-export default PostCard;
+export default IdeaCard;

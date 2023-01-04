@@ -6,6 +6,10 @@ const getStockById = async (stockId) => {
   return stock;
 };
 
+const getStockByIds = async (stockIds) => {
+  return Promise.all(stockIds.map((id) => Stock.findById(id)));
+};
+
 const addComment = async (stockId, commentId) => {
   const stockObjectId = ObjectId(stockId);
   const stockDocument = await getStockById(stockId);
@@ -19,5 +23,6 @@ const addComment = async (stockId, commentId) => {
 
 module.exports = {
   getStockById,
+  getStockByIds,
   addComment,
 };

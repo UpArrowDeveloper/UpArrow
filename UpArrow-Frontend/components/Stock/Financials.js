@@ -30,17 +30,19 @@ export const options = {
   },
 };
 
-const labels = [2018, 2019, 2020, 2021, 2022];
-
-const data = {
-  labels,
-  datasets: [
-    {
-      label: 'label',
-      data: [298, 150, 320, 205, 330],
-      backgroundColor: color.UpArrow_Blue,
-    },
-  ],
+const getData = (values) => {
+  const labels = values.map(({ year }) => year);
+  const data = values.map(({ value }) => value);
+  return {
+    labels,
+    datasets: [
+      {
+        label: 'label',
+        data,
+        backgroundColor: color.UpArrow_Blue,
+      },
+    ],
+  };
 };
 
 const FinancialsBlock = styled.div`
@@ -69,35 +71,21 @@ const FinancialsBlock = styled.div`
   }
 `;
 
-const Financials = ({ ...restProps }) => {
+const Financials = ({ analysis, ...restProps }) => {
   return (
     <FinancialsBlock {...restProps}>
       <h3>Financials</h3>
       <div className='chart-wrapper'>
-        <div className='chart'>
-          <h6>Revenue</h6>
-          <div className='bar-wrapper'>
-            <Bar options={options} data={data} />
-          </div>
-        </div>
-        <div className='chart'>
-          <h6>Net Income</h6>
-          <div className='bar-wrapper'>
-            <Bar options={options} data={data} />
-          </div>
-        </div>
-        <div className='chart'>
-          <h6>Total Assets</h6>
-          <div className='bar-wrapper'>
-            <Bar options={options} data={data} />
-          </div>
-        </div>
-        <div className='chart'>
-          <h6>Net Operating Cash Flow</h6>
-          <div className='bar-wrapper'>
-            <Bar options={options} data={data} />
-          </div>
-        </div>
+        {analysis.financials?.map(({ name, chartValues }) => {
+          return (
+            <div className='chart'>
+              <h6>{name}</h6>
+              <div className='bar-wrapper'>
+                <Bar options={options} data={getData([...chartValues])} />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </FinancialsBlock>
   );

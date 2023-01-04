@@ -179,7 +179,6 @@ const Editor = ({ editData }) => {
       thumbnailImageUrl: link,
       youtubeCode: splitedVideoUrl || null,
     };
-
     let result;
     if (editData) {
       result = await axios.put(
@@ -187,7 +186,7 @@ const Editor = ({ editData }) => {
         payload
       );
     } else {
-      result = await axios.post(env.serverUrl + '/post', payload);
+      result = await axios.post(env.serverUrl + '/idea', payload);
     }
 
     router.push(`/ideas/${result.data.data._id}`);

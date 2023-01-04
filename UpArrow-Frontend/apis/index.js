@@ -6,6 +6,7 @@ import user from './user';
 import comment from './comment';
 import order from './order';
 import price from './price';
+import idea from './idea';
 
 const api = {
   config,
@@ -16,6 +17,7 @@ const api = {
   comment,
   order,
   price,
+  idea,
 };
 
 export default api;

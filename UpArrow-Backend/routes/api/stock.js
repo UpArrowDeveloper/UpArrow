@@ -2,6 +2,7 @@ const express = require('express');
 const Analysis = require('../../models/Analysis');
 const router = express.Router();
 const Stock = require('../../models/Stock');
+const { getStockByIds } = require('../../services/stock');
 const ObjectId = require('mongodb').ObjectId;
 
 router.get('/', async (req, res) => {
@@ -38,12 +39,21 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/:ids/ids', async (req, res) => {
+  try {
+    const ids = req.params.ids;
+    const stocks = await getStockByIds(ids.split(',') || []);
+
+    return res.status(200).json(stocks);
+  } catch (error) {
+    return res.status(500).json({ message: 'ids error' });
+  }
+});
+
 router.get('/:ticker/ticker', async (req, res) => {
   try {
     const ticker = req.params.ticker;
     const stock = await Stock.findOne({ ticker });
-    console.log('stock : ', stock);
-    console.log('!stock : ', !stock);
 
     if (!stock) {
       return res.status(404).send({});
