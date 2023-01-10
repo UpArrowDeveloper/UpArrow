@@ -10,6 +10,9 @@ module.exports = {
     return config;
   },
   images: {
-    domains: ['upload.wikimedia.org'],
+    domains: [
+      'upload.wikimedia.org',
+      'uparrow-images.s3.ap-northeast-2.amazonaws.com',
+    ],
   },
 };

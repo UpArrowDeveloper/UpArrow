@@ -7,6 +7,8 @@ import Image from 'next/image';
 import Viewmore from '../../components/common/Viewmore';
 import { css } from '@emotion/react';
 import OrderChip from '../../components/OrderChip';
+import api from '../../apis';
+import { getNumberUnit } from '../../utils/number';
 
 export const commonListCss = css`
   padding-top: 3.2rem;
@@ -37,6 +39,10 @@ export const commonListCss = css`
 export const commonTableCss = css`
   .table-wrapper {
     padding: 0 3.2rem;
+
+    tr {
+      cursor: pointer;
+    }
   }
 
   .image-container {
@@ -123,6 +129,7 @@ const orderOptions = ['Popular', 'Trending', 'Market Cap'];
 
 function Home({ stocks }) {
   const [orderOption, setOrderOption] = useState();
+  console.log('stocks : ', stocks);
   return (
     <StockBlock>
       <header>
@@ -169,26 +176,26 @@ function Home({ stocks }) {
                   </div>
                 </td>
                 <td className='number'>
-                  <span>${stock.price.toLocaleString()}</span>
+                  <span>${stock.currentPrice.toLocaleString()}</span>
                 </td>
                 <td className='number'>
                   <span className='divider'>
-                    ${stock.marketCap.toLocaleString()}T
+                    ${getNumberUnit(stock.marketCap)}
                   </span>
                 </td>
                 <td className='number'>
-                  <span>{stock.buyer.toLocaleString()}</span>
+                  <span>{stock.buyerCount.toLocaleString()}</span>
                 </td>
                 <td className='number'>
                   <span className='divider'>
-                    {stock.seller.toLocaleString()}
+                    {stock.sellerCount.toLocaleString()}
                   </span>
                 </td>
                 <td className='number'>
-                  <span>{stock.ideas.toLocaleString()}</span>
+                  <span>{stock.ideaIds.length.toLocaleString()}</span>
                 </td>
                 <td className='number'>
-                  <span>{stock.comments.toLocaleString()}</span>
+                  <span>{stock.commentCount.toLocaleString()}</span>
                 </td>
               </tr>
             ))}
@@ -210,79 +217,12 @@ export default function StockPage(props) {
   );
 }
 
-export function getServerSideProps() {
-  const fixtureStocks = [
-    {
-      logoUrl: '/images/apple.png',
-      name: 'Apple',
-      ticker: 'AAPL',
-      price: 151.32,
-      marketCap: 2.26,
-      buyer: 2302,
-      seller: 924,
-      ideas: 104,
-      comments: 3324,
-    },
-    {
-      logoUrl: '/images/apple.png',
-      name: 'Apple',
-      ticker: 'AAPL',
-      price: 151.32,
-      marketCap: 2.26,
-      buyer: 2302,
-      seller: 924,
-      ideas: 104,
-      comments: 3324,
-    },
-    {
-      logoUrl: '/images/apple.png',
-      name: 'Apple',
-      ticker: 'AAPL',
-      price: 151.32,
-      marketCap: 2.26,
-      buyer: 2302,
-      seller: 924,
-      ideas: 104,
-      comments: 3324,
-    },
-    {
-      logoUrl: '/images/apple.png',
-      name: 'Apple',
-      ticker: 'AAPL',
-      price: 151.32,
-      marketCap: 2.26,
-      buyer: 2302,
-      seller: 924,
-      ideas: 104,
-      comments: 3324,
-    },
-    {
-      logoUrl: '/images/apple.png',
-      name: 'Apple',
-      ticker: 'AAPL',
-      price: 151.32,
-      marketCap: 2.26,
-      buyer: 2302,
-      seller: 924,
-      ideas: 104,
-      comments: 3324,
-    },
-    {
-      logoUrl: '/images/apple.png',
-      name: 'Apple',
-      ticker: 'AAPL',
-      price: 151.32,
-      marketCap: 2.26,
-      buyer: 2302,
-      seller: 924,
-      ideas: 104,
-      comments: 3324,
-    },
-  ];
+export async function getServerSideProps() {
+  const stocks = await api.stock.get();
 
   return {
     props: {
-      stocks: fixtureStocks,
+      stocks,
     },
   };
 }

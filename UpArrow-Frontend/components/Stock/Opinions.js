@@ -48,7 +48,7 @@ const OpinionsBlock = styled.div`
       position: absolute;
       top: calc(50% - 2.4rem);
       left: -2.4rem;
-      z-index: 500;
+      z-index: 50;
       border: 1px solid black;
       border-radius: 999rem;
       background-color: white;
@@ -61,7 +61,7 @@ const OpinionsBlock = styled.div`
       top: calc(50% - 2.4rem);
       right: -2.4rem;
       border: 1px solid black;
-      z-index: 500;
+      z-index: 50;
       border-radius: 999rem;
       background-color: white;
       padding: 1.2rem;
@@ -138,39 +138,15 @@ const OpinionCard = ({ imageUrl, author, message }) => {
   );
 };
 
-const Opinions = ({ comment, setComment, submitComment, ...restProps }) => {
-  const opinionCards = [
-    {
-      imageUrl: '/images/avatar.png',
-      author: 'Warren Edward Buffett',
-      message:
-        '“1A phenomenal company with solid fandom and market dominance that performs well in the face of recession”',
-    },
-    {
-      imageUrl: '/images/avatar.png',
-      author: 'Warren Edward Buffett',
-      message:
-        '“2A phenomenal company with solid fandom and market dominance that performs well in the face of recession”',
-    },
-    {
-      imageUrl: '/images/avatar.png',
-      author: 'Warren Edward Buffett',
-      message:
-        '“3A phenomenal company with solid fandom and market dominance that performs well in the face of recession”',
-    },
-    {
-      imageUrl: '/images/avatar.png',
-      author: 'Warren Edward Buffett',
-      message:
-        '“4A phenomenal company with solid fandom and market dominance that performs well in the face of recession”',
-    },
-    {
-      imageUrl: '/images/avatar.png',
-      author: 'Warren Edward Buffett',
-      message:
-        '“5A phenomenal company with solid fandom and market dominance that performs well in the face of recession”',
-    },
-  ];
+const Opinions = ({
+  comment,
+  setComment,
+  submitComment,
+  analysis,
+  comments,
+  ...restProps
+}) => {
+  const opinionCards = analysis.opinions;
   const [index, setIndex] = useState(0);
 
   const increaseIndex = () => {
@@ -179,29 +155,6 @@ const Opinions = ({ comment, setComment, submitComment, ...restProps }) => {
   const decreaseIndex = () => {
     setIndex((i) => (i > 0 ? i - 1 : i));
   };
-
-  const comments = [
-    {
-      _id: '6399ceb74c3cac3ead004c9d',
-      userId: '633c3585b95485105163c8b8',
-      postId: '63972b184ad7d65fde4a652e',
-      content: 'test',
-      likes: [],
-      createdAt: '2022-12-14T13:25:11.992Z',
-      updatedAt: '2022-12-14T13:25:11.992Z',
-      __v: 0,
-    },
-    {
-      _id: '6399cf6adda21ac4f42e3a64',
-      userId: '633c3585b95485105163c8b8',
-      postId: '63972b184ad7d65fde4a652e',
-      content: 'test',
-      likes: [],
-      createdAt: '2022-12-14T13:28:10.394Z',
-      updatedAt: '2022-12-14T13:28:10.394Z',
-      __v: 0,
-    },
-  ];
 
   return (
     <OpinionsBlock {...restProps} index={index} cardWidth={52 + 2.4}>

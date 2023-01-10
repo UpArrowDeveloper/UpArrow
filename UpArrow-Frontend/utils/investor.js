@@ -4,6 +4,7 @@ export const getInvestorProfileInfo = async (id) => {
   const investor = await axios.get(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/user/${id}`
   );
+  console.log('investor : ', investor.data);
   const purchaseIds = investor.data.purchases;
   const purchases = (
     await Promise.all(
@@ -12,6 +13,7 @@ export const getInvestorProfileInfo = async (id) => {
       ) || []
     )
   ).map((v) => v.data);
+
   const prices = (
     await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/config`)
   ).data.prices;
@@ -39,7 +41,7 @@ export const getInvestorProfileInfo = async (id) => {
   }, {});
 
   const userPosts = (
-    await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/post/${id}/userId`)
+    await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea/${id}/userId`)
   ).data;
 
   const userRank = (

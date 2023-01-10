@@ -1,6 +1,6 @@
 import Logo from '../components/Logo';
 import SearchBar from '../components/SearchBar';
-import PostCard from '../components/PostCard';
+import IdeaCard from '../components/IdeaCard';
 import InvestorCard from '../components/InvestorCard';
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
@@ -96,7 +96,7 @@ function Home({
 
   const postList = postDataList.map((post) => {
     return (
-      <PostCard
+      <IdeaCard
         key={post.title}
         postId={post._id}
         postImage={post.thumbnailImageUrl}

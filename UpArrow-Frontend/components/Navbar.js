@@ -121,7 +121,7 @@ const Navbar = ({ stockRef, ideaRef, investorRef }) => {
     router.push('/');
   };
 
-  const routes = ['stock', 'ideas', 'investors', 'principles'];
+  const routes = ['stocks', 'ideas', 'investors', 'principles'];
 
   const goToAdminPage = () => {
     router.push('/admin');

@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../../apis';
 
-export const usePost = (id) => {
+export const useIdea = (id) => {
   const { data, isLoading, refetch } = useQuery(
-    ['post', id],
-    api.post.getById(id)
+    ['idea', id],
+    api.idea.getById(id)
   );
 
   return {
-    post: data,
+    idea: data,
     isLoading,
     refetch,
   };

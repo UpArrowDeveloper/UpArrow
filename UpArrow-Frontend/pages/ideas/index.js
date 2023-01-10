@@ -7,7 +7,7 @@ import api from '../../apis';
 import Viewmore from '../../components/common/Viewmore';
 import IdeaVote from '../../components/IdeaVote';
 import OrderChip from '../../components/OrderChip';
-import { commonListCss, commonTableCss } from '../stock';
+import { commonListCss, commonTableCss } from '../stocks';
 import en from 'javascript-time-ago/locale/en';
 import Image from 'next/image';
 import { TagGroup } from '../../components/Tag';
@@ -74,9 +74,9 @@ const IdeasBlock = styled.div`
 const orderOptions = ['Popular', 'Trending', 'Latest'];
 
 function Ideas({ ideas }) {
-  const router = useRouter();
-  const { data: posts } = useQuery(['posts'], api.post.get);
   const [orderOption, setOrderOption] = useState();
+  const router = useRouter();
+
   return (
     <IdeasBlock>
       <header>
@@ -102,13 +102,13 @@ function Ideas({ ideas }) {
           </thead>
           <tbody>
             {ideas?.map((idea) => (
-              <tr>
+              <tr onClick={() => router.push(`/ideas/${idea._id}`)}>
                 <td>
                   <div className='title wrapper'>
                     <div className='image-container'>
                       <div className='image-wrapper'>
                         <Image
-                          src={idea.logoUrl}
+                          src={idea.thumbnailImageUrl}
                           layout='fill'
                           alt={idea.title}
                         />
@@ -117,7 +117,7 @@ function Ideas({ ideas }) {
                     <div className='title-author'>
                       <h5>{idea.title}</h5>
                       <div className='author'>
-                        by {idea.author} ·{' '}
+                        by {idea.user.username} ·{' '}
                         {timeAgo.format(new Date(idea.updatedAt))}
                       </div>
                     </div>
@@ -125,17 +125,21 @@ function Ideas({ ideas }) {
                 </td>
                 <td>
                   <div className='wrapper'>
-                    <TagGroup tags={idea.stocks.map((name) => ({ name }))} />
+                    <TagGroup
+                      tags={idea.stocks.map(({ name }) => ({ name }))}
+                    />
                   </div>
                 </td>
                 <td>
-                  <div className='comments wrapper'>{idea.comments}</div>
+                  <div className='comments wrapper'>
+                    {idea.commentIds.length}
+                  </div>
                 </td>
                 <td>
                   <div className='idea-vote wrapper'>
                     <IdeaVote
-                      agreeCount={idea.votes.good}
-                      disagreeCount={idea.votes.bad}
+                      agreeCount={idea.votes.agreeCount}
+                      disagreeCount={idea.votes.disagreeCount}
                     />
                   </div>
                 </td>
@@ -159,48 +163,38 @@ export default function IdeasPage(props) {
   );
 }
 
-export function getServerSideProps() {
-  const fixtureIdeas = [
-    {
-      logoUrl: '/images/apple.png',
-      title: 'Reasons Why Tesla will Become the Most Valuable Company',
-      author: 'Warren Buffett',
-      updatedAt: '2022-12-31',
-      stocks: ['Apple', 'Microsoft', 'Google'],
-      comments: 104,
-      votes: {
-        good: 1402,
-        bad: 302,
-      },
+export async function getServerSideProps() {
+  const ideas = await api.idea.get();
+  const stocksList = [];
+  for (let i = 0; i < ideas.length; i++) {
+    const item = ideas[i];
+    stocksList.push(
+      Promise.all(item.stockIds.map((id) => api.stock.getId(id)()))
+    );
+  }
+  const resStockList = await Promise.all(stocksList);
+  const votes = (
+    await Promise.all(ideas.map((idea) => api.vote.getByIdeaId(idea._id)()))
+  ).map(({ data }) => data);
+
+  const users = await Promise.all(
+    ideas.map((idea) => api.user.getById(idea.userId)())
+  );
+
+  console.log('users : ', users);
+  const itemIncludedIdeas = ideas.map((idea, index) => ({
+    ...idea,
+    stocks: resStockList[index] || [],
+    votes: {
+      agreeCount: votes[index]?.filter((vote) => vote.isAgree).length || 0,
+      disagreeCount: votes[index]?.filter((vote) => !vote.isAgree).length || 0,
     },
-    {
-      logoUrl: '/images/apple.png',
-      title: 'Reasons Why Tesla will Become the Most Valuable Company',
-      author: 'Warren Buffett',
-      updatedAt: '2022-12-31',
-      stocks: ['Apple', 'Microsoft', 'Google'],
-      comments: 104,
-      votes: {
-        good: 1402,
-        bad: 302,
-      },
-    },
-    {
-      logoUrl: '/images/apple.png',
-      title: 'Reasons Why Tesla will Become the Most Valuable Company',
-      author: 'Warren Buffett',
-      updatedAt: '2022-12-31',
-      stocks: ['Apple', 'Microsoft', 'Google'],
-      comments: 104,
-      votes: {
-        good: 1402,
-        bad: 302,
-      },
-    },
-  ];
+    user: users[index],
+  }));
+
   return {
     props: {
-      ideas: fixtureIdeas,
+      ideas: itemIncludedIdeas,
     },
   };
 }

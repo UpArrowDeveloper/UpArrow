@@ -5,7 +5,6 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import api from '../../apis';
-import Vote from '../../components/Vote';
 import { env } from '../../config';
 import Youtube from '../../components/Youtube';
 import InvestorProfile from '../../components/common/InvestorProfile';
@@ -18,14 +17,14 @@ import TagPill from '../../components/Editor/TagPill';
 import IdeaVote from '../../components/IdeaVote';
 import CommentInput from '../../components/CommentInput';
 import Button from '../../components/common/Button';
-import Comment from '../../components/Comment';
 import CommentList from '../../components/CommentList';
-import { usePost } from '../../hooks/model/usePost';
+import { useIdea } from '../../hooks/model/useIdea';
 import {
   CommentIcon,
   ThumbDownIcon,
   ThumbUpIcon,
 } from '../../components/icons';
+
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
 
@@ -154,7 +153,7 @@ const IdeaContent = styled.div`
 
 export default function Ideas({
   investor,
-  post: serverPost,
+  idea: serverIdea,
   rank,
   stocksWithPrices,
 }) {
@@ -162,8 +161,7 @@ export default function Ideas({
     description,
     followers,
     followings,
-    profile_image_url,
-    // purchases,
+    profileImageUrl,
     totalAssets,
     totalInvestment,
     totalProfits,
@@ -179,13 +177,13 @@ export default function Ideas({
     api.user.getByEmail(user?.email)
   );
   const commentInputRef = useRef();
-  const { post, refetch: refetchPost } = usePost(id);
+  const { idea: post, refetch: refetchPost } = useIdea(id);
   const commentIds = post?.commentIds || [];
   const {
     data: voteData,
     isLoading: isVoteDataLoading,
     refetch,
-  } = useQuery(['voteByPostId', id], api.vote.getByPostId(id));
+  } = useQuery(['voteByPostId', id], api.vote.getByIdeaId(id));
   const [comment, setComment] = useState('');
   const { data: comments, isLoading: isCommentsLoading } = useQuery(
     ['comment', commentIds],
@@ -242,7 +240,7 @@ export default function Ideas({
     <IdeasBlock>
       <div>
         <InvestorProfile
-          profile_image_url={profile_image_url}
+          profile_image_url={profileImageUrl}
           username={username}
           investedCompanies={stocksWithPrices}
           followers={followers}
@@ -257,9 +255,9 @@ export default function Ideas({
         />
       </div>
       <PostBlock>
-        <h1 className='post-title'>{serverPost.title}</h1>
+        <h1 className='post-title'>{serverIdea.title}</h1>
         <div className='post-info'>
-          by {serverPost.username} · {timeAgo.format(new Date(serverPost.date))}
+          by {username} · {timeAgo.format(new Date(serverIdea.date))}
         </div>
         <div className='tag-pill-wrapper'>
           {stocksWithPrices.map((stock) => (
@@ -274,14 +272,14 @@ export default function Ideas({
           <IdeaVote agreeCount={agreeCount} disagreeCount={disagreeCount} />
         </div>
         <div className='thumbnail-wrapper'>
-          <img src={serverPost.thumbnailImageUrl} />
+          <img src={serverIdea.thumbnailImageUrl} />
         </div>
 
-        {serverPost.youtubeCode && (
-          <Youtube youtubeCode={serverPost.youtubeCode} />
+        {serverIdea.youtubeCode && (
+          <Youtube youtubeCode={serverIdea.youtubeCode} />
         )}
 
-        <IdeaContent dangerouslySetInnerHTML={{ __html: serverPost.content }} />
+        <IdeaContent dangerouslySetInnerHTML={{ __html: serverIdea.content }} />
 
         <h2 className='sub-header'>Comments</h2>
         {comments && (
@@ -348,30 +346,25 @@ export default function Ideas({
 
 export const getServerSideProps = async (context) => {
   const { id } = context.params;
-  const post = (await axios.get(env.serverUrl + '/post/' + id)).data;
-  const { investor, prices, stockPurchaseInfos, userPosts, userRank } =
-    await getInvestorProfileInfo(post.userId);
-  const stockIds = Object.keys(stockPurchaseInfos);
+  const idea = await api.idea.getById(id)();
 
-  const stocks = (
-    await Promise.all(
-      stockIds.map((id) =>
-        axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/stock/${id}`)
-      )
-    )
-  ).map((v) => v.data);
+  const { investor, prices, stockPurchaseInfos, userPosts, userRank } =
+    await getInvestorProfileInfo(idea.userId);
+
+  const stocks = await api.stock.getIds(idea.stockIds.join(','))();
 
   const stocksWithPrices = stocks.map((stock) => {
     return {
       ...stock,
       ...stockPurchaseInfos[stock._id],
-      totalValue: stockPurchaseInfos[stock._id].quantity * prices[stock.ticker],
+      totalValue:
+        stockPurchaseInfos[stock._id]?.quantity * prices[stock.ticker],
     };
   });
 
   return {
     props: {
-      post,
+      idea,
       investor: { ...investor.data },
       prices,
       stockPurchaseInfos,

@@ -182,7 +182,7 @@ const Editor = ({ editData }) => {
     let result;
     if (editData) {
       result = await axios.put(
-        `${env.serverUrl}/post/${editData._id}`,
+        `${env.serverUrl}/idea/${editData._id}`,
         payload
       );
     } else {
