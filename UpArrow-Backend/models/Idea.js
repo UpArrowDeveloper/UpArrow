@@ -5,7 +5,6 @@ const IdeaSchema = new Schema(
   {
     stockIds: Array,
     userId: String,
-    username: String,
     youtubeCode: String,
     title: String,
     content: String,

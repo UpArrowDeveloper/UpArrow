@@ -9,6 +9,7 @@ router.get('/:id', async (req, res) => {
     const objectId = ObjectId(id);
     const analysis = await Analysis.findById(objectId);
     console.log('analysis : ', JSON.stringify(analysis));
+    console.log('analysis : ', JSON.stringify(analysis.commentIds));
 
     if (!analysis) {
       return res.status(404).send({});

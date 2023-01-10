@@ -4,26 +4,26 @@ const Vote = require('../../models/Vote');
 
 // TODO : post 에서 postId 넘겨주면 agreeCount, disAgreeCount 넘겨주는 api만들기
 
-router.get('/:postId/post', async (req, res) => {
-  const { postId } = req.params;
-  const votes = await Vote.find({ postId });
+router.get('/:ideaId/idea', async (req, res) => {
+  const { ideaId } = req.params;
+  const votes = await Vote.find({ ideaId });
   res.json({ data: votes });
 });
 
 router.post('/', async (req, res) => {
-  const { userId, postId, isAgree } = req.body;
-  const hasVote = await Vote.findOne({ userId, postId });
+  const { userId, postId: ideaId, isAgree } = req.body;
+  const hasVote = await Vote.findOne({ userId, ideaId });
   if (hasVote) {
     if (hasVote.isAgree === isAgree) {
-      await Vote.deleteOne({ userId, postId });
+      await Vote.deleteOne({ userId, ideaId });
       return res.json({ message: 'vote canceled' });
     }
-    await Vote.updateOne({ userId, postId }, { userId, postId, isAgree });
+    await Vote.updateOne({ userId, ideaId }, { userId, ideaId, isAgree });
     return res.json({ message: 'vote changed' });
   }
   const newVote = new Vote({
     userId,
-    postId,
+    ideaId,
     isAgree,
   });
   await newVote.save();

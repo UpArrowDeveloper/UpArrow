@@ -8,10 +8,10 @@ router.get('/', async (req, res) => {
   try {
     const { order, limit } = req.query;
 
-    const posts = await Idea.find()
+    const ideas = await Idea.find()
       .sort(order === 'desc' ? '-date' : '')
       .limit(limit);
-    return res.status(200).json(posts);
+    return res.status(200).json(ideas);
   } catch (error) {
     return res.status(500).json({ errorMessage: 'post get error, ', error });
   }

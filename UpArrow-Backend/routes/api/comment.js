@@ -11,15 +11,12 @@ router.get('/:stockId/stock', async (req, res) => {
   return res.status(200).send(allComments);
 });
 
-router.get('/ids', async (req, res) => {
-  const ids = req.query.ids;
+router.get('/:ids/ids', async (req, res) => {
+  const ids = req.params.ids;
   const idList = ids.split(',');
-  console.log('idList : ', idList);
   const comments = await Promise.all(
     idList.map((id) => Comment.findById(ObjectId(id)))
   );
-  console.log('comments : ', comments);
-
   return res.status(200).json(comments);
 });
 

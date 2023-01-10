@@ -3,9 +3,6 @@ const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema(
   {
-    stockId: String,
-    userId: String,
-    postId: String,
     content: String,
     timeStamp: Date,
     likes: Array,
