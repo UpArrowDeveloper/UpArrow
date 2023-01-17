@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const analysis = require('./analysis');
-const investor = require('./investor');
 const idea = require('./idea');
 const admin = require('./admin');
 const user = require('./user');
@@ -16,7 +15,6 @@ const file = require('./fileRouter');
 
 router.use('/analysis', analysis);
 router.use('/idea', idea);
-router.use('/investor', investor);
 router.use('/admin', admin);
 router.use('/user', user);
 router.use('/comment', comment);

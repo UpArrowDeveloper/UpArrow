@@ -5,9 +5,8 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import api from '../../apis';
 import Viewmore from '../../components/common/Viewmore';
-import IdeaVote from '../../components/IdeaVote';
 import OrderChip from '../../components/OrderChip';
-import { commonListCss, commonTableCss } from '../stock';
+import { commonListCss, commonTableCss } from '../stocks';
 import en from 'javascript-time-ago/locale/en';
 import Image from 'next/image';
 import { TagGroup } from '../../components/Tag';
@@ -101,7 +100,6 @@ const orderOptions = [
 
 function Investors({ investors }) {
   const router = useRouter();
-  const { data: posts } = useQuery(['posts'], api.post.get);
   const [orderOption, setOrderOption] = useState();
   return (
     <IdeasBlock>
@@ -138,7 +136,7 @@ function Investors({ investors }) {
                       <div className='image-wrapper rounded'>
                         <Image
                           objectFit='cover'
-                          src={investor.avatarUrl}
+                          src={investor.profileImageUrl}
                           layout='fill'
                           alt={investor.name}
                         />
@@ -151,7 +149,7 @@ function Investors({ investors }) {
                 </td>
                 <td>
                   <div className='wrapper'>
-                    <TagGroup
+                    {/* <TagGroup
                       tags={investor.top3Stocks.map(({ name, profit }) => ({
                         name: `${name} ${profit.toLocaleString('en-US')}%`,
                         type:
@@ -161,12 +159,12 @@ function Investors({ investors }) {
                             ? 'outline'
                             : 'minus',
                       }))}
-                    />
+                    /> */}
                   </div>
                 </td>
                 <td>
                   <div className='comments wrapper numbers'>
-                    {investor.ideas.toLocaleString('en-US')}
+                    {investor.ideaIds.length.toLocaleString('en-US')}
                   </div>
                 </td>
                 <td>
@@ -199,75 +197,12 @@ export default function IdeasPage(props) {
   );
 }
 
-export function getServerSideProps() {
-  const fixtureInvestors = [
-    {
-      avatarUrl: '/images/warren.png',
-      name: 'Warren Buffett',
-      top3Stocks: [
-        {
-          name: 'Apple',
-          profit: 1200,
-        },
-        {
-          name: 'Microsoft',
-          profit: 240,
-        },
-        {
-          name: 'Google',
-          profit: -127,
-        },
-      ],
-      ideas: 112,
-      totalProfits: 130200,
-      totalAssets: 280200,
-    },
-    {
-      avatarUrl: '/images/warren.png',
-      name: 'Warren Buffett',
-      top3Stocks: [
-        {
-          name: 'Apple',
-          profit: 1200,
-        },
-        {
-          name: 'Microsoft',
-          profit: 240,
-        },
-        {
-          name: 'Google',
-          profit: -127,
-        },
-      ],
-      ideas: 112,
-      totalProfits: 130200,
-      totalAssets: 280200,
-    },
-    {
-      avatarUrl: '/images/warren.png',
-      name: 'Warren Buffett',
-      top3Stocks: [
-        {
-          name: 'Apple',
-          profit: 1200,
-        },
-        {
-          name: 'Microsoft',
-          profit: 240,
-        },
-        {
-          name: 'Google',
-          profit: -127,
-        },
-      ],
-      ideas: 112,
-      totalProfits: 130200,
-      totalAssets: 280200,
-    },
-  ];
+export async function getServerSideProps() {
+  const users = await api.user.get();
+
   return {
     props: {
-      investors: fixtureInvestors,
+      investors: users,
     },
   };
 }

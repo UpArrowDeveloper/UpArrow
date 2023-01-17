@@ -10,6 +10,7 @@ const Average = require('../../models/Config');
 var ObjectId = require('mongodb').ObjectId;
 const axios = require('axios');
 const Config = require('../../models/Config');
+const { getTop3StocksByUserId } = require('../../services/user');
 
 // POST http://localhost:4000/api/v1/investor/register/user
 // a user is registering for the first time on UpArrow
@@ -30,14 +31,41 @@ const Config = require('../../models/Config');
 // PUT ('/user/:id') <- 회원정보 하나 가져오기
 // DELETE ('/user/:id') <- 회원정보 하나 가져오기
 
+router.get('/', async (req, res) => {
+  try {
+    const userList = await User.find();
+    return res.status(200).json(userList);
+  } catch (err) {
+    return res.status(500).json({ error: err });
+  }
+});
+
+router.get('/:id/top3stocks', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const res = await getTop3StocksByUserId(id);
+    // 구매 주식별 수익 내림차순 정렬 -> 앞 3개 return
+    return res.status(200).json(res);
+  } catch (err) {
+    return res.status(500).json({ error: err });
+  }
+});
+
 router.post('/', async (req, res) => {
   const email = req.body.email;
   const user = await User.findOne({ email: email });
 
   if (user) {
-    return res.status(400).send({});
+    return res.status(400).send({ message: 'user already exist' });
   } else {
-    const newUser = new User({ ...req.body, availableCash: 100000 });
+    const newUser = new User({
+      ...req.body,
+      commentIds: [],
+      followers: [],
+      followings: [],
+      ideaIds: [],
+      availableCash: 100000,
+    });
     newUser.save().catch((err) => console.log(err));
     return res.status(200).send(newUser);
   }
@@ -82,7 +110,7 @@ router.get('/:email/email', async (req, res) => {
   if (user) {
     return res.status(200).send(user);
   } else {
-    return res.status(200).send({});
+    return res.status(400).send({ message: 'no user' });
   }
 });
 
@@ -148,18 +176,6 @@ router.get('/:userId/profit-percentage', async (req, res) => {
   } catch (error) {
     console.log('error: ', error);
     return res.status(400).send({ error: JSON.stringify(error) });
-  }
-});
-
-// GET http://localhost:4000/api/v1/investor/fetch/all/users
-// we are getting all users in UpArrow
-
-router.get('/', async (req, res) => {
-  try {
-    const userList = await User.find();
-    return res.status(200).send(userList);
-  } catch (err) {
-    return res.status(500).json({ error: err });
   }
 });
 

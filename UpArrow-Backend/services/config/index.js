@@ -6,6 +6,12 @@ const getConfig = async () => {
   return config[0];
 };
 
+const getStockPrices = async () => {
+  const config = await getConfig();
+  return config.prices;
+};
+
 module.exports = {
   getConfig,
+  getStockPrices,
 };

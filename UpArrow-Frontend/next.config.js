@@ -13,6 +13,7 @@ module.exports = {
     domains: [
       'upload.wikimedia.org',
       'uparrow-images.s3.ap-northeast-2.amazonaws.com',
+      'pbs.twimg.com',
     ],
   },
 };

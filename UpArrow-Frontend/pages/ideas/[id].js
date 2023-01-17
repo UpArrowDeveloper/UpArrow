@@ -187,7 +187,7 @@ export default function Ideas({
   const [comment, setComment] = useState('');
   const { data: comments, isLoading: isCommentsLoading } = useQuery(
     ['comment', commentIds],
-    api.comment.getByIds(commentIds)
+    commentIds.length > 0 ? api.comment.getByIds(commentIds) : []
   );
   const createVote = useMutation(api.vote.post, { onSuccess: () => refetch() });
 

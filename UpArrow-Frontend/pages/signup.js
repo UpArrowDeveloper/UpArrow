@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0';
-import axios from 'axios';
+import api from '../apis';
 
 const SignupBlock = styled.div`
   padding-top: 11rem;
@@ -53,43 +53,28 @@ export default function Signup({ data }) {
     const profileImageUrl = e.target.profileImageUrl.value;
     const username = e.target.username.value;
     const investmentPhilosophy = e.target.investmentPhilosophy.value;
-    const website = e.target.website.value;
-    const simulationMoney = e.target.simulationMoney.value;
-    const comments = [];
+    const websiteUrl = e.target.websiteUrl.value;
+    const cash = e.target.cash.value;
     const isAdmin = false;
-    const posts = [];
-    const purchases = [];
     const totalInvestment = 0;
     const totalProfits = 0;
     const totalAssests = 0;
-    const followers = [];
-    const followings = [];
-    const availableCash = Number(simulationMoney.replace(/[^0-9.-]+/g, ''));
-
-    console.log('user : ', user);
     const userJSON = {
       name: name,
-      profile_image_url: profileImageUrl || user.picture,
-      username: username === '' ? user.nickname : username,
+      profileImageUrl: profileImageUrl || user.picture,
+      username: !username || username === '' ? user.nickname : username,
       email: email,
-      investment_philosophy: investmentPhilosophy,
-      website_url: website,
-      comments: comments,
-      isAdmin: isAdmin,
-      posts: posts,
-      purchases: purchases,
+      investmentPhilosophy: investmentPhilosophy,
+      websiteUrl: websiteUrl,
+      isAdmin,
       totalInvestment: totalInvestment,
       totalProfits: totalProfits,
       totalAssets: totalAssests,
-      followers: followers,
-      followings: followings,
-      availableCash: availableCash,
+
+      cash: cash,
     };
 
-    const userDocument = await axios.post(
-      'http://localhost:4000/api/v1/user',
-      userJSON
-    );
+    const userDocument = await api.user.post(userJSON);
 
     if (userDocument) {
       router.push('/');
@@ -97,6 +82,7 @@ export default function Signup({ data }) {
       // if posting a user fails, reload the page and then show snack bar that tells them why
       // if I get 400 make a message that you already registered with this email and show the email they registered
       // registration failed
+      console.error('sign up fail');
       router.reload();
     }
   };
@@ -145,11 +131,11 @@ export default function Signup({ data }) {
         </div>
 
         <div className='text-field'>
-          <label for='website'>Social Media</label>
+          <label for='websiteUrl'>Social Media</label>
           <input
             type='text'
-            id='website'
-            name='website'
+            id='websiteUrl'
+            name='websiteUrl'
             placeholder='YouTube, Instagram, Twitter, LinkedIn, or your personal website for other UpArrow users to follow you'
           ></input>
         </div>
@@ -166,15 +152,11 @@ export default function Signup({ data }) {
         </div>
 
         <div className='text-field'>
-          <label for='simulationMoney'>Simulation Money</label>
-          <select id='simulationMoney' name='simulationMoney' disabled>
-            <option value='$1,000'>$1,000</option>
-            <option value='$10,000'>$10,000</option>
-            <option selected value='$100,000'>
+          <label for='cash'>Simulation Money</label>
+          <select id='cash' name='cash' disabled>
+            <option selected value={100000}>
               $100,000
             </option>
-            <option value='$1,000,000'>$1,000,000</option>
-            <option value='$10,000,000'>$10,000,000</option>
           </select>
         </div>
 
