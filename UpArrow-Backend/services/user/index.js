@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const User = require('../../models/User');
 const { getStockPrices } = require('../config');
 const { getCalculatedOrdersByUser } = require('../order');
-const { getStockTickerById } = require('../stock');
+const { getStockById } = require('../stock');
 
 const getUserById = async (userId) => {
   const user = await User.findById(userId);
@@ -31,12 +31,12 @@ const getTop3StocksByUserId = async (userId) => {
   const calculatedOrders = await getCalculatedOrdersByUser(userId);
   const stockPrices = await getStockPrices();
   const tickerAttachedCalculatedOrders = await Promise.all(
-    Object.entries(calculatedOrders).map(([key, value]) => {
+    Object.entries(calculatedOrders).map(async ([_, value]) => {
+      const stock = await getStockById(value.stockId);
       return {
-        [key]: {
-          ...value,
-          ticker: getStockTickerById(key),
-        },
+        ...value,
+        ticker: stock.ticker,
+        name: stock.name,
       };
     })
   );
@@ -53,9 +53,18 @@ const getTop3StocksByUserId = async (userId) => {
   return profitAttachedOrders.sort((a, b) => b.profit - a.profit).slice(0, 3);
 };
 
+const addOrderById = async (id, orderId) => {
+  const user = await User.findById(id);
+  return User.findOneAndUpdate(
+    { _id: id },
+    { orderIds: [...user.orderIds, orderId] }
+  );
+};
+
 module.exports = {
   addComment,
   changeCash,
   getUserById,
   getTop3StocksByUserId,
+  addOrderById,
 };

@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../apis';
 
-export const useVoteData = (postId) => {
+export const useVoteData = (ideaId) => {
   const { data: voteData } = useQuery(
-    ['voteByPostId', postId],
-    api.vote.getByPostId(postId)
+    ['voteByIdeaId', ideaId],
+    api.vote.getByIdeaId(ideaId)
   );
   return {
     voteData,

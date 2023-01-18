@@ -1,4 +1,5 @@
 const Order = require('../../models/Order');
+const User = require('../../models/User');
 
 const getOrdersByUserAndStock = async (userId, stockId) => {
   const orders = await Order.find({ userId, stockId });
@@ -11,7 +12,7 @@ const getCalculatedOrdersByUser = async (userId) => {
   const orders = await Promise.all(
     user.orderIds.map((id) => Order.findById(id))
   );
-  const res = orders.reduce((acc, order) => {
+  return orders.reduce((acc, order) => {
     const orderStockId = order.stockId;
     const currentStockAcc = acc[orderStockId];
     if (currentStockAcc) {
@@ -43,13 +44,12 @@ const getCalculatedOrdersByUser = async (userId) => {
       }
     }
     return {
-      [order._id]: {
-        ...order,
+      ...acc,
+      [orderStockId]: {
+        ...order._doc,
       },
     };
   }, {});
-
-  return res;
 };
 
 module.exports = {

@@ -95,14 +95,19 @@ function Ideas({ ideas }) {
       <div className='table-wrapper'>
         <table>
           <thead>
-            <th>Idea Title</th>
-            <th>Stocks</th>
-            <th>Comments</th>
-            <th>Votes</th>
+            <tr>
+              <th>Idea Title</th>
+              <th>Stocks</th>
+              <th>Comments</th>
+              <th>Votes</th>
+            </tr>
           </thead>
           <tbody>
             {ideas?.map((idea) => (
-              <tr onClick={() => router.push(`/ideas/${idea._id}`)}>
+              <tr
+                key={idea._id}
+                onClick={() => router.push(`/ideas/${idea._id}`)}
+              >
                 <td>
                   <div className='title wrapper'>
                     <div className='image-container'>
@@ -181,7 +186,6 @@ export async function getServerSideProps() {
     ideas.map((idea) => api.user.getById(idea.userId)())
   );
 
-  console.log('users : ', users);
   const itemIncludedIdeas = ideas.map((idea, index) => ({
     ...idea,
     stocks: resStockList[index] || [],

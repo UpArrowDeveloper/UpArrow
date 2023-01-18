@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../../models/Order');
-const { changeCash } = require('../../services/user');
+const { changeCash, addOrderById } = require('../../services/user');
 const { getOrdersByUserAndStock } = require('../../services/order');
 
 router.get('/:userId/user', async (req, res) => {
@@ -28,12 +28,11 @@ router.post('/', async (req, res) => {
         0
       ) +
       quantity * (type === 'buy' ? 1 : -1);
-    console.log('totalQuantity : ', totalQuantity);
     if (totalQuantity < 0) {
       throw new Error('exceed quantity');
     }
   } catch (error) {
-    console.log('error : ', error);
+    console.error('error : ', error);
     return res.status(400).json({ message: 'exceed quantity', error });
   }
   try {
@@ -41,7 +40,16 @@ router.post('/', async (req, res) => {
   } catch (error) {
     return res.status(400).json({ message: 'exceed cash' });
   }
-  await Order.create({ userId, stockId, quantity, price, type });
+
+  const orderId = await Order.create({
+    userId,
+    stockId,
+    quantity,
+    price,
+    type,
+  });
+  await addOrderById(userId, orderId._id);
+
   return res.status(200).json({ message: 'created' });
 });
 

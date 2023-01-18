@@ -35,7 +35,7 @@ const RankBlock = styled.div`
 const Rank = ({ rank }) => {
   return (
     <RankBlock className={rank > 3 ? 'secondary' : ''}>
-      <Flag className='flag' />
+      <Flag className='flag' width={36} height={43} />
       <div className='rank'>{rank}</div>
     </RankBlock>
   );

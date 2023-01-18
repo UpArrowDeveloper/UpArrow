@@ -72,7 +72,6 @@ const parseHtml = async () => {
         [ticker]: Number(price),
       };
     }, {});
-    console.log('priceObject : ', priceObject);
     await changePrice(priceObject);
   } catch (error) {
     console.error(error);
@@ -80,7 +79,6 @@ const parseHtml = async () => {
 };
 
 setInterval(() => {
-  console.log('updated');
   try {
     parseHtml();
   } catch (error) {

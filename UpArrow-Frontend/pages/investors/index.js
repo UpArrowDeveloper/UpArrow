@@ -98,8 +98,7 @@ const orderOptions = [
   'Newest',
 ];
 
-function Investors({ investors }) {
-  const router = useRouter();
+function Investors({ investors, top3Stocks }) {
   const [orderOption, setOrderOption] = useState();
   return (
     <IdeasBlock>
@@ -119,16 +118,18 @@ function Investors({ investors }) {
       <div className='table-wrapper'>
         <table>
           <thead>
-            <th style={{ paddingLeft: '1rem' }}>Ranks</th>
-            <th style={{ paddingLeft: '0.8rem' }}>Investors</th>
-            <th>Top3 Stocks</th>
-            <th>Ideas</th>
-            <th>Total Profits</th>
-            <th>Total Assets</th>
+            <tr>
+              <th style={{ paddingLeft: '1rem' }}>Ranks</th>
+              <th style={{ paddingLeft: '0.8rem' }}>Investors</th>
+              <th>Top3 Stocks</th>
+              <th>Ideas</th>
+              <th>Total Profits</th>
+              <th>Total Assets</th>
+            </tr>
           </thead>
           <tbody>
             {investors?.map((investor, index) => (
-              <tr>
+              <tr key={investor._id}>
                 <td className='comments wrapper index'>{index + 1}</td>
                 <td>
                   <div className='title wrapper investors'>
@@ -149,8 +150,8 @@ function Investors({ investors }) {
                 </td>
                 <td>
                   <div className='wrapper'>
-                    {/* <TagGroup
-                      tags={investor.top3Stocks.map(({ name, profit }) => ({
+                    <TagGroup
+                      tags={top3Stocks[index]?.map(({ name, profit }) => ({
                         name: `${name} ${profit.toLocaleString('en-US')}%`,
                         type:
                           profit > 0
@@ -159,7 +160,7 @@ function Investors({ investors }) {
                             ? 'outline'
                             : 'minus',
                       }))}
-                    /> */}
+                    />
                   </div>
                 </td>
                 <td>
@@ -199,10 +200,14 @@ export default function IdeasPage(props) {
 
 export async function getServerSideProps() {
   const users = await api.user.get();
+  const top3Stocks = await Promise.all(
+    users.map((user) => api.user.getTop3StocksById(user._id))
+  );
 
   return {
     props: {
       investors: users,
+      top3Stocks,
     },
   };
 }

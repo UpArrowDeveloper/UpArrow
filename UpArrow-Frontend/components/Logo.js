@@ -13,26 +13,11 @@ const LogoBlock = styled.img`
   :hover {
     border: 0.1rem solid gray;
   }
+  object-fit: contain;
 `;
 
-const Logo = ({ stockJSON }) => {
-  const { user, error, isLoading } = useUser();
-  const router = useRouter();
-
-  const checkAuthentication = () => {
-    if (user) {
-      router.push(`/stock/${stockJSON.ticker}`);
-    } else {
-      router.push('/api/auth/login');
-    }
-  };
-
-  return (
-    <LogoBlock
-      src={stockJSON.profile_image_url}
-      onClick={() => checkAuthentication()}
-    />
-  );
+const Logo = ({ logoUrl }) => {
+  return <LogoBlock src={logoUrl} />;
 };
 
 export default Logo;

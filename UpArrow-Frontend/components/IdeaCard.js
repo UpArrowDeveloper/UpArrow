@@ -63,8 +63,8 @@ const IdeaCard = ({
 }) => {
   const router = useRouter();
   const { data } = useQuery(
-    ['stock', ideaStockIds],
-    api.stock.getId(ideaStockIds)
+    ['ideaStockIds', ideaStockIds],
+    api.stock.getByIds(ideaStockIds)
   );
   const { agreeCount, disagreeCount } = useVoteData(ideaId);
 

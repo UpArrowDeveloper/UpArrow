@@ -4,7 +4,6 @@ export const getInvestorProfileInfo = async (id) => {
   const investor = await axios.get(
     `${process.env.NEXT_PUBLIC_SERVER_URL}/user/${id}`
   );
-  console.log('investor : ', investor.data);
   const purchaseIds = investor.data.purchases;
   const purchases = (
     await Promise.all(

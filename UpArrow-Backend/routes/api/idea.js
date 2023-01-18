@@ -25,7 +25,7 @@ router.get('/:id', async (req, res) => {
 
     return res.status(200).json(post);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(400).send({});
   }
 });
@@ -53,10 +53,10 @@ router.post('/', validUser, async (req, res) => {
       comments: [],
       likes: [],
     });
-    newPost.save().catch((err) => console.log(err));
+    newPost.save().catch((err) => console.error(err));
     return res.status(200).json({ success: true, data: newPost });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(400).send({});
   }
 });
@@ -78,7 +78,7 @@ router.put('/:id', async (req, res) => {
       return res.status(200).send(updatedPostValue);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ error: error });
   }
 });
@@ -91,7 +91,7 @@ router.get('/:userId/userId', async (req, res) => {
 
     return res.status(200).json(posts);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(400).send({});
   }
 });

@@ -132,7 +132,6 @@ function Buy({ stockJSON, isSale }) {
         await axios(`http://localhost:4000/api/v1/purchase/${user._id}/user`)
       ).data;
 
-      console.log('userPurchases : ', userPurchases);
       const userStock = userPurchases.find(
         (purchase) => purchase.stockId === stock?._id
       );
@@ -168,10 +167,9 @@ function Buy({ stockJSON, isSale }) {
       localStorage.setItem('investorStrId', user._id);
       setTimeout(() => {
         router.push('/investor');
-        console.log('push to investor');
       }, 5000);
     } catch (error) {
-      console.log('redirect error : ', error);
+      console.error('redirect error : ', error);
       setErrorMsg(JSON.stringify(error.message));
       return;
     }

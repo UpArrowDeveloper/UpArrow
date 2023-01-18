@@ -89,7 +89,6 @@ const Banner = () => {
 
   useEffect(() => {
     timerRef.current = setInterval(() => {
-      console.log('timer run');
       getConfig();
     }, 10000);
     return () => clearInterval(timerRef.current);

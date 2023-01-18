@@ -6,7 +6,7 @@ const connectDB = async () => {
     useUnifiedTopology: true,
     useNewUrlParser: true,
   });
-  console.log('mongodb has successfully connected');
+  console.info('mongodb has successfully connected');
 };
 
 module.exports = connectDB;

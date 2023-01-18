@@ -1,8 +1,4 @@
 import React from 'react';
-import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
-import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
-import { useRouter } from 'next/router';
-import { useUser } from '@auth0/nextjs-auth0';
 import styled from '@emotion/styled';
 import color from '../styles/color';
 import {
@@ -95,7 +91,6 @@ const InvestorCardWrapper = styled.div`
 `;
 
 const InvestorCard = ({
-  investorId,
   investorAvatar,
   investorName,
   totalInvestment,
@@ -104,17 +99,6 @@ const InvestorCard = ({
   profitPercentageList,
   rank,
 }) => {
-  const router = useRouter();
-  const { user, error, isLoading } = useUser();
-
-  const seeInvestor = () => {
-    if (user) {
-      router.push(`/investor/${investorId}`);
-    } else {
-      router.push('/api/auth/login');
-    }
-  };
-
   return (
     <InvestorCardWrapper
       onClick={() => seeInvestor()}
@@ -140,9 +124,9 @@ const InvestorCard = ({
         {profitPercentageList
           .sort((a, b) => b.percent - a.percent)
           .slice(0, 3)
-          .map(({ stockName, ticker, percent }) => {
+          .map(({ stockName, ticker, percent }, index) => {
             return (
-              <div className='stock' key={ticker}>
+              <div className='stock' key={index}>
                 {stockName} {percent}%
               </div>
             );

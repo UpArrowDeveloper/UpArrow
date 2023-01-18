@@ -14,8 +14,6 @@ const IdeaVoteBlock = styled.div`
     ${Body12Medium};
     color: ${color.B53};
     .indicator-icon {
-      width: 1.6rem;
-      height: 1.6rem;
       fill: ${color.B53};
     }
   }
@@ -58,11 +56,11 @@ const IdeaVote = ({ agreeCount, disagreeCount }) => {
     >
       <div className='indicator-wrapper'>
         <div className='indicator'>
-          <ThumbUpIcon className='indicator-icon' />
+          <ThumbUpIcon className='indicator-icon' width={16} height={16} />
           Agree
         </div>
         <div className='indicator'>
-          <ThumbDownIcon className='indicator-icon' />
+          <ThumbDownIcon className='indicator-icon' width={16} height={16} />
           Disagree
         </div>
       </div>

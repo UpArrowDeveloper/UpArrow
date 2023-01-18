@@ -24,7 +24,7 @@ export const uploadFileToS3Service = async (fileData) => {
 
     return data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 };
@@ -46,7 +46,7 @@ export const uploadFileToS3 = async (req, res) => {
         util.success(statusCode.CREATED, message.CREATE_FILE_SUCCESS, data)
       );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res
       .status(statusCode.INTERNAL_SERVER_ERROR)
       .send(

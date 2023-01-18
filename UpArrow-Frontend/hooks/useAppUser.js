@@ -14,10 +14,9 @@ export const useAppUser = () => {
       const email = user.email;
       try {
         const user = await api.user.getByEmail(email)();
-        console.log('userResponse : ', user);
         setAppUser(user);
       } catch (error) {
-        console.log('no user');
+        console.error('no user');
         router.push('/signup');
       }
     }

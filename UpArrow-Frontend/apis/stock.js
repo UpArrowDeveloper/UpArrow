@@ -5,7 +5,7 @@ const stock = {
   get: () => axios.get(`${env.serverUrl}/stock`).then((res) => res.data),
   getId: (id) => () =>
     axios.get(`${env.serverUrl}/stock/${id}`).then((res) => res.data),
-  getIds: (ids) => () =>
+  getByIds: (ids) => () =>
     axios.get(`${env.serverUrl}/stock/${ids}/ids`).then((res) => res.data),
   put: (data) => () =>
     axios.put(`${env.serverUrl}/stock`, { data }).then((res) => res.data),

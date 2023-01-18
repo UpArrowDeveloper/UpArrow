@@ -13,7 +13,7 @@ router.post('/register/stock', async (req, res) => {
   const existingStockTicker = await Stock.findOne({ ticker: req.body.ticker });
   if (!existingStockName && !existingStockTicker) {
     const newStock = new Stock(req.body);
-    newStock.save().catch((err) => console.log(err));
+    newStock.save().catch((error) => console.error(error));
     return res.status(200).send(newStock);
   } else {
     return res.status(400).send({});
@@ -48,7 +48,7 @@ router.put('/update/stock/:stockObjectId', async (req, res) => {
       return res.status(200).send(updatedValue);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(400).send({});
   }
 });
@@ -101,7 +101,7 @@ router.delete('/delete/stock/:stockId', async (req, res) => {
       return res.status(200).send(deletedStock);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(400).send({});
   }
 });
@@ -117,11 +117,11 @@ router.post('/register/analysis', async (req, res) => {
       return res.status(400).send({});
     } else {
       const newAnalysis = new Analysis(req.body);
-      newAnalysis.save().catch((err) => console.log(err));
+      newAnalysis.save().catch((err) => console.error(error));
       return res.status(200).send(newAnalysis);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(400).send({});
   }
 });
@@ -178,7 +178,7 @@ router.delete('/delete/analysis/:ticker', async (req, res) => {
 
 router.post('/create/averages', async (req, res) => {
   const newAverage = new Average(req.body);
-  newAverage.save().catch((err) => console.log(err));
+  newAverage.save().catch((err) => console.error(err));
   return res.status(200).send(newAverage);
 });
 
@@ -189,8 +189,7 @@ router.put('/update/average/:averageObjectId', async (req, res) => {
     const averageDocument = await Average.findById(averageObjectId);
 
     if (!averageDocument) {
-      console.log('no such document ');
-      return res.status(404).send({});
+      return res.status(404).send({ message: 'no average document' });
     } else {
       const query = { _id: averageObjectId };
       const updatedValue = {
@@ -200,7 +199,7 @@ router.put('/update/average/:averageObjectId', async (req, res) => {
       return res.status(200).send(updatedValue);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(400).send({});
   }
 });

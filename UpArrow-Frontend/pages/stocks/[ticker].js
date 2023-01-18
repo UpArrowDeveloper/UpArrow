@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useUser } from '@auth0/nextjs-auth0';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import StockCover from '../../components/StockCover';
@@ -60,16 +59,13 @@ export default function Stock({ stock, analysis }) {
 
   const { data: ideaList } = useQuery(
     ['ideaList', stock?.ideaIds],
-    (stock?.ideaIds?.length > 0 &&
-      api.idea.getByIds(stock.ideaIds.join(','))) ||
-      []
+    stock?.ideaIds?.length > 0 && api.idea.getByIds(stock.ideaIds.join(','))
   );
 
   const { data: analysisIdeaList } = useQuery(
     ['analysisIdeaList', stock?.ideaIds],
-    (analysis?.ideaIds?.length > 0 &&
-      api.idea.getByIds(analysis.ideaIds.join(','))) ||
-      []
+    analysis?.ideaIds?.length > 0 &&
+      api.idea.getByIds(analysis.ideaIds.join(','))
   );
 
   const { data: comments, refetch: refetchComments } = useQuery(
@@ -140,7 +136,7 @@ export default function Stock({ stock, analysis }) {
         <InvestSimulatorIdeas
           stock={stock}
           user={user}
-          ideaList={ideaList}
+          ideaList={ideaList || []}
           onBuyClick={onBuyClick}
           onSellClick={onSellClick}
           currentStockValuation={currentStockValuationData.price}

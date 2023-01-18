@@ -9,6 +9,7 @@ import { css } from '@emotion/react';
 import OrderChip from '../../components/OrderChip';
 import api from '../../apis';
 import { getNumberUnit } from '../../utils/number';
+import { useRouter } from 'next/router';
 
 export const commonListCss = css`
   padding-top: 3.2rem;
@@ -129,7 +130,7 @@ const orderOptions = ['Popular', 'Trending', 'Market Cap'];
 
 function Home({ stocks }) {
   const [orderOption, setOrderOption] = useState();
-  console.log('stocks : ', stocks);
+  const router = useRouter();
   return (
     <StockBlock>
       <header>
@@ -148,17 +149,22 @@ function Home({ stocks }) {
       <div className='table-wrapper'>
         <table>
           <thead>
-            <th>Name/Ticker</th>
-            <th>Price</th>
-            <th>Market Cap</th>
-            <th>Buyer</th>
-            <th>Seller</th>
-            <th>Ideas</th>
-            <th>Comments</th>
+            <tr>
+              <th>Name/Ticker</th>
+              <th>Price</th>
+              <th>Market Cap</th>
+              <th>Buyer</th>
+              <th>Seller</th>
+              <th>Ideas</th>
+              <th>Comments</th>
+            </tr>
           </thead>
           <tbody>
             {stocks?.map((stock) => (
-              <tr>
+              <tr
+                key={stock._id}
+                onClick={() => router.push(`/stocks/${stock.ticker}`)}
+              >
                 <td>
                   <div className='name-ticker'>
                     <div className='image-container'>

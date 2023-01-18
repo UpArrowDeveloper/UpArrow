@@ -43,10 +43,10 @@ router.get('/', async (req, res) => {
 router.get('/:id/top3stocks', async (req, res) => {
   const id = req.params.id;
   try {
-    const res = await getTop3StocksByUserId(id);
-    // 구매 주식별 수익 내림차순 정렬 -> 앞 3개 return
-    return res.status(200).json(res);
+    const result = await getTop3StocksByUserId(id);
+    return res.status(200).json(result);
   } catch (err) {
+    console.error('error : ', err);
     return res.status(500).json({ error: err });
   }
 });
@@ -66,7 +66,7 @@ router.post('/', async (req, res) => {
       ideaIds: [],
       availableCash: 100000,
     });
-    newUser.save().catch((err) => console.log(err));
+    newUser.save().catch((err) => console.error(err));
     return res.status(200).send(newUser);
   }
 });
@@ -89,12 +89,9 @@ router.get('/:id/rank', async (req, res) => {
     const _id = req.params.id;
     const user = await User.find();
     const sortedUser = user.sort((a, b) => b.totalAssets - a.totalAssets);
-    console.log('id: ', _id);
     const rank = sortedUser.findIndex((user) => {
-      console.log('user.id : ', user._id);
       return user._id.toString() === _id;
     });
-    console.log('rank : ', rank);
 
     return res.status(200).json({ userId: _id, rank: rank + 1 });
   } catch (error) {
@@ -136,24 +133,25 @@ router.get('/:userId/profit-percentage', async (req, res) => {
   try {
     const userId = req.params.userId;
     const userObjectId = ObjectId(userId);
-    const userDocument = await User.findById(userObjectId);
+    const user = await User.findById(userObjectId);
+    console.log('userDocument : ', user);
 
-    const purchaseList = await Promise.all(
-      userDocument.purchases.map((purchaseId) => {
-        return Order.findById(purchaseId);
+    const orderList = await Promise.all(
+      user.orderIds.map((orderId) => {
+        return Order.findById(orderId);
       })
     );
-    const purchase2List = await Promise.all(
-      purchaseList.map((purchase) => Stock.findById(purchase.stockId))
+    const stockList = await Promise.all(
+      orderList.map((order) => Stock.findById(order.stockId))
     );
-    const finalPurchaseList = purchaseList.map((purchase, index) => {
+    const finalPurchaseList = orderList.map((purchase, index) => {
       return {
         _id: purchase._id,
         userId: purchase.userId,
         stockId: purchase.stockId,
         quantity: purchase.quantity,
         averagePrice: purchase.averagePrice,
-        stock: purchase2List[index],
+        stock: stockList[index],
       };
     });
 
@@ -174,7 +172,7 @@ router.get('/:userId/profit-percentage', async (req, res) => {
 
     return res.status(200).send(profitPercentageList);
   } catch (error) {
-    console.log('error: ', error);
+    console.error('error: ', error);
     return res.status(400).send({ error: JSON.stringify(error) });
   }
 });

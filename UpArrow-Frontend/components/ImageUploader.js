@@ -17,7 +17,6 @@ const ImageUploaderBlock = styled.div`
 `;
 
 const ImageUploader = ({ id, file, setFile }) => {
-  console.log('file : ', file);
   return (
     <ImageUploaderBlock>
       <label for={id}>

@@ -4,6 +4,10 @@ import { env } from '../config';
 const url = `${env.serverUrl}/user`;
 const user = {
   get: () => axios.get(url).then((res) => res.data),
+  getTop3StocksById: (id) =>
+    axios.get(`${url}/${id}/top3stocks`).then((res) => res.data),
+  getProfitPercentageById: (id, params) =>
+    axios.get(`${url}/${id}/profit-percentage`, params).then((res) => res.data),
   getById: (id) => () => axios.get(`${url}/${id}`).then((res) => res.data),
   getByEmail: (email) => () =>
     axios.get(`${url}/${email}/email`).then((res) => res.data),

@@ -29,4 +29,4 @@ connectDB();
 
 app.use('/api/v1', routes);
 
-app.listen(port, () => console.log(`API Server Listening on port ${port}`));
+app.listen(port, () => console.info(`API Server Listening on port ${port}`));

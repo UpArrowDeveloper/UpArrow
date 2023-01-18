@@ -80,7 +80,6 @@ const SearchInput = ({
               className='item'
               key={stock._id}
               onClick={() => {
-                console.log('stock : ', stock);
                 onSelect(stock);
               }}
             >
