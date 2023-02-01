@@ -56,22 +56,16 @@ export default function Signup({ data }) {
     const websiteUrl = e.target.websiteUrl.value;
     const cash = e.target.cash.value;
     const isAdmin = false;
-    const totalInvestment = 0;
-    const totalProfits = 0;
-    const totalAssests = 0;
+
     const userJSON = {
-      name: name,
+      name,
       profileImageUrl: profileImageUrl || user.picture,
       username: !username || username === '' ? user.nickname : username,
-      email: email,
-      investmentPhilosophy: investmentPhilosophy,
-      websiteUrl: websiteUrl,
+      email,
+      investmentPhilosophy,
+      websiteUrl,
       isAdmin,
-      totalInvestment: totalInvestment,
-      totalProfits: totalProfits,
-      totalAssets: totalAssests,
-
-      cash: cash,
+      cash,
     };
 
     const userDocument = await api.user.post(userJSON);
