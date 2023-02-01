@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../../models/Order');
 const { changeCash, addOrderById } = require('../../services/user');
-const { getOrdersByUserAndStock } = require('../../services/order');
+const {
+  getOrdersByUserAndStock,
+  getOrderByIds,
+} = require('../../services/order');
 
 router.get('/:userId/user', async (req, res) => {
   const userId = req.params.userId;
@@ -14,6 +17,17 @@ router.get('/:id', async (req, res) => {
   const id = req.params.id;
   const order = await Order.findOne({ _id: id });
   return res.status(200).send(order);
+});
+
+router.get('/:ids/ids', async (req, res) => {
+  try {
+    const ids = req.params.ids;
+    const orders = await getOrderByIds(ids.split(',') || []);
+
+    return res.status(200).json(orders);
+  } catch (error) {
+    return res.status(500).json({ message: 'ids error' });
+  }
 });
 
 router.post('/', async (req, res) => {

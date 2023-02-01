@@ -1,6 +1,10 @@
 const Order = require('../../models/Order');
 const User = require('../../models/User');
 
+const getOrderByIds = async (orderIds) => {
+  return Promise.all(orderIds.map((id) => Order.findById(id)));
+};
+
 const getOrdersByUserAndStock = async (userId, stockId) => {
   const orders = await Order.find({ userId, stockId });
   return orders;
@@ -53,6 +57,7 @@ const getCalculatedOrdersByUser = async (userId) => {
 };
 
 module.exports = {
+  getOrderByIds,
   getOrdersByUserAndStock,
   getCalculatedOrdersByUser,
 };
