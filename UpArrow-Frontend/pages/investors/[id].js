@@ -1,10 +1,13 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import PostCard from '../../components/PostCard';
+import IdeaCard from '../../components/IdeaCard';
 
 import axios from 'axios';
 import { numberComma } from '../../utils/number';
-import { getInvestorProfileInfo } from '../../utils/investor';
+import {
+  getInvestorInvestInfo,
+  getInvestorProfileInfo,
+} from '../../utils/investor';
 import InvestorProfile from '../../components/common/InvestorProfile';
 import {
   Body14Medium,
@@ -13,6 +16,7 @@ import {
   HeadH6Bold,
 } from '../../styles/typography';
 import color from '../../styles/color';
+import api from '../../apis';
 
 const InvestorBlock = styled.div`
   display: flex;
@@ -104,6 +108,7 @@ const InvestorDataBlock = styled.div`
 
 export default function Investor({ investor, stocksWithPrices, rank }) {
   const {
+    cash,
     comments,
     description,
     email,
@@ -113,7 +118,7 @@ export default function Investor({ investor, stocksWithPrices, rank }) {
     likes,
     name,
     password,
-    posts,
+    ideas,
     profile_image_url,
     // purchases,
     stockPreference,
@@ -124,6 +129,7 @@ export default function Investor({ investor, stocksWithPrices, rank }) {
     websiteUrl,
     _id,
   } = investor;
+  const availableCash = cash;
 
   return (
     <InvestorBlock>
@@ -138,7 +144,7 @@ export default function Investor({ investor, stocksWithPrices, rank }) {
         availableCash={availableCash}
         totalInvestment={totalInvestment}
         totalProfits={totalProfits}
-        totalAssets={totalAssets}
+        totalAssets={totalInvestment + availableCash}
         rank={rank}
       />
       <InvestorDataBlock>
@@ -147,7 +153,7 @@ export default function Investor({ investor, stocksWithPrices, rank }) {
           <div className='stocks'>
             {stocksWithPrices.map((company) => (
               <div className='stock'>
-                <img className='stock-logo' src={company.profile_image_url} />
+                <img className='stock-logo' src={company.logoUrl} />
                 <div className='stock-info'>
                   <div className='stock-name'>{company.name}</div>
                   <div className='stock-quantity'>
@@ -165,15 +171,15 @@ export default function Investor({ investor, stocksWithPrices, rank }) {
         <div className='ideas-wrapper'>
           <div>
             <div className='investor-title'>{username}'s Ideas</div>
-            {posts.map((post) => (
-              <PostCard
+            {ideas.map((ideas) => (
+              <IdeaCard
                 theme={'none'}
-                postId={post._id}
-                postImage={post.image_url}
-                postTitle={post.title}
-                postAuthor={post.userName}
+                postId={ideas._id}
+                postImage={ideas.image_url}
+                postTitle={ideas.title}
+                postAuthor={ideas.userName}
                 postDate={new Date()}
-                stockId={post.stockId}
+                stockId={ideas.stockId}
               />
             ))}
           </div>
@@ -186,18 +192,14 @@ export default function Investor({ investor, stocksWithPrices, rank }) {
 
 export async function getServerSideProps(context) {
   const { id } = context.params;
-  const { investor, prices, stockPurchaseInfos, userPosts, userRank } =
+  const { investor, prices, stockPurchaseInfos, userIdeas, userRank } =
     await getInvestorProfileInfo(id);
 
+  const { totalInvestment, totalProfits } = await getInvestorInvestInfo(id);
   const stockIds = Object.keys(stockPurchaseInfos);
 
-  const stocks = (
-    await Promise.all(
-      stockIds.map((id) =>
-        axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/stock/${id}`)
-      )
-    )
-  ).map((v) => v.data);
+  const stocks =
+    stockIds.length > 0 ? await api.stock.getByIds(stockIds.join(','))() : [];
 
   const stocksWithPrices = stocks.map((stock) => {
     return {
@@ -210,8 +212,10 @@ export async function getServerSideProps(context) {
   return {
     props: {
       investor: {
-        ...investor.data,
-        posts: userPosts,
+        ...investor,
+        ideas: userIdeas,
+        totalInvestment,
+        totalProfits,
       },
       stocksWithPrices,
       rank: userRank,

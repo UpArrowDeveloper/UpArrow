@@ -14,7 +14,6 @@ import { Body14Regular, HeadH5Bold } from '../../styles/typography';
 import color from '../../styles/color';
 import { MainLayout } from '../../Layouts';
 TimeAgo.addDefaultLocale(en);
-const timeAgo = new TimeAgo('en-US');
 const IdeasBlock = styled.div`
   ${commonListCss};
   ${commonTableCss};
@@ -100,6 +99,8 @@ const orderOptions = [
 
 function Investors({ investors, top3Stocks }) {
   const [orderOption, setOrderOption] = useState();
+  const router = useRouter();
+
   return (
     <IdeasBlock>
       <header>
@@ -129,7 +130,10 @@ function Investors({ investors, top3Stocks }) {
           </thead>
           <tbody>
             {investors?.map((investor, index) => (
-              <tr key={investor._id}>
+              <tr
+                key={investor._id}
+                onClick={() => router.push(`/investors/${investor._id}`)}
+              >
                 <td className='comments wrapper index'>{index + 1}</td>
                 <td>
                   <div className='title wrapper investors'>
