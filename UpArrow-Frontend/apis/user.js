@@ -9,6 +9,8 @@ const user = {
   getProfitPercentageById: (id, params) =>
     axios.get(`${url}/${id}/profit-percentage`, params).then((res) => res.data),
   getById: (id) => () => axios.get(`${url}/${id}`).then((res) => res.data),
+  getRankById: (id) => () =>
+    axios.get(`${url}/${id}/rank`).then((res) => res.data),
   getByEmail: (email) => () =>
     axios.get(`${url}/${email}/email`).then((res) => res.data),
   post: (payload) => axios.post(url, payload).then((res) => res.data),
