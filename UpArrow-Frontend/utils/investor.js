@@ -1,57 +1,99 @@
-import axios from 'axios';
+import api from '../apis';
 
 export const getInvestorProfileInfo = async (id) => {
-  const investor = await axios.get(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/user/${id}`
-  );
-  const purchaseIds = investor.data.purchases;
-  const purchases = (
-    await Promise.all(
-      purchaseIds?.map((id) =>
-        axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/purchase/${id}`)
-      ) || []
-    )
-  ).map((v) => v.data);
+  const investor = await api.user.getById(id)();
+  const orderIds = investor.orderIds;
+  const orders =
+    orderIds.length > 0 ? await api.order.getByIds(orderIds.join(','))() : [];
 
-  const prices = (
-    await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/config`)
-  ).data.prices;
+  const prices = (await api.config.get()).prices;
 
-  const stockPurchaseInfos = purchases.reduce((acc, purchase) => {
-    if (acc[purchase.stockId]) {
+  const stockPurchaseInfos = orders.reduce((acc, order) => {
+    if (acc[order.stockId]) {
       return {
         ...acc,
-        [acc[purchase.stockId]]: {
-          ...acc[purchase.stockId],
-          id: purchase.stockId,
-          quantity: acc[purchase.stockId].quantity + purchase.quantity,
-          averagePrice:
-            acc[purchase.stockId].averagePrice + purchase.averagePrice,
+        [order.stockId]: {
+          ...acc[order.stockId],
+          id: order.stockId,
+          quantity: acc[order.stockId].quantity + order.quantity,
+          price: acc[order.stockId].price + order.price,
         },
       };
     }
     return {
       ...acc,
-      [purchase.stockId]: {
-        id: purchase.stockId,
-        quantity: purchase.quantity,
+      [order.stockId]: {
+        id: order.stockId,
+        quantity: order.quantity,
+        price: order.price,
       },
     };
   }, {});
 
-  const userPosts = (
-    await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/idea/${id}/userId`)
-  ).data;
-
-  const userRank = (
-    await axios.get(`${process.env.NEXT_PUBLIC_SERVER_URL}/user/${id}/rank`)
-  ).data.rank;
+  const userIdeas = await api.idea.getByUserId(id)();
+  const userRank = await api.user.getRankById(id)();
 
   return {
     investor,
     prices,
     stockPurchaseInfos,
-    userPosts,
-    userRank,
+    userIdeas,
+    userRank: userRank.rank,
+  };
+};
+
+export const getInvestorInvestInfo = async (id) => {
+  const investor = await api.user.getById(id)();
+  const orderIds = investor.orderIds;
+  const orders =
+    orderIds.length > 0 ? await api.order.getByIds(orderIds.join(','))() : [];
+
+  const prices = (await api.config.get()).prices;
+
+  const stockPurchaseInfos = orders.reduce((acc, order) => {
+    const isBuy = order.type === 'buy';
+    if (acc[order.stockId]) {
+      return {
+        ...acc,
+        [order.stockId]: {
+          ...acc[order.stockId],
+          id: order.stockId,
+          quantity: isBuy
+            ? acc[order.stockId].quantity + order.quantity
+            : acc[order.stockId].quantity + order.quantity,
+          price: isBuy
+            ? (acc[order.stockId].price * acc[order.stockId].quantity +
+                order.price * order.quantity) /
+              (order.quantity + acc[order.stockId].quantity)
+            : (acc[order.stockId].price * acc[order.stockId].quantity -
+                order.price * order.quantity) /
+              (order.quantity + acc[order.stockId].quantity),
+        },
+      };
+    }
+    return {
+      ...acc,
+      [order.stockId]: {
+        id: order.stockId,
+        quantity: order.quantity,
+        price: isBuy ? 1 : -1 * order.price,
+      },
+    };
+  }, {});
+
+  const totalInvestment = Object.entries(stockPurchaseInfos).reduce(
+    (acc, [key, value]) => acc + value.price * value.quantity,
+    0
+  );
+
+  const totalProfits = Object.entries(stockPurchaseInfos).reduce(
+    (acc, [key, value]) =>
+      acc + value.price * value.quantity - prices['TSLA'] * value.quantity,
+    0
+  );
+
+  return {
+    totalInvestment,
+    totalProfits,
   };
 };
