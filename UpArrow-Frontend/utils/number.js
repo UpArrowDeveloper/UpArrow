@@ -1,5 +1,5 @@
 export const numberComma = (num) => {
-  return num.toLocaleString();
+  return (num || 0).toLocaleString();
 };
 
 export const isNumber = (v) => {

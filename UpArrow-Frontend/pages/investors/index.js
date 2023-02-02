@@ -13,6 +13,7 @@ import { TagGroup } from '../../components/Tag';
 import { Body14Regular, HeadH5Bold } from '../../styles/typography';
 import color from '../../styles/color';
 import { MainLayout } from '../../Layouts';
+import { getInvestorInvestInfo } from '../../utils/investor';
 TimeAgo.addDefaultLocale(en);
 const IdeasBlock = styled.div`
   ${commonListCss};
@@ -169,7 +170,7 @@ function Investors({ investors, top3Stocks }) {
                 </td>
                 <td>
                   <div className='comments wrapper numbers'>
-                    {investor.ideaIds.length.toLocaleString('en-US')}
+                    {investor.ideas.length.toLocaleString('en-US')}
                   </div>
                 </td>
                 <td>
@@ -179,7 +180,10 @@ function Investors({ investors, top3Stocks }) {
                 </td>
                 <td>
                   <div className='comments wrapper numbers'>
-                    ${investor.totalAssets.toLocaleString('en-US')}
+                    $
+                    {(investor.totalInvestment + investor.cash).toLocaleString(
+                      'en-US'
+                    )}
                   </div>
                 </td>
               </tr>
@@ -208,9 +212,24 @@ export async function getServerSideProps() {
     users.map((user) => api.user.getTop3StocksById(user._id))
   );
 
+  const investDataIncludedUsers = await Promise.all(
+    users.map(async (user) => {
+      const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
+        user._id
+      );
+      const ideas = await api.user.getIdeasById(user._id)();
+      return {
+        ...user,
+        totalInvestment,
+        totalProfits,
+        ideas,
+      };
+    })
+  );
+
   return {
     props: {
-      investors: users,
+      investors: investDataIncludedUsers,
       top3Stocks,
     },
   };

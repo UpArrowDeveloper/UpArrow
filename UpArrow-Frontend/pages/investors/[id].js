@@ -8,7 +8,7 @@ import {
   getInvestorInvestInfo,
   getInvestorProfileInfo,
 } from '../../utils/investor';
-import InvestorProfile from '../../components/common/InvestorProfile';
+import InvestorProfileView from '../../components/common/InvestorProfile';
 import {
   Body14Medium,
   HeadH3Bold,
@@ -119,22 +119,20 @@ export default function Investor({ investor, stocksWithPrices, rank }) {
     name,
     password,
     ideas,
-    profile_image_url,
+    profileImageUrl,
     // purchases,
     stockPreference,
-    totalAssets,
     totalInvestment,
     totalProfits,
     username,
     websiteUrl,
-    _id,
   } = investor;
   const availableCash = cash;
 
   return (
     <InvestorBlock>
-      <InvestorProfile
-        profile_image_url={profile_image_url}
+      <InvestorProfileView
+        profile_image_url={profileImageUrl}
         username={username}
         investedCompanies={stocksWithPrices}
         followers={followers}
@@ -174,11 +172,11 @@ export default function Investor({ investor, stocksWithPrices, rank }) {
             {ideas.map((ideas) => (
               <IdeaCard
                 theme={'none'}
-                postId={ideas._id}
-                postImage={ideas.image_url}
-                postTitle={ideas.title}
-                postAuthor={ideas.userName}
-                postDate={new Date()}
+                ideaId={ideas._id}
+                ideaImage={ideas.image_url}
+                ideaTitle={ideas.title}
+                ideaAuthor={ideas.userName}
+                ideaDate={new Date()}
                 stockId={ideas.stockId}
               />
             ))}

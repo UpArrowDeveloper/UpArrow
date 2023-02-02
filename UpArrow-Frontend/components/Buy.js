@@ -192,7 +192,7 @@ function Buy({ stockJSON, isSale }) {
           <ModalWrapper isSale={isSale}>
             {!buy ? (
               <>
-                <img className='stockLogo' src={stock?.profile_image_url} />
+                <img className='stockLogo' src={stock?.logoUrl} />
                 <p>
                   Stock Name: <div className='boldText'>{stock?.name}</div>
                 </p>

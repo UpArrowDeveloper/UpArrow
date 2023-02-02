@@ -160,7 +160,7 @@ const Comment = ({ comment: comment }) => {
       );
       const data = await response.json();
       setUsername(data.username);
-      setInvestorProfilePicture(data.profile_image_url);
+      setInvestorProfilePicture(data.profileImageUrl);
     };
     getUser();
   }, []);

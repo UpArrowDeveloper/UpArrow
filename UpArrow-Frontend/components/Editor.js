@@ -165,7 +165,10 @@ const Editor = ({ editData }) => {
   }, []);
 
   const submit = async () => {
-    if (!file) return;
+    if (!file) {
+      alert('no thumbnail');
+      return;
+    }
     const formData = new FormData();
     formData.append('image', file.file);
     const { link } = (
@@ -213,7 +216,7 @@ const Editor = ({ editData }) => {
               <TagPill
                 key={stock._id}
                 label={stock.name}
-                stockImageUrl={stock.profile_image_url}
+                stockImageUrl={stock.logoUrl}
                 clean={() => {
                   setSelectedStocks((s) =>
                     s.filter((v) => v._id !== stock._id)

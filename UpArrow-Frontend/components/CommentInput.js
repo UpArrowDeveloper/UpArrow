@@ -43,7 +43,7 @@ const CommentInputBlock = styled.div`
 const CommentInput = (props) => {
   const { user } = useAppUser();
 
-  return <CommentInputView userUrl={user?.profile_image_url} {...props} />;
+  return <CommentInputView userUrl={user?.profileImageUrl} {...props} />;
 };
 
 const CommentInputView = ({

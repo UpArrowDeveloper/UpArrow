@@ -8,7 +8,10 @@ import api from '../../apis';
 import { env } from '../../config';
 import Youtube from '../../components/Youtube';
 import InvestorProfile from '../../components/common/InvestorProfile';
-import { getInvestorProfileInfo } from '../../utils/investor';
+import {
+  getInvestorInvestInfo,
+  getInvestorProfileInfo,
+} from '../../utils/investor';
 import { Body14Regular, HeadH1Bold, HeadH3Bold } from '../../styles/typography';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
@@ -162,13 +165,12 @@ export default function Ideas({
     followers,
     followings,
     profileImageUrl,
-    totalAssets,
     totalInvestment,
     totalProfits,
     username,
     websiteUrl,
+    cash,
   } = investor;
-  const availableCash = totalAssets - totalInvestment;
   const router = useRouter();
   const { id } = router.query;
   const { user } = useUser();
@@ -247,10 +249,10 @@ export default function Ideas({
           followings={followings}
           description={description}
           websiteUrl={websiteUrl}
-          availableCash={availableCash}
+          cash={cash}
           totalInvestment={totalInvestment}
           totalProfits={totalProfits}
-          totalAssets={totalAssets}
+          totalAssets={totalInvestment + cash}
           rank={rank}
         />
       </div>
@@ -263,7 +265,7 @@ export default function Ideas({
           {stocksWithPrices.map((stock) => (
             <TagPill
               key={stock._id}
-              stockImageUrl={stock.profile_image_url}
+              stockImageUrl={stock.logoUrl}
               label={stock.name}
             />
           ))}
@@ -348,10 +350,10 @@ export const getServerSideProps = async (context) => {
   const { id } = context.params;
   const idea = await api.idea.getById(id)();
 
-  const { investor, prices, stockPurchaseInfos, userPosts, userRank } =
+  const { investor, prices, stockPurchaseInfos, userIdeas, userRank } =
     await getInvestorProfileInfo(idea.userId);
 
-  const stocks = await api.stock.getIds(idea.stockIds.join(','))();
+  const stocks = await api.stock.getByIds(idea.stockIds.join(','))();
 
   const stocksWithPrices = stocks.map((stock) => {
     return {
@@ -361,15 +363,19 @@ export const getServerSideProps = async (context) => {
         stockPurchaseInfos[stock._id]?.quantity * prices[stock.ticker],
     };
   });
+  const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
+    idea.userId
+  );
 
+  console.log('investor : ', investor);
   return {
     props: {
       idea,
-      investor: { ...investor.data },
+      investor: { ...investor, totalInvestment, totalProfits },
       prices,
       stockPurchaseInfos,
       stocksWithPrices,
-      userPosts,
+      userPosts: userIdeas,
       userRank,
       rank: userRank,
     },

@@ -105,7 +105,7 @@ const InvestorProfileBlock = styled.div`
   }
 `;
 
-const InvestorProfile = ({
+const InvestorProfileView = ({
   profile_image_url,
   username,
   investedCompanies,
@@ -113,7 +113,7 @@ const InvestorProfile = ({
   followings,
   description,
   websiteUrl,
-  availableCash,
+  cash,
   totalInvestment,
   totalAssets,
   totalProfits,
@@ -143,7 +143,7 @@ const InvestorProfile = ({
       <div className='cash-block'>
         <div>
           <div className='label'>Available Cash</div>
-          <div className='cash'>${numberComma(availableCash)}</div>
+          <div className='cash'>${numberComma(cash)}</div>
         </div>
         <div>
           <div className='label'>Total Investment</div>
@@ -162,4 +162,4 @@ const InvestorProfile = ({
   );
 };
 
-export default InvestorProfile;
+export default InvestorProfileView;
