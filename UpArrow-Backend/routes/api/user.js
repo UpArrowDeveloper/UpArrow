@@ -11,6 +11,7 @@ var ObjectId = require('mongodb').ObjectId;
 const axios = require('axios');
 const Config = require('../../models/Config');
 const { getTop3StocksByUserId } = require('../../services/user');
+const { getIdeasByUserId } = require('../../services/idea');
 
 // POST http://localhost:4000/api/v1/investor/register/user
 // a user is registering for the first time on UpArrow
@@ -63,7 +64,6 @@ router.post('/', async (req, res) => {
       commentIds: [],
       followers: [],
       followings: [],
-      ideaIds: [],
       availableCash: 100000,
     });
     newUser.save().catch((err) => console.error(err));
@@ -134,7 +134,6 @@ router.get('/:userId/profit-percentage', async (req, res) => {
     const userId = req.params.userId;
     const userObjectId = ObjectId(userId);
     const user = await User.findById(userObjectId);
-    console.log('userDocument : ', user);
 
     const orderList = await Promise.all(
       user.orderIds.map((orderId) => {
@@ -144,22 +143,20 @@ router.get('/:userId/profit-percentage', async (req, res) => {
     const stockList = await Promise.all(
       orderList.map((order) => Stock.findById(order.stockId))
     );
-    const finalPurchaseList = orderList.map((purchase, index) => {
+    const finalPurchaseList = orderList.map((order, index) => {
       return {
-        _id: purchase._id,
-        userId: purchase.userId,
-        stockId: purchase.stockId,
-        quantity: purchase.quantity,
-        averagePrice: purchase.averagePrice,
+        _id: order._id,
+        userId: order.userId,
+        stockId: order.stockId,
+        quantity: order.quantity,
+        averagePrice: order.averagePrice,
         stock: stockList[index],
       };
     });
 
-    const currentPrices = (await Config.find())[0].prices;
-
     const profitPercentageList = finalPurchaseList.map((purchase) => {
       const quantity = purchase.quantity;
-      const currentAmount = currentPrices[purchase.stock.ticker] * quantity;
+      const currentAmount = purchase.stock.currentPrice * quantity;
       const boughtAmount = purchase.averagePrice * quantity;
       const profitAmount = boughtAmount - currentAmount;
       const profitPercentage = (profitAmount + currentAmount) / currentAmount;
@@ -193,6 +190,12 @@ router.get('/:email/search', async (req, res) => {
   } catch (error) {
     return res.status(400).send({});
   }
+});
+
+router.get('/:id/ideas', async (req, res) => {
+  const id = req.params.id;
+  const ideas = await getIdeasByUserId(id);
+  res.json(ideas);
 });
 
 // GET http://localhost:4000/api/v1/investor/fetch/userprofiles/

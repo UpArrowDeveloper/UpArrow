@@ -29,7 +29,6 @@ const changeCash = async ({ userId, cash }) => {
 
 const getTop3StocksByUserId = async (userId) => {
   const calculatedOrders = await getCalculatedOrdersByUser(userId);
-  const stockPrices = await getStockPrices();
   const tickerAttachedCalculatedOrders = await Promise.all(
     Object.entries(calculatedOrders).map(async ([_, value]) => {
       const stock = await getStockById(value.stockId);
@@ -37,6 +36,7 @@ const getTop3StocksByUserId = async (userId) => {
         ...value,
         ticker: stock.ticker,
         name: stock.name,
+        stock,
       };
     })
   );
@@ -44,9 +44,9 @@ const getTop3StocksByUserId = async (userId) => {
     return {
       ...order,
       profit:
-        ((order.price * order.quantity -
-          order.quantity * stockPrices[order.ticker]) /
-          (order.quantity * stockPrices[order.ticker])) *
+        ((order.quantity * order.stock.currentPrice -
+          order.price * order.quantity) /
+          (order.quantity * order.stock.currentPrice)) *
         100,
     };
   });

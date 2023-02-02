@@ -11,7 +11,6 @@ const UserSchema = new Schema(
     investmentPhilosophy: String,
     websiteUrl: String,
     isAdmin: Boolean,
-    ideaIds: Array,
     orderIds: Array,
     commentIds: Array,
     totalInvestment: Number,

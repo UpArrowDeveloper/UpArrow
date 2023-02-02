@@ -9,6 +9,10 @@ const stock = {
     axios.get(`${env.serverUrl}/stock/${ids}/ids`).then((res) => res.data),
   put: (data) => () =>
     axios.put(`${env.serverUrl}/stock`, { data }).then((res) => res.data),
+  savePriceById: (id, data) => () =>
+    axios
+      .put(`${env.serverUrl}/stock/${id}/price`, data)
+      .then((res) => res.data),
 };
 
 export default stock;

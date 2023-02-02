@@ -1,5 +1,5 @@
 const Comment = require('../../models/Comment');
-const postService = require('../post');
+const ideaService = require('../idea');
 const userService = require('../user');
 
 const addStockComment = async ({
@@ -38,7 +38,7 @@ const addPostComment = async ({
     likes,
   });
 
-  await postService.addComment(postId, newComment._id);
+  await ideaService.addComment(postId, newComment._id);
   await userService.addComment(userId, newComment._id);
 
   await newComment.save();

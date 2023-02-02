@@ -118,4 +118,15 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.put('/:id/price', async (req, res) => {
+  const { id } = req.params;
+  console.log('req.body : ', req.body);
+  const { currentPrice } = req.body;
+  console.log('id : ', id);
+  console.log('currentProce : ', currentPrice);
+
+  const result = await Stock.findOneAndUpdate({ _id: id }, { currentPrice });
+  return res.send('success');
+});
+
 module.exports = router;
