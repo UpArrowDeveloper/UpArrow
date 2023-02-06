@@ -80,11 +80,11 @@ const PostBlock = styled.div`
   display: flex;
   flex-direction: column;
 
-  .post-title {
+  .idea-title {
     ${HeadH1Bold}
     margin-bottom: 1.6rem;
   }
-  .post-info {
+  .idea-info {
     ${Body14Regular};
     color: ${color.B40};
     margin-bottom: 1.6rem;
@@ -176,16 +176,19 @@ export default function Ideas({
   const { user } = useUser();
   const { data, isLoading } = useQuery(
     ['user', user?.email],
-    api.user.getByEmail(user?.email)
+    api.user.getByEmail(user?.email),
+    {
+      enabled: !!user?.email,
+    }
   );
   const commentInputRef = useRef();
-  const { idea: post, refetch: refetchPost } = useIdea(id);
-  const commentIds = post?.commentIds || [];
+  const { idea, refetch: refetchIdea } = useIdea(id);
+  const commentIds = idea?.commentIds || [];
   const {
     data: voteData,
     isLoading: isVoteDataLoading,
     refetch,
-  } = useQuery(['voteByPostId', id], api.vote.getByIdeaId(id));
+  } = useQuery(['voteByIdeaId', id], api.vote.getByIdeaId(id));
   const [comment, setComment] = useState('');
   const { data: comments, isLoading: isCommentsLoading } = useQuery(
     ['comment', commentIds],
@@ -207,7 +210,7 @@ export default function Ideas({
       content: comment,
       likes: [],
     });
-    refetchPost();
+    refetchIdea();
   };
 
   const [scrollTop, setScrollTop] = useState(0);
@@ -242,7 +245,7 @@ export default function Ideas({
     <IdeasBlock>
       <div>
         <InvestorProfile
-          profile_image_url={profileImageUrl}
+          profileImageUrl={profileImageUrl}
           username={username}
           investedCompanies={stocksWithPrices}
           followers={followers}
@@ -257,8 +260,8 @@ export default function Ideas({
         />
       </div>
       <PostBlock>
-        <h1 className='post-title'>{serverIdea.title}</h1>
-        <div className='post-info'>
+        <h1 className='idea-title'>{serverIdea.title}</h1>
+        <div className='idea-info'>
           by {username} · {timeAgo.format(new Date(serverIdea.date))}
         </div>
         <div className='tag-pill-wrapper'>
@@ -367,7 +370,6 @@ export const getServerSideProps = async (context) => {
     idea.userId
   );
 
-  console.log('investor : ', investor);
   return {
     props: {
       idea,

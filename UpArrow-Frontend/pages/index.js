@@ -2,12 +2,12 @@ import Logo from '../components/Logo';
 import IdeaCard from '../components/IdeaCard';
 import InvestorCard from '../components/InvestorCard';
 import styled from '@emotion/styled';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import { MainLayout } from '../Layouts';
 import { HeadH2Bold } from '../styles/typography';
 import Banner from '../components/common/Banner';
 import api from '../apis';
+import { getInvestorInvestInfo } from '../utils/investor';
 
 const IndexWrapper = styled.div`
   margin-bottom: 5rem;
@@ -28,18 +28,19 @@ const IndexWrapper = styled.div`
     padding-bottom: 3.2rem;
   }
 
-  .postList {
+  .ideaList {
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 2rem;
+    gap: 2rem;
 
-    & > div {
+    /* & > div {
       &:not(
           :nth-last-child(-n + ${({ postLength }) => (postLength % 2 ? 1 : 2)})
         ) {
         border-bottom: 0.1rem solid #d9d9d9;
       }
-    }
+    } */
   }
 
   .investorList {
@@ -59,41 +60,6 @@ function Home({
 }) {
   const router = useRouter();
 
-  const logoList = stockList.slice(0, 14).map((data) => {
-    return <Logo key={data._id} logoUrl={data.logoUrl} />;
-  });
-
-  const postList = topSixIdea.map((idea) => {
-    return (
-      <IdeaCard
-        key={idea._id}
-        ideaId={idea._id}
-        ideaImage={idea.thumbnailImageUrl}
-        ideaTitle={idea.title}
-        ideaAuthor={idea.username}
-        ideaDate={idea.date}
-        ideaStockIds={idea.stockIds}
-      />
-    );
-  });
-
-  const topTenRenderedInvestorList = investorDataList
-    .slice(0, 10)
-    .map((investor, index) => {
-      return (
-        <InvestorCard
-          key={investor._id}
-          investorName={investor.name}
-          investorAvatar={investor.profileImageUrl}
-          totalInvestment={investor.totalInvestment}
-          totalProfits={investor.totalProfits}
-          totalAssets={investor.totalAssets}
-          profitPercentageList={investor.percentList}
-          rank={index + 1}
-        />
-      );
-    });
-
   return (
     <IndexWrapper postLength={topSixIdea.length}>
       <div className='main-items'>
@@ -104,20 +70,54 @@ function Home({
         >
           Stocks
         </div>
-        <div className='stockList'>{logoList}</div>
+        <div className='stockList'>
+          {stockList.slice(0, 14).map((data) => {
+            return <Logo key={data._id} logoUrl={data.logoUrl} />;
+          })}
+        </div>
       </div>
       <div className='main-items'>
         <div className='text' ref={ideaRef}>
           Ideas
         </div>
-        <div className='postList'>{postList}</div>
+        <div className='ideaList'>
+          {topSixIdea.map((idea) => {
+            return (
+              <IdeaCard
+                key={idea._id}
+                ideaId={idea._id}
+                ideaImage={idea.thumbnailImageUrl}
+                ideaTitle={idea.title}
+                ideaAuthor={idea.username}
+                ideaDate={idea.date}
+                ideaStockIds={idea.stockIds}
+              />
+            );
+          })}
+        </div>
       </div>
 
       <div className='main-items'>
         <div className='text' ref={investorRef}>
           Investors
         </div>
-        <div className='investorList'>{topTenRenderedInvestorList}</div>
+        <div className='investorList'>
+          {investorDataList.slice(0, 10).map((investor, index) => {
+            return (
+              <InvestorCard
+                key={investor._id}
+                investorId={investor._id}
+                investorName={investor.name}
+                investorAvatar={investor.profileImageUrl}
+                totalInvestment={investor.totalInvestment}
+                totalProfits={investor.totalProfits}
+                totalAssets={investor.totalAssets}
+                profitPercentageList={investor.percentList}
+                rank={index + 1}
+              />
+            );
+          })}
+        </div>
       </div>
     </IndexWrapper>
   );
@@ -139,9 +139,16 @@ export async function getServerSideProps() {
       api.user.getProfitPercentageById(investor._id)
     )
   );
-  // TODO: percent null 인데 이유 찾기
-  console.log('investorProfit : ', investorProfitPercentageList);
-  const percentBindDataList = investorList.map((investor, index) => {
+
+  const totalProfitAttached = [];
+  for await (const v of investorList) {
+    totalProfitAttached.push({
+      ...v,
+      ...(await getInvestorInvestInfo(v._id)),
+    });
+  }
+
+  const percentBindDataList = totalProfitAttached.map((investor, index) => {
     return {
       ...investor,
       percentList: investorProfitPercentageList[index],

@@ -9,6 +9,7 @@ import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import { Body14Medium, Body16Regular, HeadH6Bold } from '../styles/typography';
 import color from '../styles/color';
+import api from '../apis';
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
@@ -128,21 +129,17 @@ const Comment = ({ comment: comment }) => {
   };
 
   useEffect(() => {
-    const email = localStorage.getItem('email');
+    const email = user.email;
     const getUser = async () => {
+      if (!email || !comment.userId) return;
       const likesList = comment.likes;
 
-      var userResponse = await fetch(
-        `http://localhost:4000/api/v1/user/${email}/email`
-      );
-      var userData = await userResponse.json();
-      var userIdString = String(userData._id);
-      uid = userIdString;
-      var isLiked = false;
+      const user = await api.user.getByEmail(email)();
+      let isLiked = false;
 
-      for (var i = 0; i < likesList.length; i++) {
-        var userId = String(likesList[i]);
-        if (userId == uid) {
+      for (let i = 0; i < likesList.length; i++) {
+        const userId = String(likesList[i]);
+        if (userId == String(user._id)) {
           isLiked = true;
         }
       }
@@ -155,15 +152,12 @@ const Comment = ({ comment: comment }) => {
         setChecked(false);
       }
 
-      const response = await fetch(
-        `http://localhost:4000/api/v1/user/${comment.userId}`
-      );
-      const data = await response.json();
+      const data = await api.user.getById(comment.userId)();
       setUsername(data.username);
       setInvestorProfilePicture(data.profileImageUrl);
     };
     getUser();
-  }, []);
+  }, [user.email && comment.userId]);
 
   const callLikesApi = async () => {
     const commentId = String(comment._id);

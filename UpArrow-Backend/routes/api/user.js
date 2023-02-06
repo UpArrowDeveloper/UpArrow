@@ -132,8 +132,7 @@ router.get('/:userId/profile', async (req, res) => {
 router.get('/:userId/profit-percentage', async (req, res) => {
   try {
     const userId = req.params.userId;
-    const userObjectId = ObjectId(userId);
-    const user = await User.findById(userObjectId);
+    const user = await User.findById(userId);
 
     const orderList = await Promise.all(
       user.orderIds.map((orderId) => {
@@ -149,7 +148,7 @@ router.get('/:userId/profit-percentage', async (req, res) => {
         userId: order.userId,
         stockId: order.stockId,
         quantity: order.quantity,
-        averagePrice: order.averagePrice,
+        price: order.price,
         stock: stockList[index],
       };
     });
@@ -157,7 +156,7 @@ router.get('/:userId/profit-percentage', async (req, res) => {
     const profitPercentageList = finalPurchaseList.map((purchase) => {
       const quantity = purchase.quantity;
       const currentAmount = purchase.stock.currentPrice * quantity;
-      const boughtAmount = purchase.averagePrice * quantity;
+      const boughtAmount = purchase.price * quantity;
       const profitAmount = boughtAmount - currentAmount;
       const profitPercentage = (profitAmount + currentAmount) / currentAmount;
       return {
@@ -170,7 +169,7 @@ router.get('/:userId/profit-percentage', async (req, res) => {
     return res.status(200).send(profitPercentageList);
   } catch (error) {
     console.error('error: ', error);
-    return res.status(400).send({ error: JSON.stringify(error) });
+    return res.status(500).send({ error: JSON.stringify(error) });
   }
 });
 

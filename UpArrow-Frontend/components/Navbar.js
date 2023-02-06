@@ -84,27 +84,6 @@ const NavBlock = styled.div`
       background-color: red;
     }
   }
-
-  /* @media screen and (max-width: 60rem) {
-    font-size: 1rem;
-
-    .uparrow-logo {
-      margin-left: 1rem;
-      margin-right: 1rem;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-
-    .stocks {
-      margin-right: 1rem;
-      cursor: pointer;
-    }
-
-    .ideas {
-      margin-right: 1rem;
-      cursor: pointer;
-    }
-  } */
 `;
 
 const getFirstCharacterCapitalString = (str) => {
@@ -121,7 +100,12 @@ const Navbar = ({ stockRef, ideaRef, investorRef }) => {
     router.push('/');
   };
 
-  const routes = ['stocks', 'ideas', 'investors', 'principles'];
+  const routes = [
+    { name: 'stocks', path: 'stock' },
+    { name: 'ideas', path: 'idea' },
+    { name: 'investors', path: 'investor' },
+    { name: 'principles', path: 'principles' },
+  ];
 
   const goToAdminPage = () => {
     router.push('/admin');
@@ -136,8 +120,8 @@ const Navbar = ({ stockRef, ideaRef, investorRef }) => {
 
         <div className='buttons'>
           {routes.map((route) => (
-            <div key={route} onClick={() => router.push(`/${route}`)}>
-              {getFirstCharacterCapitalString(route)}
+            <div key={route} onClick={() => router.push(`/${route.path}`)}>
+              {getFirstCharacterCapitalString(route.name)}
             </div>
           ))}
         </div>

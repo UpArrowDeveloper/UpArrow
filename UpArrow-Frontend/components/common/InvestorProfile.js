@@ -106,7 +106,7 @@ const InvestorProfileBlock = styled.div`
 `;
 
 const InvestorProfileView = ({
-  profile_image_url,
+  profileImageUrl,
   username,
   investedCompanies,
   followers,
@@ -122,7 +122,7 @@ const InvestorProfileView = ({
   return (
     <InvestorProfileBlock>
       <Rank rank={rank} />
-      <Avatar className='avatar' src={profile_image_url} />
+      <Avatar className='avatar' src={profileImageUrl} />
       <div className='name'>{username}</div>
       <button className='follow-btn'>Follow</button>
       <div className='invest-info'>

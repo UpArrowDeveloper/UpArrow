@@ -219,6 +219,7 @@ const InvestSimulatorIdeas = ({
       setTargetPriceIndex((s) => (s + 1) % stock.targetPrices.length);
     }, 1000);
   }, []);
+
   const [stockOrderQuantity, setStockOrderQuantity] = useState(0);
 
   return (

@@ -70,7 +70,7 @@ const IdeaCard = ({
   const { agreeCount, disagreeCount } = useVoteData(ideaId);
 
   return (
-    <IdeaWrapper theme={theme} onClick={() => router.push(`/ideas/${ideaId}`)}>
+    <IdeaWrapper theme={theme} onClick={() => router.push(`/idea/${ideaId}`)}>
       <div className='image'>
         {ideaImage ? <Img alt='idea-card-image' src={ideaImage} /> : null}
       </div>
@@ -81,7 +81,9 @@ const IdeaCard = ({
           by {ideaAuthor} · {timeAgo.format(new Date(ideaDate))}
         </div>
         <div className='tag-wrapper'>
-          <Tag>{data?.name}</Tag>
+          {data?.map((stock) => (
+            <Tag key={stock._id}>{stock.name}</Tag>
+          ))}
         </div>
         <IdeaVote agreeCount={agreeCount} disagreeCount={disagreeCount} />
       </div>

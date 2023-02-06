@@ -54,18 +54,21 @@ export default function Stock({ stock, analysis }) {
   const [comment, setComment] = useState('');
   const { data: currentStockValuationData, refetch } = useQuery(
     ['currentStockValuation', user, stock],
-    (stock && user && api.price.get(stock._id, user._id)) || {}
+    api.price.get(stock?._id, user?._id),
+    { enabled: !!(stock?._id && user?._id) }
   );
 
   const { data: ideaList } = useQuery(
     ['ideaList', stock?.ideaIds],
-    stock?.ideaIds?.length > 0 && api.idea.getByIds(stock.ideaIds.join(','))
+    api.idea.getByIds(stock.ideaIds.join(',')),
+    { enabled: stock?.ideaIds?.length > 0 }
   );
 
   const { data: analysisIdeaList } = useQuery(
     ['analysisIdeaList', stock?.ideaIds],
-    analysis?.ideaIds?.length > 0 &&
-      api.idea.getByIds(analysis.ideaIds.join(','))
+
+    api.idea.getByIds(analysis.ideaIds.join(',')),
+    { enabled: analysis?.ideaIds?.length > 0 }
   );
 
   const { data: comments, refetch: refetchComments } = useQuery(
@@ -78,21 +81,16 @@ export default function Stock({ stock, analysis }) {
   });
 
   const submitComment = async () => {
-    if (comment && stock && user) {
-      const response = await fetch(
-        `http://localhost:4000/api/v1/user/${user.email}/email`
-      );
-      const data = await response.json();
-
-      const commentJSON = {
-        stockId: String(stock._id),
-        userId: String(data._id),
-        content: comment,
-        likes: [],
-      };
+    if (comment && stock && user?.email) {
+      const data = await api.user.getByEmail(user.email)();
 
       try {
-        await axios.post('http://localhost:4000/api/v1/comment', commentJSON);
+        await api.comment.post({
+          stockId: String(stock._id),
+          userId: String(data._id),
+          content: comment,
+          likes: [],
+        })();
         refetchComments();
       } catch (e) {
         console.error('e : ', e);

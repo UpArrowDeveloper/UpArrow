@@ -1,87 +1,14 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { MainLayout } from '../../Layouts';
-import { Body14Medium, HeadH1Bold, HeadH5Bold } from '../../styles/typography';
-import color from '../../styles/color';
+import { HeadH5Bold } from '../../styles/typography';
 import Image from 'next/image';
 import Viewmore from '../../components/common/Viewmore';
-import { css } from '@emotion/react';
 import OrderChip from '../../components/OrderChip';
 import api from '../../apis';
 import { getNumberUnit } from '../../utils/number';
 import { useRouter } from 'next/router';
-
-export const commonListCss = css`
-  padding-top: 3.2rem;
-  header {
-    padding: 1.6rem 3.2rem;
-  }
-  h1 {
-    ${HeadH1Bold}
-  }
-
-  .order-option-wrapper {
-    padding: 0.8rem 3.2rem;
-    display: flex;
-    gap: 0.8rem;
-    margin-bottom: 4rem;
-  }
-
-  .view-more-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2.4rem;
-  }
-  .view-more {
-    width: 24rem;
-  }
-`;
-
-export const commonTableCss = css`
-  .table-wrapper {
-    padding: 0 3.2rem;
-
-    tr {
-      cursor: pointer;
-    }
-  }
-
-  .image-container {
-    padding: 1.2rem 0.8rem;
-  }
-
-  .image-wrapper {
-    position: relative;
-    width: 5.6rem;
-    height: 5.6rem;
-  }
-
-  table {
-    width: 100%;
-    margin-bottom: 3.2rem;
-    thead {
-      th {
-        ${Body14Medium}
-        color: ${color.B40};
-        text-align: left;
-        padding-bottom: 1.6rem;
-      }
-      border-bottom: 0.1rem solid rgba(0 0 0 / 20%);
-    }
-
-    tbody {
-      &:before {
-        content: '-';
-        display: block;
-        line-height: 0.8rem;
-        color: transparent;
-      }
-      tr {
-        border-bottom: 0.1rem solid rgba(0 0 0 / 20%);
-      }
-    }
-  }
-`;
+import { commonListCss, commonTableCss } from '../../styles/table';
 
 const StockBlock = styled.div`
   ${commonListCss}
@@ -163,7 +90,7 @@ function Home({ stocks }) {
             {stocks?.map((stock) => (
               <tr
                 key={stock._id}
-                onClick={() => router.push(`/stocks/${stock.ticker}`)}
+                onClick={() => router.push(`/stock/${stock.ticker}`)}
               >
                 <td>
                   <div className='name-ticker'>

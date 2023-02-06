@@ -86,13 +86,13 @@ router.put('/:id', async (req, res) => {
 router.get('/:userId/userId', async (req, res) => {
   try {
     const userId = req.params.userId;
-    const postUserId = ObjectId(userId);
-    const posts = await Idea.find({ userId: postUserId });
+    const ideas = await Idea.find({ userId });
+    console.log('posts : ', ideas);
 
-    return res.status(200).json(posts);
+    return res.status(200).json(ideas);
   } catch (error) {
     console.error(error);
-    return res.status(400).send({});
+    return res.status(500).send({ error: JSON.stringify(error) });
   }
 });
 

@@ -8,7 +8,7 @@ const IdeaSchema = new Schema(
     youtubeCode: String,
     title: String,
     content: String,
-    date: String,
+    date: Date,
     commentIds: Array,
     thumbnailImageUrl: String,
   },

@@ -8,6 +8,7 @@ import {
   HeadH6Bold,
 } from '../styles/typography';
 import Rank from './common/Rank';
+import { useRouter } from 'next/router';
 
 const InvestorCardWrapper = styled.div`
   position: relative;
@@ -91,6 +92,7 @@ const InvestorCardWrapper = styled.div`
 `;
 
 const InvestorCard = ({
+  investorId,
   investorAvatar,
   investorName,
   totalInvestment,
@@ -99,9 +101,10 @@ const InvestorCard = ({
   profitPercentageList,
   rank,
 }) => {
+  const router = useRouter();
   return (
     <InvestorCardWrapper
-      onClick={() => seeInvestor()}
+      onClick={() => router.push(`/investor/${investorId}`)}
       investorAvatar={investorAvatar}
     >
       <Rank rank={rank} />

@@ -7,7 +7,7 @@ import api from '../../apis';
 import Viewmore from '../../components/common/Viewmore';
 import IdeaVote from '../../components/IdeaVote';
 import OrderChip from '../../components/OrderChip';
-import { commonListCss, commonTableCss } from '../stocks';
+import { commonListCss, commonTableCss } from '../../styles/table';
 import en from 'javascript-time-ago/locale/en';
 import Image from 'next/image';
 import { TagGroup } from '../../components/Tag';
@@ -106,7 +106,7 @@ function Ideas({ ideas }) {
             {ideas?.map((idea) => (
               <tr
                 key={idea._id}
-                onClick={() => router.push(`/ideas/${idea._id}`)}
+                onClick={() => router.push(`/idea/${idea._id}`)}
               >
                 <td>
                   <div className='title wrapper'>

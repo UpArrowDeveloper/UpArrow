@@ -100,6 +100,17 @@ const InvestorDataBlock = styled.div`
     width: 100%;
     margin-bottom: 2rem;
     padding: 3.2rem;
+
+    .ideas {
+      margin-bottom: 2.6rem;
+
+      .ideas-content-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+
+        gap: 2rem;
+      }
+    }
   }
 `;
 
@@ -127,22 +138,21 @@ export default function Investor({ investor, stocksWithPrices, rank }) {
     username,
     websiteUrl,
   } = investor;
-  const availableCash = cash;
 
   return (
     <InvestorBlock>
       <InvestorProfileView
-        profile_image_url={profileImageUrl}
+        profileImageUrl={profileImageUrl}
         username={username}
         investedCompanies={stocksWithPrices}
         followers={followers}
         followings={followings}
         description={description}
         websiteUrl={websiteUrl}
-        availableCash={availableCash}
+        cash={cash}
         totalInvestment={totalInvestment}
         totalProfits={totalProfits}
-        totalAssets={totalInvestment + availableCash}
+        totalAssets={totalInvestment + cash}
         rank={rank}
       />
       <InvestorDataBlock>
@@ -167,19 +177,21 @@ export default function Investor({ investor, stocksWithPrices, rank }) {
           <div className='view-all'>View All</div>
         </div>
         <div className='ideas-wrapper'>
-          <div>
+          <div className='ideas'>
             <div className='investor-title'>{username}'s Ideas</div>
-            {ideas.map((ideas) => (
-              <IdeaCard
-                theme={'none'}
-                ideaId={ideas._id}
-                ideaImage={ideas.image_url}
-                ideaTitle={ideas.title}
-                ideaAuthor={ideas.userName}
-                ideaDate={new Date()}
-                stockId={ideas.stockId}
-              />
-            ))}
+            <div className='ideas-content-wrapper'>
+              {ideas.map((idea) => (
+                <IdeaCard
+                  theme={'none'}
+                  ideaId={idea._id}
+                  ideaImage={idea.thumbnailImageUrl}
+                  ideaTitle={idea.title}
+                  ideaAuthor={username}
+                  ideaDate={idea.date}
+                  stockId={idea.stockId}
+                />
+              ))}
+            </div>
           </div>
           <div className='view-all'>View All</div>
         </div>

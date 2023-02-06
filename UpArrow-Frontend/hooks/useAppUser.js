@@ -10,7 +10,7 @@ export const useAppUser = () => {
   const router = useRouter();
 
   const getUser = async () => {
-    if (user) {
+    if (user?.email) {
       const email = user.email;
       try {
         const user = await api.user.getByEmail(email)();

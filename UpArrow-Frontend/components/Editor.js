@@ -192,7 +192,7 @@ const Editor = ({ editData }) => {
       result = await axios.post(env.serverUrl + '/idea', payload);
     }
 
-    router.push(`/ideas/${result.data.data._id}`);
+    router.push(`/idea/${result.data.data._id}`);
   };
 
   return (

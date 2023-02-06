@@ -2,6 +2,7 @@ const express = require('express');
 const Analysis = require('../../models/Analysis');
 const router = express.Router();
 const Stock = require('../../models/Stock');
+const Order = require('../../models/Order');
 const { getStockByIds } = require('../../services/stock');
 const ObjectId = require('mongodb').ObjectId;
 
@@ -21,6 +22,35 @@ router.get('/search', async (req, res) => {
   const stocks = await Stock.find({ name: { $regex: regex(query) } });
 
   return res.status(200).send(stocks);
+});
+
+router.get('/latestOrder', async (req, res) => {
+  try {
+    const stockList = await Stock.find();
+    const orderList = await Order.find();
+
+    const stockIds = stockList.map(({ _id }) => _id);
+
+    for await (const stockId of stockIds) {
+      const buyerCount = orderList.filter(
+        (order) =>
+          String(order.stockId) === String(stockId) && order.type === 'buy'
+      ).length;
+      const sellerCount = orderList.filter(
+        (order) =>
+          String(order.stockId) === String(stockId) && order.type === 'sell'
+      ).length;
+      await Stock.findOneAndUpdate(
+        { _id: stockId },
+        { buyerCount, sellerCount }
+      );
+    }
+
+    return res.status(200).json({ message: 'updated' });
+  } catch (err) {
+    console.error('err : ', err);
+    return res.status(500).json({ error: JSON.stringify(err) });
+  }
 });
 
 router.get('/:id', async (req, res) => {
@@ -120,12 +150,9 @@ router.post('/', async (req, res) => {
 
 router.put('/:id/price', async (req, res) => {
   const { id } = req.params;
-  console.log('req.body : ', req.body);
   const { currentPrice } = req.body;
-  console.log('id : ', id);
-  console.log('currentProce : ', currentPrice);
 
-  const result = await Stock.findOneAndUpdate({ _id: id }, { currentPrice });
+  await Stock.findOneAndUpdate({ _id: id }, { currentPrice });
   return res.send('success');
 });
 

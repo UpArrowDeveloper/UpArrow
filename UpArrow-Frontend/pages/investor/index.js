@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import api from '../../apis';
 import Viewmore from '../../components/common/Viewmore';
 import OrderChip from '../../components/OrderChip';
-import { commonListCss, commonTableCss } from '../stocks';
+import { commonListCss, commonTableCss } from '../../styles/table';
 import en from 'javascript-time-ago/locale/en';
 import Image from 'next/image';
 import { TagGroup } from '../../components/Tag';
@@ -133,7 +133,7 @@ function Investors({ investors, top3Stocks }) {
             {investors?.map((investor, index) => (
               <tr
                 key={investor._id}
-                onClick={() => router.push(`/investors/${investor._id}`)}
+                onClick={() => router.push(`/investor/${investor._id}`)}
               >
                 <td className='comments wrapper index'>{index + 1}</td>
                 <td>

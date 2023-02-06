@@ -3,8 +3,6 @@ import stock from '../apis/stock';
 
 export const getInvestorProfileInfo = async (id) => {
   const investor = await api.user.getById(id)();
-  console.log('id : ', id);
-  console.log('investor : ', investor);
   const orderIds = investor.orderIds;
   const orders =
     orderIds?.length > 0 ? await api.order.getByIds(orderIds.join(','))() : [];
@@ -52,8 +50,6 @@ export const getInvestorInvestInfo = async (id) => {
   const orders =
     orderIds.length > 0 ? await api.order.getByIds(orderIds.join(','))() : [];
 
-  const prices = (await api.config.get()).prices;
-
   const stockPurchaseInfos = orders.reduce((acc, order) => {
     const isBuy = order.type === 'buy';
     if (acc[order.stockId]) {
@@ -98,6 +94,7 @@ export const getInvestorInvestInfo = async (id) => {
       0 * value.quantity,
     0
   );
+  console.log('*****\n\n\n\ntotalProfits : ', totalProfits);
 
   return {
     totalInvestment,
