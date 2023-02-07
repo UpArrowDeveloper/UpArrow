@@ -5,7 +5,6 @@ import { UserProvider } from '@auth0/nextjs-auth0';
 import Head from 'next/head';
 import PropTypes from 'prop-types';
 import { CacheProvider } from '@emotion/react';
-import theme from '../src/theme';
 import createEmotionCache from '../src/createEmotionCache';
 import Script from 'next/script';
 import Navbar, { navbarHeight } from '../components/Navbar';
@@ -42,7 +41,7 @@ function MyApp({
                 <Script
                   src='https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js'
                   integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl'
-                  crossOrigin='anonymous'
+                  crossOrigin
                 ></Script>
                 <link rel='preconnect' href='https://fonts.googleapis.com' />
                 <link

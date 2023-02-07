@@ -189,7 +189,7 @@ const Editor = ({ editData }) => {
         payload
       );
     } else {
-      result = await axios.post(env.serverUrl + '/idea', payload);
+      result = await api.idea.post(payload);
     }
 
     router.push(`/idea/${result.data.data._id}`);

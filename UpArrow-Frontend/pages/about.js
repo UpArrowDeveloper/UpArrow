@@ -1,16 +1,12 @@
-import Head from 'next/head';
-import Image from 'next/image';
-import styles from '../styles/Home.module.css';
 import Link from 'next/link';
 import CardBox from '../components/CardBox';
-import ResponsiveAppBar from '../components/ResponsiveAppBar';
 
 export default function About({ data }) {
   const fakeUser = data[0];
   const fakeUser2 = data[1];
   return (
     <div>
-      <ResponsiveAppBar />
+      {/* <ResponsiveAppBar /> */}
       <h1>This is about Peter Park!</h1>
       <Link href='/'>
         <a>This is the main page</a>

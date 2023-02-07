@@ -1,26 +1,13 @@
-import React, { useEffect, useState, useRef, Fragment } from 'react';
-import { useRouter } from 'next/router';
-import StarRatings from 'react-star-ratings';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
+import React from 'react';
 import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
-import styles from '../components/Stock.module.css';
-import Grid from '@mui/material/Grid';
-import Comment from '../components/Comment';
-import Paper from '@material-ui/core/Paper';
-import { useUser } from '@auth0/nextjs-auth0';
-import { makeStyles } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
+
 import Button from '@material-ui/core/Button';
-import axios from 'axios';
-import ResponsiveAppBar from '../components/ResponsiveAppBar';
 
 export default function Dashboard() {
   return (
     <div>
-      <ResponsiveAppBar />
+      {/* <ResponsiveAppBar /> */}
 
       <Box
         sx={{

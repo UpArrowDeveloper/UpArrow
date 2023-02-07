@@ -8,7 +8,7 @@ const ObjectTable = ({
   return (
     <table>
       <tbody>
-        {prices.map((price, index) => (
+        {prices?.map((price, index) => (
           <tr key={index}>
             <td>{tickers[index]}</td>
             <td>

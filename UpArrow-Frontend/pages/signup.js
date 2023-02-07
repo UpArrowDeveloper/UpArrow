@@ -85,7 +85,7 @@ export default function Signup({ data }) {
     <SignupBlock>
       <form className='signup-form' onSubmit={handleSubmit}>
         <div className='text-field'>
-          <label for='firstname'>First Name</label>
+          <label htmlFor='firstname'>First Name</label>
           <input
             type='text'
             id='firstname'
@@ -95,7 +95,7 @@ export default function Signup({ data }) {
         </div>
 
         <div className='text-field'>
-          <label for='lastname'>Last Name</label>
+          <label htmlFor='lastname'>Last Name</label>
           <input
             type='text'
             id='lastname'
@@ -105,7 +105,7 @@ export default function Signup({ data }) {
         </div>
 
         <div className='text-field'>
-          <label for='username'>Username</label>
+          <label htmlFor='username'>Username</label>
           <input
             type='text'
             id='username'
@@ -115,7 +115,7 @@ export default function Signup({ data }) {
         </div>
 
         <div className='text-field'>
-          <label for='profileImageUrl'>Profile Image URL</label>
+          <label htmlFor='profileImageUrl'>Profile Image URL</label>
           <input
             type='text'
             id='profileImageUrl'
@@ -125,7 +125,7 @@ export default function Signup({ data }) {
         </div>
 
         <div className='text-field'>
-          <label for='websiteUrl'>Social Media</label>
+          <label htmlFor='websiteUrl'>Social Media</label>
           <input
             type='text'
             id='websiteUrl'
@@ -135,7 +135,7 @@ export default function Signup({ data }) {
         </div>
 
         <div className='text-field'>
-          <label for='investmentPhilosophy'>Investment Philosophy</label>
+          <label htmlFor='investmentPhilosophy'>Investment Philosophy</label>
           <textarea
             rows='3'
             type='investmentPhilosophy'
@@ -146,7 +146,7 @@ export default function Signup({ data }) {
         </div>
 
         <div className='text-field'>
-          <label for='cash'>Simulation Money</label>
+          <label htmlFor='cash'>Simulation Money</label>
           <select id='cash' name='cash' disabled>
             <option selected value={100000}>
               $100,000

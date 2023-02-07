@@ -6,7 +6,7 @@ import Editor from '../../components/Editor';
 const App = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data, isLoading } = useQuery(['post', id], api.post.getId(id));
+  const { data, isLoading } = useQuery(['post', id], api.idea.getById(id));
   if (isLoading) {
     return null;
   }
