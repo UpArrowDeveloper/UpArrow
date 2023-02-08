@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { EmptyAvatar } from './icons';
+import { env } from '../config';
 
 const ProfileIconWrapper = styled.div`
   position: relative;
@@ -59,6 +60,10 @@ const ProfileIcon = ({ className, data }) => {
     router.push('/investor');
   };
 
+  const login = () => {
+    router.push(`${env.serverUrl}/oauth/auth/google`);
+  };
+
   return (
     <>
       <ProfileIconWrapper className={className}>
@@ -83,7 +88,7 @@ const ProfileIcon = ({ className, data }) => {
                 <a href='/api/auth/logout'>Logout</a>
               </>
             ) : (
-              <a href='/api/auth/login'>Login</a>
+              <div onClick={login}>Login</div>
             )}
           </div>
         )}
