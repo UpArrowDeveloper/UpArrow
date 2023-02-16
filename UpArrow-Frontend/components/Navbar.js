@@ -92,7 +92,7 @@ const getFirstCharacterCapitalString = (str) => {
 
 const Navbar = ({ stockRef, ideaRef, investorRef }) => {
   const router = useRouter();
-  const { user } = useAppUser();
+  const { user, logout } = useAppUser();
 
   const isAdmin = user?.isAdmin;
 
@@ -120,7 +120,7 @@ const Navbar = ({ stockRef, ideaRef, investorRef }) => {
 
         <div className='buttons'>
           {routes.map((route) => (
-            <div key={route} onClick={() => router.push(`/${route.path}`)}>
+            <div key={route.path} onClick={() => router.push(`/${route.path}`)}>
               {getFirstCharacterCapitalString(route.name)}
             </div>
           ))}
@@ -136,7 +136,7 @@ const Navbar = ({ stockRef, ideaRef, investorRef }) => {
       </div>
 
       <div className='right-items'>
-        <ProfileIcon data={user} />
+        <ProfileIcon data={user} logout={logout} />
       </div>
     </NavBlock>
   );

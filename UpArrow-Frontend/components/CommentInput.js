@@ -1,4 +1,3 @@
-import { useUser } from '@auth0/nextjs-auth0';
 import styled from '@emotion/styled';
 import React from 'react';
 import color from '../styles/color';

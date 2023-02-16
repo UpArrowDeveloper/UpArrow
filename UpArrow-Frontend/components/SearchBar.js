@@ -1,9 +1,9 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { useRouter } from 'next/router';
-import { useUser } from '@auth0/nextjs-auth0';
 import './SearchBar.module.css';
 import styled from '@emotion/styled';
+import { useAppUser } from '../hooks/useAppUser';
 
 const SearchBarWrapper = styled.div`
   .searchSelect__control {
@@ -15,7 +15,7 @@ const SearchBarWrapper = styled.div`
 
 const SearchBar = (props) => {
   const router = useRouter();
-  const { user, error, isLoading } = useUser();
+  const { user } = useAppUser();
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [value, setValue] = useState([]);
 

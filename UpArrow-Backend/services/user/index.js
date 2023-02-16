@@ -3,9 +3,15 @@ const User = require('../../models/User');
 const { getStockPrices } = require('../config');
 const { getCalculatedOrdersByUser } = require('../order');
 const { getStockById } = require('../stock');
+const { UserAlreadyExist } = require('../../error/user');
 
 const getUserById = async (userId) => {
   const user = await User.findById(userId);
+  return user;
+};
+
+const getUserByEmail = async (email) => {
+  const user = await User.findOne({ email });
   return user;
 };
 
@@ -61,10 +67,55 @@ const addOrderById = async (id, orderId) => {
   );
 };
 
+const addUser = async (email, name, profileImageUrl) => {
+  const user = await User.findOne({ email });
+  if (user) throw UserAlreadyExist;
+
+  const newUser = new User({
+    email,
+    name,
+    profileImageUrl,
+    username: '',
+    investmentPhilosophy: '',
+    websiteUrl: '',
+    isAdmin: false,
+    commentIds: [],
+    followers: [],
+    followings: [],
+    cash: 100000,
+  });
+  await newUser.save().catch((err) => console.error(err));
+};
+
+const updateUserById = async (
+  id,
+  { email, name, profileImageUrl, username, investmentPhilosophy, websiteUrl }
+) => {
+  const user = await User.findOneAndUpdate(
+    { _id: id },
+    {
+      email,
+      name,
+      profileImageUrl,
+      username,
+      investmentPhilosophy,
+      websiteUrl,
+      isAdmin: false,
+      commentIds: [],
+      followers: [],
+      followings: [],
+    }
+  );
+  return user;
+};
+
 module.exports = {
+  addUser,
+  updateUserById,
   addComment,
   changeCash,
   getUserById,
+  getUserByEmail,
   getTop3StocksByUserId,
   addOrderById,
 };

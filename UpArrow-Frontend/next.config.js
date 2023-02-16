@@ -15,6 +15,7 @@ module.exports = {
       'uparrow-images.s3.ap-northeast-2.amazonaws.com',
       'pbs.twimg.com',
       'www.humanesociety.org',
+      'lh3.googleusercontent.com',
     ],
   },
 };

@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { useQuery } from '@tanstack/react-query';
 import TimeAgo from 'javascript-time-ago';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -140,12 +139,14 @@ function Investors({ investors, top3Stocks }) {
                   <div className='title wrapper investors'>
                     <div className='image-container'>
                       <div className='image-wrapper rounded'>
-                        <Image
-                          objectFit='cover'
-                          src={investor.profileImageUrl}
-                          layout='fill'
-                          alt={investor.name}
-                        />
+                        {!!investor.profileImageUrl && (
+                          <Image
+                            objectFit='cover'
+                            src={investor.profileImageUrl}
+                            layout='fill'
+                            alt={investor.name}
+                          />
+                        )}
                       </div>
                     </div>
                     <div className='title-author'>

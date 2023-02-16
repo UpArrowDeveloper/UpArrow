@@ -1,9 +1,8 @@
-import { useUser } from '@auth0/nextjs-auth0';
 import styled from '@emotion/styled';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import api from '../../apis';
 import { env } from '../../config';
 import Youtube from '../../components/Youtube';
@@ -27,6 +26,7 @@ import {
   ThumbDownIcon,
   ThumbUpIcon,
 } from '../../components/icons';
+import { useAppUser } from '../../hooks/useAppUser';
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
@@ -173,7 +173,8 @@ export default function Ideas({
   } = investor;
   const router = useRouter();
   const { id } = router.query;
-  const { user } = useUser();
+  const { user } = useAppUser();
+
   const { data, isLoading } = useQuery(
     ['user', user?.email],
     api.user.getByEmail(user?.email),

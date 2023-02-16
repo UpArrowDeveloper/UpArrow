@@ -1,34 +1,42 @@
-import { useUser } from '@auth0/nextjs-auth0';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import api from '../apis';
+import storage from '../utils/storage';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 export const useAppUser = () => {
-  const { user } = useUser();
-  const [appUser, setAppUser] = useState();
   const router = useRouter();
-
-  const getUser = async () => {
-    if (user?.email) {
-      const email = user.email;
-      try {
-        const user = await api.user.getByEmail(email)();
-        setAppUser(user);
-      } catch (error) {
-        console.error('no user');
-        router.push('/signup');
+  const accessToken = storage.get('access_token');
+  const { data: userResponse, refetch } = useQuery(
+    ['user profile', accessToken || 'ac'],
+    () => {
+      const accessToken = storage.get('access_token');
+      if (accessToken) {
+        return api.user.me().catch((err) => {
+          if (err.status === 401) return null;
+          return err;
+        });
       }
+      return {};
     }
-  };
+  );
 
-  const refetch = () => {
-    getUser();
-  };
+  const user = userResponse?.user;
 
   useEffect(() => {
-    refetch();
+    if (user && (!user?.username || user.username === '')) {
+      router.replace('/signup');
+      return;
+    }
   }, [user]);
 
-  return { user: appUser, refetch };
+  const logout = () => {
+    storage.remove('access_token');
+    axios.defaults.headers['Authorization'] = '';
+    refetch();
+    router.replace('/');
+  };
+
+  return { user, logout };
 };

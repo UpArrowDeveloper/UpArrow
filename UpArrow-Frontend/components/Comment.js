@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { ThumbUpIcon } from '../components/icons';
-import { useUser } from '@auth0/nextjs-auth0';
 import './Comment.module.css';
 import axios from 'axios';
 import styled from '@emotion/styled';

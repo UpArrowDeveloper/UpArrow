@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { useUser } from '@auth0/nextjs-auth0';
+import { useEffect, useRef } from 'react';
 import api from '../apis';
+import { useAppUser } from '../hooks/useAppUser';
 
 const SignupBlock = styled.div`
   padding-top: 11rem;
@@ -41,34 +42,35 @@ const SignupBlock = styled.div`
   }
 `;
 
-export default function Signup({ data }) {
+export default function Signup() {
   const router = useRouter();
-  const { user, error, isLoading } = useUser();
+  const { user } = useAppUser();
+  const formRef = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const email = user ? user.email : '';
-    const name = e.target.firstname.value + ' ' + e.target.lastname.value;
+    const name = e.target.name.value;
     const profileImageUrl = e.target.profileImageUrl.value;
     const username = e.target.username.value;
     const investmentPhilosophy = e.target.investmentPhilosophy.value;
     const websiteUrl = e.target.websiteUrl.value;
     const cash = e.target.cash.value;
     const isAdmin = false;
+    if (!username || username === '') {
+      return alert('need username');
+    }
 
-    const userJSON = {
+    const userDocument = await api.user.updateById(user._id, {
       name,
-      profileImageUrl: profileImageUrl || user.picture,
-      username: !username || username === '' ? user.nickname : username,
-      email,
+      profileImageUrl,
+      username,
+      email: user.email,
       investmentPhilosophy,
       websiteUrl,
       isAdmin,
       cash,
-    };
-
-    const userDocument = await api.user.post(userJSON);
+    });
 
     if (userDocument) {
       router.push('/');
@@ -81,27 +83,22 @@ export default function Signup({ data }) {
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      formRef.current.name.value = user.name;
+      formRef.current.profileImageUrl.value = user.profileImageUrl;
+      formRef.current.cash.value = user.cash;
+    }
+  }, [user]);
+
+  if (!user) return 'please login';
+
   return (
     <SignupBlock>
-      <form className='signup-form' onSubmit={handleSubmit}>
+      <form ref={formRef} className='signup-form' onSubmit={handleSubmit}>
         <div className='text-field'>
-          <label htmlFor='firstname'>First Name</label>
-          <input
-            type='text'
-            id='firstname'
-            name='firstname'
-            placeholder='Your first name'
-          ></input>
-        </div>
-
-        <div className='text-field'>
-          <label htmlFor='lastname'>Last Name</label>
-          <input
-            type='text'
-            id='lastname'
-            name='lastname'
-            placeholder='Your last name'
-          ></input>
+          <label htmlFor='firstname'>name</label>
+          <input type='text' id='name' name='name'></input>
         </div>
 
         <div className='text-field'>
@@ -147,11 +144,18 @@ export default function Signup({ data }) {
 
         <div className='text-field'>
           <label htmlFor='cash'>Simulation Money</label>
-          <select id='cash' name='cash' disabled>
+          <input
+            type='text'
+            id='cash'
+            name='cash'
+            placeholder=''
+            disabled
+          ></input>
+          {/* <select id='cash' name='cash' disabled>
             <option selected value={100000}>
               $100,000
             </option>
-          </select>
+          </select> */}
         </div>
 
         <div className='text-field'>

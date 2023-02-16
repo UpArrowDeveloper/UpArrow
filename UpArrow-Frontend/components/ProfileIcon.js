@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { EmptyAvatar } from './icons';
 import { env } from '../config';
+import storage from '../utils/storage';
 
 const ProfileIconWrapper = styled.div`
   position: relative;
@@ -49,7 +50,7 @@ const InvisibleCover = styled.div`
   z-index: 990;
 `;
 
-const ProfileIcon = ({ className, data }) => {
+const ProfileIcon = ({ className, data, logout }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -57,7 +58,13 @@ const ProfileIcon = ({ className, data }) => {
   const isLogin = !!data;
 
   const navigateProfile = () => {
-    router.push('/investor');
+    if (!data) return;
+    router.push(`/investor/${data?._id}`);
+  };
+
+  const navigateShareIdea = () => {
+    if (!data) return;
+    router.push(`/editor`);
   };
 
   const login = () => {
@@ -80,15 +87,15 @@ const ProfileIcon = ({ className, data }) => {
         )}
 
         {isOpen && (
-          <div className='menu'>
+          <div className='menu' onClick={() => setIsOpen(!isOpen)}>
             {isLogin ? (
               <>
                 <a onClick={() => navigateProfile()}>My Portfolio</a>
-                <a>Share Ideas</a>
-                <a href='/api/auth/logout'>Logout</a>
+                <a onClick={() => navigateShareIdea()}>Share Ideas</a>
+                <a onClick={logout}>Logout</a>
               </>
             ) : (
-              <div onClick={login}>Login</div>
+              <a onClick={login}>Login</a>
             )}
           </div>
         )}

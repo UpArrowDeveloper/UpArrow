@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useUser } from '@auth0/nextjs-auth0';
 import styled from '@emotion/styled';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import api from '../apis';

@@ -1,4 +1,3 @@
-import { useUser } from '@auth0/nextjs-auth0';
 import styled from '@emotion/styled';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import axios from 'axios';
@@ -15,6 +14,7 @@ import { PlusIcon } from './icons';
 import ImageUploader from './ImageUploader';
 import VideoUploader from './VideoUploader';
 import { useRouter } from 'next/router';
+import { useAppUser } from '../hooks/useAppUser';
 
 const EditorBlock = styled.div`
   display: flex;
@@ -127,7 +127,7 @@ const InputWrapper = styled.div`
 
 const Editor = ({ editData }) => {
   const { data: stocks } = useQuery(['stock'], api.stock.get);
-  const { user } = useUser();
+  const { user } = useAppUser();
   // https://www.youtube.com/watch?v=fzEcKYFmQxM ex video url
   const [videoUrl, setVideoUrl] = useState('');
   const [postForm, setPostForm] = useState(

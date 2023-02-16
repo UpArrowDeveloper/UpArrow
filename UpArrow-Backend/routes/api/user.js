@@ -10,8 +10,14 @@ const Average = require('../../models/Config');
 var ObjectId = require('mongodb').ObjectId;
 const axios = require('axios');
 const Config = require('../../models/Config');
-const { getTop3StocksByUserId } = require('../../services/user');
+const {
+  getTop3StocksByUserId,
+  addUser,
+  updateUserById,
+} = require('../../services/user');
 const { getIdeasByUserId } = require('../../services/idea');
+const { USER_ALREADY_EXIST, UserAlreadyExist } = require('../../error/user');
+const { validUser } = require('../../middlewares/auth');
 
 // POST http://localhost:4000/api/v1/investor/register/user
 // a user is registering for the first time on UpArrow
@@ -53,25 +59,74 @@ router.get('/:id/top3stocks', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const email = req.body.email;
-  const user = await User.findOne({ email: email });
-
-  if (user) {
-    return res.status(400).send({ message: 'user already exist' });
-  } else {
-    const newUser = new User({
-      ...req.body,
-      commentIds: [],
-      followers: [],
-      followings: [],
-      availableCash: 100000,
+  const {
+    name,
+    email,
+    profileImageUrl,
+    username,
+    investmentPhilosophy,
+    websiteUrl,
+    isAdmin,
+    cash,
+  } = req.body;
+  try {
+    const newUser = await addUser({
+      name,
+      email,
+      profileImageUrl,
+      username,
+      investmentPhilosophy,
+      websiteUrl,
+      isAdmin,
+      cash: cash || 100000,
     });
-    newUser.save().catch((err) => console.error(err));
     return res.status(200).send(newUser);
+  } catch (error) {
+    if (error.errorType === USER_ALREADY_EXIST) {
+      return UserAlreadyExist.responseError();
+    }
+    return res.status(500).json(error);
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  const id = req.params.id;
+  const {
+    name,
+    email,
+    profileImageUrl,
+    username,
+    investmentPhilosophy,
+    websiteUrl,
+    isAdmin,
+    cash,
+  } = req.body;
+  try {
+    const updateUser = await updateUserById(id, {
+      name,
+      email,
+      profileImageUrl,
+      username,
+      investmentPhilosophy,
+      websiteUrl,
+      isAdmin,
+      cash,
+    });
+    return res.status(200).send(updateUser);
+  } catch (error) {
+    if (error.errorType === USER_ALREADY_EXIST) {
+      return UserAlreadyExist.responseError();
+    }
+    console.log('error : ', error);
+    return res.status(500).json(error);
   }
 });
 
 // a user getting a user data using email
+router.get('/me', validUser, async (req, res) => {
+  console.log('req user : ', req.user);
+  return res.status(200).json({ user: req.user });
+});
 
 router.get('/:id', async (req, res) => {
   const _id = req.params.id;
@@ -80,7 +135,7 @@ router.get('/:id', async (req, res) => {
     const user = await User.findOne({ _id });
     return res.status(200).send(user);
   } catch (error) {
-    return res.status(200).send({ error });
+    return res.status(500).send({ error });
   }
 });
 
