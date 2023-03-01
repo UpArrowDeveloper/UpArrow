@@ -168,7 +168,7 @@ export default function IdeasPage(props) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const ideas = await api.idea.get();
   const stocksList = [];
   for (let i = 0; i < ideas.length; i++) {

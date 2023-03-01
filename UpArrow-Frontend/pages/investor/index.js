@@ -207,7 +207,15 @@ export default function IdeasPage(props) {
   );
 }
 
-export async function getServerSideProps() {
+// 항상 실시간 <=
+// 장점 : 항상 실시간
+// 단점 : 사람이 많아질수록 서버 부하가 커짐.
+
+// 꼭 실시간은 아니고 (10분에 한번 || 우현님 원하실때) 씩 실시간 <=
+// 장점 : 서버 부하가 줄어듬. & 훨씬 빠름
+// 단점 : 실시간이 아니다.
+
+export async function getStaticProps() {
   const users = await api.user.get();
   const top3Stocks = await Promise.all(
     users.map((user) => api.user.getTop3StocksById(user._id))

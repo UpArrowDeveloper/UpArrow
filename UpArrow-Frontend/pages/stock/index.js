@@ -150,7 +150,7 @@ export default function StockPage(props) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const stocks = await api.stock.get();
 
   return {
