@@ -72,7 +72,13 @@ function Home({
         </div>
         <div className='stockList'>
           {stockList.slice(0, 14).map((data) => {
-            return <Logo key={data._id} logoUrl={data.logoUrl} />;
+            return (
+              <Logo
+                key={data._id}
+                logoUrl={data.logoUrl}
+                onClick={() => router.push(`/stock/${data.ticker}`)}
+              />
+            );
           })}
         </div>
       </div>

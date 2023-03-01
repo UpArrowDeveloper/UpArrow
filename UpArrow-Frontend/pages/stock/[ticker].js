@@ -159,8 +159,15 @@ export default function Stock({ stock, analysis }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const ticker = context.query.ticker;
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+}
+
+export async function getStaticProps(context) {
+  const ticker = context.params.ticker;
   const stock = (
     await axios.get(
       `${process.env.NEXT_PUBLIC_SERVER_URL}/stock/${ticker}/ticker`

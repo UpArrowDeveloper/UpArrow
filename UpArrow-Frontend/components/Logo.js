@@ -14,8 +14,8 @@ const LogoBlock = styled.img`
   object-fit: contain;
 `;
 
-const Logo = ({ logoUrl }) => {
-  return <LogoBlock src={logoUrl} />;
+const Logo = ({ logoUrl, ...props }) => {
+  return <LogoBlock src={logoUrl} {...props} />;
 };
 
 export default Logo;
