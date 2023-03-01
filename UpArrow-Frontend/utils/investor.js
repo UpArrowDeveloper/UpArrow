@@ -1,5 +1,4 @@
 import api from '../apis';
-import stock from '../apis/stock';
 
 export const getInvestorProfileInfo = async (id) => {
   const investor = await api.user.getById(id)();
@@ -94,7 +93,6 @@ export const getInvestorInvestInfo = async (id) => {
       0 * value.quantity,
     0
   );
-  console.log('*****\n\n\n\ntotalProfits : ', totalProfits);
 
   return {
     totalInvestment,
