@@ -2,8 +2,8 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-export const useConfig = (config) => {
-  const [config, setConfig] = useState(config);
+export const useConfig = (initConfig) => {
+  const [config, setConfig] = useState(initConfig);
   const [loading, setLoading] = useState(false);
   const getConfig = async () => {
     setLoading(true);

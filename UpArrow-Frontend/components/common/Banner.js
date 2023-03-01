@@ -82,8 +82,8 @@ const BannerBlock = styled.div`
     }
   }
 `;
-const Banner = ({ config }) => {
-  const { config, getConfig } = useConfig(config);
+const Banner = ({ config: initConfig }) => {
+  const { config, getConfig } = useConfig(initConfig);
   const bannerImageUrl = config?.bannerImageUrl;
   const stock = config?.board;
   const timerRef = useRef();
