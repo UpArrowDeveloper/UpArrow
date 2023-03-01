@@ -16,6 +16,7 @@ module.exports = {
       'pbs.twimg.com',
       'www.humanesociety.org',
       'lh3.googleusercontent.com',
+      'www.rollingstone.com',
     ],
   },
 };
