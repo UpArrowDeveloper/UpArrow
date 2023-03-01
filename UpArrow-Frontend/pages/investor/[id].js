@@ -200,7 +200,14 @@ export default function Investor({ investor, stocksWithPrices, rank }) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking', // can also be true or 'blocking'
+  };
+}
+
+export async function getStaticProps(context) {
   const { id } = context.params;
   const { investor, prices, stockPurchaseInfos, userIdeas, userRank } =
     await getInvestorProfileInfo(id);
@@ -230,5 +237,6 @@ export async function getServerSideProps(context) {
       stocksWithPrices,
       rank: userRank,
     },
+    revalidate: 600,
   };
 }
