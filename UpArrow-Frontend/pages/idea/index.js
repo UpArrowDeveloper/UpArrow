@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { useQuery } from '@tanstack/react-query';
 import TimeAgo from 'javascript-time-ago';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';

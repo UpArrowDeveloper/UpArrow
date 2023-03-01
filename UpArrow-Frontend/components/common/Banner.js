@@ -4,14 +4,16 @@ import { HeadH1Bold, HeadH4Medium } from '../../styles/typography';
 import { NextIcon } from '../icons';
 import { numberComma } from '../../utils/number';
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 const BannerBlock = styled.div`
   background-color: gray;
   position: relative;
-  & > img {
+
+  .image-wrapper {
+    position: relative;
     width: 100%;
     height: 70rem;
-    object-fit: cover;
   }
 
   & > .board {
@@ -80,9 +82,8 @@ const BannerBlock = styled.div`
     }
   }
 `;
-const Banner = () => {
+const Banner = ({ bannerImageUrl }) => {
   const { config, getConfig } = useConfig();
-  const bannerImageUrl = config.bannerImageUrl;
   const stock = config?.board;
   const timerRef = useRef();
   const dotLocation = stock?.dotLocation;
@@ -98,7 +99,9 @@ const Banner = () => {
 
   return (
     <BannerBlock stockColor={stock.color} dotLocation={dotLocation}>
-      <img src={bannerImageUrl} />
+      <div className='image-wrapper'>
+        <Image layout='fill' objectFit='cover' src={bannerImageUrl} />
+      </div>
       <div className='board'>
         <img className='stock-icon' src={stock.imageUrl} />
         <div className='text'>

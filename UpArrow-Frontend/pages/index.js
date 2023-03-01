@@ -126,6 +126,8 @@ function Home({
 export async function getStaticProps() {
   const stockList = await api.stock.get();
   const investorList = await api.user.get();
+  const config = await api.config.get();
+  const bannerImageUrl = config.bannerImageUrl;
   const topSixIdea = await api.idea.get({
     params: {
       order: 'desc',
@@ -165,6 +167,7 @@ export async function getStaticProps() {
       stockList,
       topSixIdea,
       investorDataList: percentBindDataList,
+      bannerImageUrl,
     },
   };
 }
@@ -172,7 +175,7 @@ export async function getStaticProps() {
 export default function MainPage(props) {
   return (
     <>
-      <Banner />
+      <Banner bannerImageUrl={props.bannerImageUrl} />
       <MainLayout>
         <Home {...props} />
       </MainLayout>
