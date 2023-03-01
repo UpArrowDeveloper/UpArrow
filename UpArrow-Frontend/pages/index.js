@@ -167,7 +167,7 @@ export async function getStaticProps() {
       stockList,
       topSixIdea,
       investorDataList: percentBindDataList,
-      bannerImageUrl,
+      config,
     },
   };
 }
@@ -175,7 +175,7 @@ export async function getStaticProps() {
 export default function MainPage(props) {
   return (
     <>
-      <Banner bannerImageUrl={props.bannerImageUrl} />
+      <Banner config={props.config} />
       <MainLayout>
         <Home {...props} />
       </MainLayout>

@@ -82,8 +82,9 @@ const BannerBlock = styled.div`
     }
   }
 `;
-const Banner = ({ bannerImageUrl }) => {
-  const { config, getConfig } = useConfig();
+const Banner = ({ config }) => {
+  const { config, getConfig } = useConfig(config);
+  const bannerImageUrl = config?.bannerImageUrl;
   const stock = config?.board;
   const timerRef = useRef();
   const dotLocation = stock?.dotLocation;
@@ -95,7 +96,7 @@ const Banner = ({ bannerImageUrl }) => {
     return () => clearInterval(timerRef.current);
   }, []);
 
-  if (!stock) return 'loading..';
+  if (!stock) return null;
 
   return (
     <BannerBlock stockColor={stock.color} dotLocation={dotLocation}>
