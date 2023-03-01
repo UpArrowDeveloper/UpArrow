@@ -9,6 +9,7 @@ import en from 'javascript-time-ago/locale/en';
 import { Body14Medium, Body16Regular, HeadH6Bold } from '../styles/typography';
 import color from '../styles/color';
 import api from '../apis';
+import { useAppUser } from '../hooks/useAppUser';
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
@@ -113,7 +114,7 @@ const Comment = ({ comment: comment }) => {
   const [investorProfilePicture, setInvestorProfilePicture] = useState('');
   const [likes, setLikes] = useState(0);
   var uid = '';
-  const { user, error, isLoading } = useUser();
+  const { user } = useAppUser();
 
   const [checked, setChecked] = useState(false);
 
