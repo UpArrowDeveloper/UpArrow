@@ -350,7 +350,14 @@ export default function Ideas({
   );
 }
 
-export const getServerSideProps = async (context) => {
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking', // can also be true or 'blocking'
+  };
+}
+
+export const getStaticProps = async (context) => {
   const { id } = context.params;
   const idea = await api.idea.getById(id)();
 
@@ -382,5 +389,6 @@ export const getServerSideProps = async (context) => {
       userRank,
       rank: userRank,
     },
+    revalidate: 6000,
   };
 };

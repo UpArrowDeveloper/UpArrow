@@ -120,8 +120,8 @@ export default function Stock({ stock, analysis }) {
     });
   };
 
-  if (!user) return 'please login';
-  if (!currentStockValuationData) return 'no stock data';
+  if (!user) return null;
+  if (!currentStockValuationData) return null;
 
   return (
     <StockWrapper>
