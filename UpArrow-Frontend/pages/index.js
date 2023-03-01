@@ -123,23 +123,20 @@ function Home({
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const stockList = await api.stock.get();
+  const investorList = await api.user.get();
   const topSixIdea = await api.idea.get({
     params: {
       order: 'desc',
       limit: 6,
     },
   });
-
-  const investorList = await api.user.get();
-
   const investorProfitPercentageList = await Promise.all(
     investorList.map((investor) =>
       api.user.getProfitPercentageById(investor._id)
     )
   );
-
   const totalProfitAttached = [];
   for await (const v of investorList) {
     totalProfitAttached.push({
