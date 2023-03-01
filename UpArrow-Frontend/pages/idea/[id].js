@@ -191,7 +191,7 @@ export default function Ideas({
     refetch,
   } = useQuery(['voteByIdeaId', id], api.vote.getByIdeaId(id));
   const [comment, setComment] = useState('');
-  const { data: comments, isLoading: isCommentsLoading } = useQuery(
+  const { data: comments } = useQuery(
     ['comment', commentIds],
     commentIds.length > 0 ? api.comment.getByIds(commentIds) : []
   );

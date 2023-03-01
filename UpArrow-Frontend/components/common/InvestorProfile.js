@@ -40,6 +40,7 @@ const InvestorProfileBlock = styled.div`
     border-radius: 999rem;
     ${FollowBtn}
     margin-bottom: 1.6rem;
+    cursor: pointer;
   }
 
   .invest-info {

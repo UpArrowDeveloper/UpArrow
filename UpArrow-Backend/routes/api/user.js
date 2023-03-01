@@ -124,7 +124,6 @@ router.put('/:id', async (req, res) => {
 
 // a user getting a user data using email
 router.get('/me', validUser, async (req, res) => {
-  console.log('req user : ', req.user);
   return res.status(200).json({ user: req.user });
 });
 
@@ -250,6 +249,13 @@ router.get('/:id/ideas', async (req, res) => {
   const id = req.params.id;
   const ideas = await getIdeasByUserId(id);
   res.json(ideas);
+});
+
+// TODO: follow
+router.put('/:id/follow', validUser, async (req, res) => {
+  const user = req.user;
+  const currentUserId = user.id;
+  const targetUserId = req.params.id;
 });
 
 // GET http://localhost:4000/api/v1/investor/fetch/userprofiles/
