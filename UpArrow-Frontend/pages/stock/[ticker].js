@@ -50,6 +50,7 @@ const StockWrapper = styled.div`
 `;
 
 export default function Stock({ stock, analysis }) {
+  console.log('stock : ', stock);
   const { user, refetch: refetchUser } = useAppUser();
   const [comment, setComment] = useState('');
   const { data: currentStockValuationData, refetch } = useQuery(
@@ -120,8 +121,8 @@ export default function Stock({ stock, analysis }) {
     });
   };
 
-  if (!user) return null;
-  if (!currentStockValuationData) return null;
+  console.log('before null', user, currentStockValuationData);
+  console.log('after null');
 
   return (
     <StockWrapper>
@@ -137,7 +138,7 @@ export default function Stock({ stock, analysis }) {
           ideaList={ideaList || []}
           onBuyClick={onBuyClick}
           onSellClick={onSellClick}
-          currentStockValuation={currentStockValuationData.price}
+          currentStockValuation={currentStockValuationData?.price}
           className='section'
         />
         <Overview

@@ -170,6 +170,7 @@ export default function Principles() {
       return s;
     });
   };
+  return null;
   return (
     <PrinciplesBlock>
       <div className='principle-card-wrapper'>

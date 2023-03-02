@@ -277,12 +277,12 @@ const InvestSimulatorIdeas = ({
           <div className='cash-info'>
             <div>
               <h4>My Current Simulation Cash</h4>
-              <div className='cash'>${user.cash.toLocaleString()}</div>
+              <div className='cash'>${user?.cash.toLocaleString()}</div>
             </div>
             <div>
               <h4>My Current Stock Valuation</h4>
               <div className='cash'>
-                ${currentStockValuation.toLocaleString()}
+                ${currentStockValuation?.toLocaleString()}
               </div>
             </div>
           </div>

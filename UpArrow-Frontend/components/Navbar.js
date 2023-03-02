@@ -104,7 +104,7 @@ const Navbar = ({ stockRef, ideaRef, investorRef }) => {
     { name: 'stocks', path: 'stock' },
     { name: 'ideas', path: 'idea' },
     { name: 'investors', path: 'investor' },
-    { name: 'principles', path: 'principles' },
+    // { name: 'principles', path: 'principles' },
   ];
 
   const goToAdminPage = () => {

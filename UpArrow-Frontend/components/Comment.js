@@ -129,7 +129,7 @@ const Comment = ({ comment: comment }) => {
   };
 
   useEffect(() => {
-    const email = user.email;
+    const email = user?.email;
     const getUser = async () => {
       if (!email || !comment.userId) return;
       const likesList = comment.likes;
@@ -157,7 +157,7 @@ const Comment = ({ comment: comment }) => {
       setInvestorProfilePicture(data.profileImageUrl);
     };
     getUser();
-  }, [user.email && comment.userId]);
+  }, [user?.email && comment.userId]);
 
   const callLikesApi = async () => {
     const commentId = String(comment._id);
