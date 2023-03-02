@@ -237,6 +237,5 @@ export async function getStaticProps(context) {
       stocksWithPrices,
       rank: userRank,
     },
-    revalidate: 600,
   };
 }
