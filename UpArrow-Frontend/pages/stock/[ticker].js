@@ -9,6 +9,7 @@ import Opinions from '../../components/Stock/Opinions';
 import { useAppUser } from '../../hooks/useAppUser';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import api from '../../apis';
+import { MainLayout } from '../../Layouts';
 
 const StockWrapper = styled.div`
   display: flex;
@@ -49,8 +50,15 @@ const StockWrapper = styled.div`
   }
 `;
 
-export default function Stock({ stock, analysis }) {
-  console.log('stock : ', stock);
+export default function StockPage(props) {
+  return (
+    <MainLayout>
+      <Stock {...props} />
+    </MainLayout>
+  );
+}
+
+function Stock({ stock, analysis }) {
   const { user, refetch: refetchUser } = useAppUser();
   const [comment, setComment] = useState('');
   const { data: currentStockValuationData, refetch } = useQuery(
@@ -60,14 +68,14 @@ export default function Stock({ stock, analysis }) {
   );
 
   const { data: ideaList } = useQuery(
-    ['ideaList', stock?.ideaIds],
-    api.idea.getByIds(stock.ideaIds.join(',')),
-    { enabled: stock?.ideaIds?.length > 0 }
+    ['ideaList', stock?._id],
+    api.stock.getIdeasById(stock._id),
+    { enabled: !!stock._id }
   );
+  console.log('idea list : ', ideaList);
 
   const { data: analysisIdeaList } = useQuery(
     ['analysisIdeaList', stock?.ideaIds],
-
     api.idea.getByIds(analysis.ideaIds.join(',')),
     { enabled: analysis?.ideaIds?.length > 0 }
   );
@@ -76,6 +84,7 @@ export default function Stock({ stock, analysis }) {
     ['stockComments', stock._id],
     (stock._id && api.comment.getByStockId(stock._id)) || []
   );
+  console.log('comments : ', comments);
 
   const postOrder = useMutation(api.order.post, {
     onSuccess: () => refetch() && refetchUser(),
@@ -120,9 +129,6 @@ export default function Stock({ stock, analysis }) {
       type: 'sell',
     });
   };
-
-  console.log('before null', user, currentStockValuationData);
-  console.log('after null');
 
   return (
     <StockWrapper>

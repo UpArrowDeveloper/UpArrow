@@ -13,6 +13,8 @@ const stock = {
     axios
       .put(`${env.serverUrl}/stock/${id}/price`, data)
       .then((res) => res.data),
+  getIdeasById: (id) => () =>
+    axios.get(`${env.serverUrl}/stock/${id}/ideas`).then((res) => res.data),
 };
 
 export default stock;

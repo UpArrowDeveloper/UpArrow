@@ -131,7 +131,7 @@ const Editor = ({ editData }) => {
   // https://www.youtube.com/watch?v=fzEcKYFmQxM ex video url
   const [videoUrl, setVideoUrl] = useState('');
   const [postForm, setPostForm] = useState(
-    editData || { title: '', content: '', thumbnailImageUrl: '', stockId: '' }
+    editData || { title: '', content: '', thumbnailImageUrl: '', stockIds: [] }
   );
   const router = useRouter();
 
@@ -184,15 +184,12 @@ const Editor = ({ editData }) => {
     };
     let result;
     if (editData) {
-      result = await axios.put(
-        `${env.serverUrl}/idea/${editData._id}`,
-        payload
-      );
+      result = await api.idea.updateById(editData._id, payload);
     } else {
       result = await api.idea.post(payload);
     }
 
-    router.push(`/idea/${result.data.data._id}`);
+    router.push(`/idea/${result.data._id}`);
   };
 
   return (

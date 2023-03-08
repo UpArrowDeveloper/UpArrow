@@ -126,11 +126,11 @@ const OpinionCardBlock = styled.div`
   }
 `;
 
-const OpinionCard = ({ imageUrl, author, message }) => {
+const OpinionCard = ({ authorImageUrl, author, message }) => {
   return (
     <OpinionCardBlock>
       <div className='opinion-card-image-wrapper'>
-        <Image src={imageUrl} layout='fill' />
+        <Image src={authorImageUrl} layout='fill' />
       </div>
       <div className='author'>{author} says</div>
       <div className='message'>{message}</div>
@@ -155,6 +155,7 @@ const Opinions = ({
   const decreaseIndex = () => {
     setIndex((i) => (i > 0 ? i - 1 : i));
   };
+  console.log('opinionCards  :', opinionCards);
 
   return (
     <OpinionsBlock {...restProps} index={index} cardWidth={52 + 2.4}>

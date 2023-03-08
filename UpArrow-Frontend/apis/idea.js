@@ -10,6 +10,12 @@ const idea = {
     axios.get(`${env.serverUrl}/idea/${ids}/ids`).then((res) => res.data),
   getByUserId: (userId) => () =>
     axios.get(`${env.serverUrl}/idea/${userId}/userId`).then((res) => res.data),
+  post: (data) =>
+    axios.post(`${env.serverUrl}/idea`, { ...data }).then((res) => res.data),
+  updateById: (id, data) =>
+    axios
+      .post(`${env.serverUrl}/idea/${id}`, { ...data })
+      .then((res) => res.data),
 };
 
 export default idea;

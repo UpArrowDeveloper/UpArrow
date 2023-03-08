@@ -44,7 +44,7 @@ router.get('/:ids/ids', async (req, res) => {
 
 router.post('/', validUser, async (req, res) => {
   try {
-    const user = req.user[0];
+    const user = req.user;
     const newPost = new Idea({
       ...req.body,
       userId: user._id,

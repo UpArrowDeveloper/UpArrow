@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import color from '../../styles/color';
 import {
   Body12Medium,
@@ -48,6 +49,7 @@ const OverviewBlock = styled.div`
       .item-list {
         margin-bottom: 1.6rem;
         .item {
+          cursor: pointer;
           h4 {
             margin: 0;
           }
@@ -150,6 +152,7 @@ const Card = styled.div`
 `;
 
 const Layer1 = ({ analysis, ideaList }) => {
+  const router = useRouter();
   return (
     <div className='layer-1'>
       <div>
@@ -168,7 +171,11 @@ const Layer1 = ({ analysis, ideaList }) => {
         <h6>Insights of Giants</h6>
         <div className='item-list'>
           {ideaList.map((item, index) => (
-            <div className='item' key={index}>
+            <div
+              className='item'
+              key={index}
+              onClick={() => router.push(`/idea/${item._id}`)}
+            >
               <h4 className='bold'>{item.title}</h4>
               <div className='item-date'>{item.date}</div>
             </div>

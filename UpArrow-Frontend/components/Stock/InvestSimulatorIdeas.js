@@ -298,7 +298,7 @@ const InvestSimulatorIdeas = ({
               ideaTitle={idea.title}
               ideaAuthor={idea.username}
               ideaDate={idea.date}
-              ideaLikes={idea.likes.length}
+              ideaLikes={idea.likes?.length || 0}
               ideaStockIds={idea.stockIds}
             />
           ))}

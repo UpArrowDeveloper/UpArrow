@@ -3,6 +3,7 @@ const Analysis = require('../../models/Analysis');
 const router = express.Router();
 const Stock = require('../../models/Stock');
 const Order = require('../../models/Order');
+const Idea = require('../../models/Idea');
 const { getStockByIds } = require('../../services/stock');
 const ObjectId = require('mongodb').ObjectId;
 
@@ -95,6 +96,16 @@ router.get('/:ticker/ticker', async (req, res) => {
   }
 });
 
+router.get('/:id/ideas', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const ideas = await Idea.find({ stockIds: { $in: [id] } });
+    return res.json(ideas);
+  } catch (error) {
+    return res.status(500).json({ message: 'id error', error });
+  }
+});
+
 router.post('/', async (req, res) => {
   try {
     const {
@@ -116,20 +127,22 @@ router.post('/', async (req, res) => {
       competitiveAdvantage,
       growthOppertunities,
       potentialRisks,
+      financials,
+      opinions,
     } = req.body;
 
     const newAnalysisId = await Analysis.create({
       thumbnailImageUrl,
       thumbnailTitle,
       thumbnailDate,
-      ideaIds: [],
+      ideaIds,
       missionStatement,
       businessModel,
       competitiveAdvantage,
       growthOppertunities,
       potentialRisks,
-      financials: [],
-      opinions: [],
+      financials,
+      opinions,
     });
 
     await Stock.create({
@@ -139,6 +152,9 @@ router.post('/', async (req, res) => {
       backgroundImageUrl,
       currentPrice,
       targetPrices,
+      buyerCount: 0,
+      sellerCount: 0,
+      commentCount: 0,
       analysisId: newAnalysisId,
     });
 

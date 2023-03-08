@@ -13,7 +13,19 @@ export const BoStocksMenu = () => {
   const [chartValues, setChartValues] = useState([]);
   const [chartValue, setChartValue] = useState({});
 
+  const [opinions, setOpinions] = useState([]);
+  const [opinion, setOpinion] = useState({});
+
   const [financials, setFinancials] = useState([]);
+
+  const [growthOppertunities, setGrowthOppertunities] = useState([]);
+  const [growthOppertunity, setGrowthOppertunity] = useState('');
+
+  const [potentialRisks, setPotentialRisks] = useState([]);
+  const [potentialRisk, setPotentialRisk] = useState('');
+
+  const [ideaIds, setIdeaIds] = useState([]);
+  const [ideaId, setIdeaId] = useState('');
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +37,24 @@ export const BoStocksMenu = () => {
     const backgroundImage = e.target.backgroundImage.files?.[0];
     const marketCap = e.target.marketCap.value;
 
+    const thumbnailImage = e.target.thumbnailImage.files?.[0];
+    const thumbnailTitle = e.target.thumbnailTitle.value;
+    const thumbnailDate = e.target.thumbnailDate.value;
+
+    const missionStatement = e.target.missionStatement.value;
+    const businessModel = e.target.businessModel.value;
+    const competitiveAdvantage = e.target.competitiveAdvantage.value;
+    const newOpinions = [];
+
+    for await (const v of opinions) {
+      const imageForm = new FormData();
+      imageForm.append('image', v.file);
+      const { link } = (
+        await axios.post(`${env.serverUrl}/file/upload`, imageForm)
+      ).data;
+      newOpinions.push({ ...v, file: undefined, authorImageUrl: link });
+    }
+
     const logoFormData = new FormData();
     logoFormData.append('image', logoImage);
     const { link: logoUrl } = (
@@ -35,15 +65,11 @@ export const BoStocksMenu = () => {
     const { link: backgroundImageUrl } = (
       await axios.post(`${env.serverUrl}/file/upload`, backgroundFormData)
     ).data;
-
-    console.log(
-      name,
-      ticker,
-      currentPrice,
-      marketCap,
-      logoUrl,
-      backgroundImageUrl
-    );
+    const thumbnailFormData = new FormData();
+    thumbnailFormData.append('image', thumbnailImage);
+    const { link: thumbnailImageUrl } = (
+      await axios.post(`${env.serverUrl}/file/upload`, thumbnailFormData)
+    ).data;
 
     await axios.post(`${env.serverUrl}/stock`, {
       name,
@@ -52,6 +78,18 @@ export const BoStocksMenu = () => {
       backgroundImageUrl,
       currentPrice,
       targetPrices,
+      thumbnailImageUrl,
+      thumbnailTitle,
+      thumbnailDate,
+      missionStatement,
+      businessModel,
+      competitiveAdvantage,
+      growthOppertunities,
+      potentialRisks,
+      financials,
+      ideaIds,
+      marketCap,
+      opinions: newOpinions,
     });
   };
   return (
@@ -62,7 +100,6 @@ export const BoStocksMenu = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <TextField
-            required
             id='name'
             name='name'
             label='stock name'
@@ -72,7 +109,6 @@ export const BoStocksMenu = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            required
             id='ticker'
             name='ticker'
             label='ticker'
@@ -123,7 +159,6 @@ export const BoStocksMenu = () => {
             Target Prices
           </Typography>
           <TextField
-            required
             id='targetPriceName'
             name='targetPriceName'
             label='Name'
@@ -134,7 +169,6 @@ export const BoStocksMenu = () => {
             }}
           />
           <TextField
-            required
             id='targetPrice'
             name='targetPrice'
             value={targetPrice.price || 0}
@@ -184,7 +218,7 @@ export const BoStocksMenu = () => {
             Analyses
           </Typography>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={8}>
           <Typography variant='h6' gutterBottom>
             Thumbnail
           </Typography>
@@ -213,6 +247,32 @@ export const BoStocksMenu = () => {
             InputLabelProps={{ shrink: true }}
             sx={{ marginLeft: 2 }}
           />
+        </Grid>
+
+        <Grid item xs={4}>
+          <Typography variant='h6' gutterBottom>
+            Insights of Giants
+          </Typography>
+          <TextField
+            label='idea id'
+            variant='outlined'
+            value={ideaId}
+            onChange={(e) => setIdeaId(e.target.value)}
+          />
+          <Button
+            variant='contained'
+            onClick={() => {
+              setIdeaIds((s) => [...s, ideaId]);
+              setIdeaId('');
+            }}
+          >
+            Add
+          </Button>
+          <div>
+            {ideaIds.map((e) => (
+              <div>{e}</div>
+            ))}
+          </div>
         </Grid>
         <Grid item xs={4}>
           <Typography variant='h6' gutterBottom>
@@ -260,15 +320,51 @@ export const BoStocksMenu = () => {
           <Typography variant='h6' gutterBottom>
             Growth Opportunities
           </Typography>
-          <TextField label='Growth Opportunities' variant='outlined' />
-          <Button variant='contained'>Add</Button>
+          <TextField
+            label='Growth Opportunities'
+            variant='outlined'
+            value={growthOppertunity}
+            onChange={(e) => setGrowthOppertunity(e.target.value)}
+          />
+          <Button
+            variant='contained'
+            onClick={() => {
+              setGrowthOppertunities((s) => [...s, growthOppertunity]);
+              setGrowthOppertunity('');
+            }}
+          >
+            Add
+          </Button>
+          <div>
+            {growthOppertunities.map((e) => (
+              <div>{e}</div>
+            ))}
+          </div>
         </Grid>
         <Grid item xs={8}>
           <Typography variant='h6' gutterBottom>
             Potential Risks
           </Typography>
-          <TextField label='Potential Risks' variant='outlined' />
-          <Button variant='contained'>Add</Button>
+          <TextField
+            label='Potential Risks'
+            variant='outlined'
+            value={potentialRisk}
+            onChange={(e) => setPotentialRisk(e.target.value)}
+          />
+          <Button
+            variant='contained'
+            onClick={() => {
+              setPotentialRisks((s) => [...s, potentialRisk]);
+              setPotentialRisk('');
+            }}
+          >
+            Add
+          </Button>
+          <div>
+            {potentialRisks.map((e) => (
+              <div>{e}</div>
+            ))}
+          </div>
         </Grid>
         <Grid item xs={8}>
           <Typography variant='h6' gutterBottom>
@@ -281,7 +377,6 @@ export const BoStocksMenu = () => {
             onChange={(e) => setChartName(e.target.value)}
           />
           <TextField
-            required
             label='year'
             variant='standard'
             value={chartValue.year || 0}
@@ -293,7 +388,6 @@ export const BoStocksMenu = () => {
             InputLabelProps={{ shrink: true }}
           />
           <TextField
-            required
             value={chartValue.value || 0}
             label='value'
             variant='standard'
@@ -347,6 +441,62 @@ export const BoStocksMenu = () => {
             </div>
           ))}
         </Grid>
+        <Grid item xs={8}>
+          <Typography variant='h6' gutterBottom>
+            Opinions
+          </Typography>
+
+          <Button variant='contained' component='label'>
+            Upload File
+            <input
+              type='file'
+              onChange={(e) =>
+                setOpinion((s) => ({ ...s, file: e.target.files[0] }))
+              }
+              hidden
+            />
+          </Button>
+          <TextField
+            value={opinion.author || ''}
+            label='author'
+            variant='outlined'
+            sx={{ marginLeft: 2 }}
+            InputLabelProps={{ shrink: true }}
+            onChange={(e) => {
+              setOpinion((s) => ({ ...s, author: e.target.value }));
+            }}
+          />
+          <TextField
+            value={opinion.message || ''}
+            label='message'
+            variant='outlined'
+            sx={{ marginLeft: 2 }}
+            InputLabelProps={{ shrink: true }}
+            onChange={(e) => {
+              setOpinion((s) => ({ ...s, message: e.target.value }));
+            }}
+          />
+          <Button
+            variant='contained'
+            component='label'
+            sx={{ marginLeft: 2, marginTop: 2 }}
+            disabled={!opinion.author || !opinion.message}
+            onClick={() => {
+              setOpinions((s) => [...s, { ...opinion }]);
+              setOpinion({});
+            }}
+          >
+            Add
+          </Button>
+
+          {opinions.map((cv) => (
+            <div>
+              hasFile : {cv.file ? 'O' : 'X'}author : {cv.author} message :{' '}
+              {cv.message}
+            </div>
+          ))}
+        </Grid>
+
         <Grid item xs={12}>
           <Button variant='contained' type='submit' fullWidth>
             Add Stock

@@ -23,7 +23,7 @@ const AnalysisSchema = new Schema(
     thumbnailImageUrl: String,
     thumbnailTitle: String,
     thumbnailDate: Date,
-    ideaIds: [ObjectId],
+    ideaIds: [ObjectId], // for Insights of Giants
     missionStatement: String,
     businessModel: String,
     competitiveAdvantage: String,
