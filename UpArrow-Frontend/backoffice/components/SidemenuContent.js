@@ -11,9 +11,11 @@ import React from 'react';
 import backofficeConfig from '../config';
 import { useRecoilState } from 'recoil';
 import { menuState } from '../store';
+import { useRouter } from 'next/router';
 
 export const SidemenuContent = () => {
-  const [menu, setMenu] = useRecoilState(menuState);
+  const router = useRouter();
+  const menu = router.asPath.slice('/').at(-1);
   return (
     <List>
       {backofficeConfig.menus.map((text, index) => (
@@ -21,7 +23,7 @@ export const SidemenuContent = () => {
           key={text}
           disablePadding
           onClick={() => {
-            setMenu(text);
+            router.push('/backoffice/' + text.toLocaleLowerCase());
           }}
         >
           <ListItemButton selected={menu === text}>

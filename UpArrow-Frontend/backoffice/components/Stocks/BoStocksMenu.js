@@ -29,7 +29,6 @@ export const BoStocksMenu = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log('e.target : ', e.target);
     const name = e.target.name.value;
     const ticker = e.target.ticker.value;
     const currentPrice = e.target.currentPrice.value;
