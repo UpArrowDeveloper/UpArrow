@@ -6,8 +6,8 @@ const Analysis = require('../../models/Analysis');
 router.get('/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const objectId = ObjectId(id);
-    const analysis = await Analysis.findById(objectId);
+    console.log('id : ', id);
+    const analysis = await Analysis.findById(id);
 
     if (!analysis) {
       return res.status(404).send({ message: 'analysis not found' });

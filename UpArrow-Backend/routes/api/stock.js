@@ -10,11 +10,7 @@ const ObjectId = require('mongodb').ObjectId;
 router.get('/', async (req, res) => {
   const stocks = await Stock.find();
 
-  if (stocks.length == 0) {
-    return res.status(404).send({});
-  } else {
-    return res.status(200).send(stocks);
-  }
+  return res.status(200).send(stocks);
 });
 
 router.get('/search', async (req, res) => {
@@ -170,6 +166,12 @@ router.put('/:id/price', async (req, res) => {
 
   await Stock.findOneAndUpdate({ _id: id }, { currentPrice });
   return res.send('success');
+});
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  await Stock.deleteOne({ _id: id });
+  return res.send('delete success');
 });
 
 module.exports = router;

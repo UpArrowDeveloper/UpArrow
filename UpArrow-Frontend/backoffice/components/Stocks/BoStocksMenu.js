@@ -2,29 +2,57 @@ import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import { Button, Divider, TextField, Typography } from '@mui/material';
+import FilePreview from '../../../components/common/FilePreview';
 import axios from 'axios';
 import { env } from '../../../config';
 
-export const BoStocksMenu = () => {
-  const [targetPrices, setTargetPrices] = useState([]);
+export const BoStocksMenu = ({ stock, analysis }) => {
+  console.log('stock : ', stock);
+  console.log('analysis : ', analysis);
+  const [name, setName] = useState(stock.name || '');
+  const [ticker, setTicker] = useState(stock.ticker || '');
+  const [currentPrice, setCurrentPrice] = useState(stock.currentPrice || 0);
+  const [marketCap, setMarketCap] = useState(stock.marketCap || 0);
+  const [thumbnailTitle, setThumbnailTitle] = useState(
+    analysis.thumbnailTitle || ''
+  );
+  const [thumbnailDate, setThumbnailDate] = useState(
+    analysis?.thumbnailDate ? new Date(analysis.thumbnailDate) : undefined
+  );
+
+  const [missionStatement, setMissionStatement] = useState(
+    analysis.missionStatement || ''
+  );
+  const [businessModel, setBusinessModel] = useState(
+    analysis.businessModel || ''
+  );
+  const [competitiveAdvantage, setCompetitiveAdvantage] = useState(
+    analysis.competitiveAdvantage || ''
+  );
+
+  const [targetPrices, setTargetPrices] = useState(stock.targetPrices || []);
   const [targetPrice, setTargetPrice] = useState({});
 
   const [chartName, setChartName] = useState('');
   const [chartValues, setChartValues] = useState([]);
   const [chartValue, setChartValue] = useState({});
 
-  const [opinions, setOpinions] = useState([]);
+  const [opinions, setOpinions] = useState(analysis.opinions || []);
   const [opinion, setOpinion] = useState({});
 
-  const [financials, setFinancials] = useState([]);
+  const [financials, setFinancials] = useState(analysis.financials || []);
 
-  const [growthOppertunities, setGrowthOppertunities] = useState([]);
+  const [growthOppertunities, setGrowthOppertunities] = useState(
+    analysis.growthOppertunities || []
+  );
   const [growthOppertunity, setGrowthOppertunity] = useState('');
 
-  const [potentialRisks, setPotentialRisks] = useState([]);
+  const [potentialRisks, setPotentialRisks] = useState(
+    analysis.potentialRisks || []
+  );
   const [potentialRisk, setPotentialRisk] = useState('');
 
-  const [ideaIds, setIdeaIds] = useState([]);
+  const [ideaIds, setIdeaIds] = useState(analysis.ideaIds || []);
   const [ideaId, setIdeaId] = useState('');
 
   const onSubmit = async (e) => {
@@ -91,6 +119,14 @@ export const BoStocksMenu = () => {
       opinions: newOpinions,
     });
   };
+
+  const getYMD = (date) => {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(date.getDate()).padStart(2, '0')}`;
+  };
+
   return (
     <form onSubmit={onSubmit}>
       <Typography variant='h6' gutterBottom>
@@ -101,6 +137,8 @@ export const BoStocksMenu = () => {
           <TextField
             id='name'
             name='name'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             label='stock name'
             fullWidth
             variant='standard'
@@ -110,8 +148,11 @@ export const BoStocksMenu = () => {
           <TextField
             id='ticker'
             name='ticker'
+            value={ticker}
+            onChange={(e) => setTicker(e.target.value)}
             label='ticker'
             fullWidth
+            InputLabelProps={{ shrink: true }}
             autoComplete='family-name'
             variant='outlined'
           />
@@ -125,6 +166,7 @@ export const BoStocksMenu = () => {
             Upload File
             <input type='file' id='stockImage' name='stockImage' hidden />
           </Button>
+          <FilePreview file={{ url: stock.logoUrl }} />
         </Grid>
         <Grid item xs={6}>
           <Typography variant='h6' gutterBottom>
@@ -139,6 +181,7 @@ export const BoStocksMenu = () => {
               hidden
             />
           </Button>
+          <FilePreview file={{ url: stock.backgroundImageUrl }} />
         </Grid>
         <Divider sx={{ width: '100%', mt: 4 }} variant='middle' />
         <Grid item xs={4}>
@@ -149,6 +192,8 @@ export const BoStocksMenu = () => {
             id='currentPrice'
             name='currentPrice'
             label='current price'
+            value={currentPrice}
+            onChange={setCurrentPrice}
             variant='standard'
             type='number'
           />
@@ -207,6 +252,9 @@ export const BoStocksMenu = () => {
           <TextField
             id='marketCap'
             name='marketCap'
+            value={marketCap}
+            onChange={(e) => setMarketCap(Number(e.target.value))}
+            InputLabelProps={{ shrink: true }}
             label='market cap'
             type='number'
             variant='standard'
@@ -230,10 +278,14 @@ export const BoStocksMenu = () => {
               hidden
             />
           </Button>
+          <FilePreview file={{ url: analysis.thumbnailImageUrl }} />
           <TextField
             id='thumbnailTitle'
             name='thumbnailTitle'
             label='thumbnail title'
+            value={thumbnailTitle}
+            onChange={(e) => setThumbnailTitle(e.target.value)}
+            InputLabelProps={{ shrink: true }}
             variant='standard'
             sx={{ marginLeft: 2 }}
           />
@@ -241,6 +293,8 @@ export const BoStocksMenu = () => {
             id='thumbnailDate'
             name='thumbnailDate'
             label='thumbnail date'
+            value={getYMD(thumbnailDate)}
+            onChange={(e) => setThumbnailDate(e.target.value)}
             variant='outlined'
             type='date'
             InputLabelProps={{ shrink: true }}
@@ -281,6 +335,8 @@ export const BoStocksMenu = () => {
             id='missionStatement'
             name='missionStatement'
             label='missionStatement'
+            value={missionStatement}
+            onChange={(e) => setMissionStatement(e.target.value)}
             variant='outlined'
             multiline
             fullWidth
@@ -295,6 +351,8 @@ export const BoStocksMenu = () => {
             id='businessModel'
             name='businessModel'
             label='businessModel'
+            value={businessModel}
+            onChange={(e) => setBusinessModel(e.target.value)}
             variant='outlined'
             multiline
             fullWidth
@@ -310,6 +368,8 @@ export const BoStocksMenu = () => {
             name='competitiveAdvantage'
             label='Competitive Advantages'
             variant='outlined'
+            value={competitiveAdvantage}
+            onChange={(e) => setCompetitiveAdvantage(e.target.value)}
             multiline
             fullWidth
             rows={6}
@@ -490,6 +550,7 @@ export const BoStocksMenu = () => {
 
           {opinions.map((cv) => (
             <div>
+              <FilePreview file={{ url: cv.authorImageUrl }} />
               hasFile : {cv.file ? 'O' : 'X'}author : {cv.author} message :{' '}
               {cv.message}
             </div>

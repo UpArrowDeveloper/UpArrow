@@ -15,6 +15,8 @@ const stock = {
       .then((res) => res.data),
   getIdeasById: (id) => () =>
     axios.get(`${env.serverUrl}/stock/${id}/ideas`).then((res) => res.data),
+  deleteById: (id) =>
+    axios.delete(`${env.serverUrl}/stock/${id}`).then((res) => res.data),
 };
 
 export default stock;

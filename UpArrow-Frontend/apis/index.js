@@ -7,6 +7,7 @@ import order from './order';
 import price from './price';
 import idea from './idea';
 import auth from './auth';
+import analysis from './analysis';
 import storage from '../utils/storage';
 import axios from 'axios';
 
@@ -15,6 +16,7 @@ axios.defaults.headers['Authorization'] = storage.get('access_token');
 const api = {
   config,
   stock,
+  analysis,
   vote,
   user,
   comment,

@@ -1,6 +1,7 @@
 // material-ui
 import {
   Box,
+  Button,
   StyledEngineProvider,
   Table,
   TableBody,
@@ -29,7 +30,6 @@ const columns = [
     width: 50,
     type: 'image',
     renderCell: (params) => {
-      console.log('params : ', params);
       return <Image src={params.value} width={30} height={30} />;
     },
   },
@@ -69,6 +69,10 @@ const BackofficeStockList = () => {
   const router = useRouter();
   const handleClick = (params, e) => {
     e.stopPropagation();
+    if (params.field !== '__check__') {
+      router.push(`/backoffice/stocks/${params.row._id}`);
+      return;
+    }
     setSelectedIds((s) => {
       if (!selectedIds.some((v) => v === params.row._id)) {
         return [...s, params.row._id];
@@ -76,10 +80,16 @@ const BackofficeStockList = () => {
       return s.filter((v) => params.row._id !== v);
     });
   };
+  const clickDelete = () => {
+    selectedIds.forEach((id) => {
+      api.stock.deleteById(id);
+    });
+  };
   if (!data) return 'loading';
   return (
     <Box>
       {JSON.stringify(selectedIds)}
+      <Button onClick={clickDelete}>Delete</Button>
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
           onCellClick={handleClick}
