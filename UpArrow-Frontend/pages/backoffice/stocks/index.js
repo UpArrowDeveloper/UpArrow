@@ -89,6 +89,9 @@ const BackofficeStockList = () => {
   return (
     <Box>
       {JSON.stringify(selectedIds)}
+      <Button onClick={() => router.push('/backoffice/stocks/new')}>
+        Create
+      </Button>
       <Button onClick={clickDelete}>Delete</Button>
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
