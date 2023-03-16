@@ -160,6 +160,55 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const {
+    // stock payload
+    name,
+    ticker,
+    logoUrl,
+    backgroundImageUrl,
+    currentPrice,
+    targetPrices,
+    // analysis payload
+    thumbnailImageUrl,
+    thumbnailTitle,
+    thumbnailDate,
+    ideaIds,
+    missionStatement,
+    businessModel,
+    competitiveAdvantage,
+    growthOppertunities,
+    potentialRisks,
+    financials,
+    opinions,
+  } = req.body;
+
+  const stock = await Stock.findById(id);
+  await Stock.findOneAndUpdate(
+    { _id: id },
+    { name, ticker, logoUrl, backgroundImageUrl, currentPrice, targetPrices }
+  );
+
+  await Analysis.findOneAndUpdate(
+    { _id: stock.analysisId },
+    {
+      thumbnailImageUrl,
+      thumbnailTitle,
+      thumbnailDate,
+      ideaIds,
+      missionStatement,
+      businessModel,
+      competitiveAdvantage,
+      growthOppertunities,
+      potentialRisks,
+      financials,
+      opinions,
+    }
+  );
+  return res.send('success');
+});
+
 router.put('/:id/price', async (req, res) => {
   const { id } = req.params;
   const { currentPrice } = req.body;

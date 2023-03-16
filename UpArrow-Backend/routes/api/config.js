@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
 router.put('/', async (req, res) => {
   const { prices, board, bannerImageUrl } = req.body;
   const originConfig = await getConfig();
-  const config = await Config.updateOne(
+  await Config.updateOne(
     { _id: originConfig._id },
     {
       prices: prices ? prices : originConfig.prices,

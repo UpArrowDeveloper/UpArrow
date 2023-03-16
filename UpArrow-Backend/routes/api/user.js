@@ -196,16 +196,21 @@ router.get('/:userId/profit-percentage', async (req, res) => {
     const stockList = await Promise.all(
       orderList.map((order) => Stock.findById(order.stockId))
     );
-    const finalPurchaseList = orderList.map((order, index) => {
-      return {
-        _id: order._id,
-        userId: order.userId,
-        stockId: order.stockId,
-        quantity: order.quantity,
-        price: order.price,
-        stock: stockList[index],
-      };
-    });
+    console.log('stockList : ', stockList);
+    const finalPurchaseList = orderList
+      .filter((order, index) => {
+        return stockList[index];
+      })
+      .map((order, index) => {
+        return {
+          _id: order._id,
+          userId: order.userId,
+          stockId: order.stockId,
+          quantity: order.quantity,
+          price: order.price,
+          stock: stockList[index],
+        };
+      });
 
     const profitPercentageList = finalPurchaseList.map((purchase) => {
       const quantity = purchase.quantity;
