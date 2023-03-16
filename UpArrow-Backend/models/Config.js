@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
  *  imageUrl: string,
  *  name: string,
  *  importantDateString: DateString,
- * importantDatePrice: number,
+ *  importantDatePrice: number,
  *  ticker: string,
  *  chartImageUrl: string,
  *  dotLocation: number,
