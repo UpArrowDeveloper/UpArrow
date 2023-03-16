@@ -5,6 +5,7 @@ import { NextIcon } from '../icons';
 import { numberComma } from '../../utils/number';
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { getYMD } from '../../utils/date';
 
 const BannerBlock = styled.div`
   background-color: gray;
@@ -108,16 +109,18 @@ const Banner = ({ config: initConfig }) => {
         <div className='text'>
           If You Invested $10,000 in{' '}
           <span className='stock-name'>{stock.name}</span> on{' '}
-          {stock.importantDateString}, you have $
+          {getYMD(new Date(stock.importantDateString))}, you have $
           {numberComma(
             (
               (10000 / stock.importantDatePrice) *
-              config.prices[stock.ticker]
+              (config.prices?.[stock.ticker] || 1)
             ).toFixed(2)
           )}
         </div>
         <div className='chart'>
-          {stock.chartImageUrl ? <img src={stock.chartImageUrl} /> : null}
+          {stock.chartImageUrl ? (
+            <Image layout='fill' src={stock.chartImageUrl} />
+          ) : null}
           <div className='dot' />
         </div>
         <div className='more'>

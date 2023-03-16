@@ -5,66 +5,69 @@ import { Button, Divider, TextField, Typography } from '@mui/material';
 import FilePreview from '../../../components/common/FilePreview';
 import axios from 'axios';
 import { env } from '../../../config';
+import { useRouter } from 'next/router';
+import { getYMD } from '../../../utils/date';
 
 export const BoStocksMenu = ({ stock, analysis }) => {
-  console.log('stock : ', stock);
-  console.log('analysis : ', analysis);
-  const [name, setName] = useState(stock.name || '');
-  const [ticker, setTicker] = useState(stock.ticker || '');
-  const [currentPrice, setCurrentPrice] = useState(stock.currentPrice || 0);
-  const [marketCap, setMarketCap] = useState(stock.marketCap || 0);
+  const isEdit = !!stock;
+  const router = useRouter();
+  const [name, setName] = useState(stock?.name || '');
+  const [ticker, setTicker] = useState(stock?.ticker || '');
+  const [currentPrice, setCurrentPrice] = useState(stock?.currentPrice || 0);
+  const [marketCap, setMarketCap] = useState(stock?.marketCap || 0);
   const [thumbnailTitle, setThumbnailTitle] = useState(
-    analysis.thumbnailTitle || ''
+    analysis?.thumbnailTitle || ''
   );
   const [thumbnailDate, setThumbnailDate] = useState(
-    analysis?.thumbnailDate ? new Date(analysis.thumbnailDate) : undefined
+    analysis?.thumbnailDate ? new Date(analysis?.thumbnailDate) : undefined
   );
 
   const [missionStatement, setMissionStatement] = useState(
-    analysis.missionStatement || ''
+    analysis?.missionStatement || ''
   );
   const [businessModel, setBusinessModel] = useState(
-    analysis.businessModel || ''
+    analysis?.businessModel || ''
   );
   const [competitiveAdvantage, setCompetitiveAdvantage] = useState(
-    analysis.competitiveAdvantage || ''
+    analysis?.competitiveAdvantage || ''
   );
 
-  const [targetPrices, setTargetPrices] = useState(stock.targetPrices || []);
+  const [targetPrices, setTargetPrices] = useState(stock?.targetPrices || []);
   const [targetPrice, setTargetPrice] = useState({});
 
   const [chartName, setChartName] = useState('');
   const [chartValues, setChartValues] = useState([]);
   const [chartValue, setChartValue] = useState({});
 
-  const [opinions, setOpinions] = useState(analysis.opinions || []);
+  const [opinions, setOpinions] = useState(analysis?.opinions || []);
   const [opinion, setOpinion] = useState({});
 
-  const [financials, setFinancials] = useState(analysis.financials || []);
+  const [financials, setFinancials] = useState(analysis?.financials || []);
 
   const [growthOppertunities, setGrowthOppertunities] = useState(
-    analysis.growthOppertunities || []
+    analysis?.growthOppertunities || []
   );
   const [growthOppertunity, setGrowthOppertunity] = useState('');
 
   const [potentialRisks, setPotentialRisks] = useState(
-    analysis.potentialRisks || []
+    analysis?.potentialRisks || []
   );
   const [potentialRisk, setPotentialRisk] = useState('');
 
-  const [ideaIds, setIdeaIds] = useState(analysis.ideaIds || []);
+  const [ideaIds, setIdeaIds] = useState(analysis?.ideaIds || []);
   const [ideaId, setIdeaId] = useState('');
+
+  const [logoImage, setLogoImage] = useState();
+  const [backgroundImage, setBackgroundImage] = useState();
+  const [thumbnailImage, setThumbnailImage] = useState();
 
   const onSubmit = async (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const ticker = e.target.ticker.value;
     const currentPrice = e.target.currentPrice.value;
-    const logoImage = e.target.stockImage.files?.[0];
-    const backgroundImage = e.target.backgroundImage.files?.[0];
     const marketCap = e.target.marketCap.value;
 
-    const thumbnailImage = e.target.thumbnailImage.files?.[0];
     const thumbnailTitle = e.target.thumbnailTitle.value;
     const thumbnailDate = e.target.thumbnailDate.value;
 
@@ -74,6 +77,10 @@ export const BoStocksMenu = ({ stock, analysis }) => {
     const newOpinions = [];
 
     for await (const v of opinions) {
+      if (v.authorImageUrl) {
+        newOpinions.push(v);
+        continue;
+      }
       const imageForm = new FormData();
       imageForm.append('image', v.file);
       const { link } = (
@@ -82,23 +89,43 @@ export const BoStocksMenu = ({ stock, analysis }) => {
       newOpinions.push({ ...v, file: undefined, authorImageUrl: link });
     }
 
-    const logoFormData = new FormData();
-    logoFormData.append('image', logoImage);
-    const { link: logoUrl } = (
-      await axios.post(`${env.serverUrl}/file/upload`, logoFormData)
-    ).data;
-    const backgroundFormData = new FormData();
-    backgroundFormData.append('image', backgroundImage);
-    const { link: backgroundImageUrl } = (
-      await axios.post(`${env.serverUrl}/file/upload`, backgroundFormData)
-    ).data;
-    const thumbnailFormData = new FormData();
-    thumbnailFormData.append('image', thumbnailImage);
-    const { link: thumbnailImageUrl } = (
-      await axios.post(`${env.serverUrl}/file/upload`, thumbnailFormData)
-    ).data;
+    let logoUrl = '';
+    if (logoImage) {
+      const logoFormData = new FormData();
+      logoFormData.append('image', logoImage);
+      const { link } = (
+        await axios.post(`${env.serverUrl}/file/upload`, logoFormData)
+      ).data;
+      logoUrl = link;
+    } else if (stock?.logoUrl) {
+      logoUrl = stock.logoUrl;
+    }
 
-    await axios.post(`${env.serverUrl}/stock`, {
+    let backgroundImageUrl = '';
+    if (backgroundImage) {
+      const backgroundFormData = new FormData();
+      backgroundFormData.append('image', backgroundImage);
+      const { link } = (
+        await axios.post(`${env.serverUrl}/file/upload`, backgroundFormData)
+      ).data;
+      backgroundImageUrl = link;
+    } else if (stock?.backgroundImageUrl) {
+      backgroundImageUrl = stock.backgroundImageUrl;
+    }
+
+    let thumbnailImageUrl = '';
+    if (thumbnailImage) {
+      const thumbnailFormData = new FormData();
+      thumbnailFormData.append('image', thumbnailImage);
+      const { link } = (
+        await axios.post(`${env.serverUrl}/file/upload`, thumbnailFormData)
+      ).data;
+      thumbnailImageUrl = link;
+    } else if (analysis?.thumbnailImageUrl) {
+      thumbnailImageUrl = analysis.thumbnailImageUrl;
+    }
+
+    const payload = {
       name,
       ticker,
       logoUrl,
@@ -117,14 +144,13 @@ export const BoStocksMenu = ({ stock, analysis }) => {
       ideaIds,
       marketCap,
       opinions: newOpinions,
-    });
-  };
-
-  const getYMD = (date) => {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-      2,
-      '0'
-    )}-${String(date.getDate()).padStart(2, '0')}`;
+    };
+    if (isEdit) {
+      await axios.put(`${env.serverUrl}/stock/${stock._id}`, payload);
+    } else {
+      await axios.post(`${env.serverUrl}/stock`, payload);
+    }
+    router.push('/backoffice/stocks');
   };
 
   return (
@@ -164,9 +190,17 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           </Typography>
           <Button variant='contained' component='label'>
             Upload File
-            <input type='file' id='stockImage' name='stockImage' hidden />
+            <input
+              type='file'
+              id='stockImage'
+              name='stockImage'
+              hidden
+              onChange={(e) => {
+                setLogoImage(e.target.files[0]);
+              }}
+            />
           </Button>
-          <FilePreview file={{ url: stock.logoUrl }} />
+          <FilePreview file={logoImage} url={stock?.logoUrl} />
         </Grid>
         <Grid item xs={6}>
           <Typography variant='h6' gutterBottom>
@@ -179,9 +213,12 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               id='backgroundImage'
               name='backgroundImage'
               hidden
+              onChange={(e) => {
+                setBackgroundImage(e.target.files[0]);
+              }}
             />
           </Button>
-          <FilePreview file={{ url: stock.backgroundImageUrl }} />
+          <FilePreview file={backgroundImage} url={stock?.backgroundImageUrl} />
         </Grid>
         <Divider sx={{ width: '100%', mt: 4 }} variant='middle' />
         <Grid item xs={4}>
@@ -193,7 +230,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             name='currentPrice'
             label='current price'
             value={currentPrice}
-            onChange={setCurrentPrice}
+            onChange={(e) => setCurrentPrice(Number(e.target.value))}
             variant='standard'
             type='number'
           />
@@ -242,6 +279,15 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             <div>
               <span>{targetPrice.name}</span>
               <span>({targetPrice.price})</span>
+              <Button
+                onClick={() =>
+                  setTargetPrices((s) =>
+                    s.filter((v) => v.name !== targetPrice.name)
+                  )
+                }
+              >
+                X
+              </Button>
             </div>
           ))}
         </Grid>
@@ -276,9 +322,15 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               id='thumbnailImage'
               name='thumbnailImage'
               hidden
+              onChange={(e) => {
+                setThumbnailImage(e.target.files[0]);
+              }}
             />
           </Button>
-          <FilePreview file={{ url: analysis.thumbnailImageUrl }} />
+          <FilePreview
+            file={thumbnailImage}
+            url={analysis?.thumbnailImageUrl}
+          />
           <TextField
             id='thumbnailTitle'
             name='thumbnailTitle'
@@ -293,8 +345,8 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             id='thumbnailDate'
             name='thumbnailDate'
             label='thumbnail date'
-            value={getYMD(thumbnailDate)}
-            onChange={(e) => setThumbnailDate(e.target.value)}
+            value={getYMD(thumbnailDate || new Date())}
+            onChange={(e) => setThumbnailDate(new Date(e.target.value))}
             variant='outlined'
             type='date'
             InputLabelProps={{ shrink: true }}
@@ -323,7 +375,14 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           </Button>
           <div>
             {ideaIds.map((e) => (
-              <div>{e}</div>
+              <div>
+                {e}
+                <Button
+                  onClick={() => setIdeaIds((s) => s.filter((v) => v !== e))}
+                >
+                  X
+                </Button>
+              </div>
             ))}
           </div>
         </Grid>
@@ -396,7 +455,16 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           </Button>
           <div>
             {growthOppertunities.map((e) => (
-              <div>{e}</div>
+              <div>
+                {e}
+                <Button
+                  onClick={() =>
+                    setGrowthOppertunities((s) => s.filter((v) => v !== e))
+                  }
+                >
+                  X
+                </Button>
+              </div>
             ))}
           </div>
         </Grid>
@@ -421,7 +489,16 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           </Button>
           <div>
             {potentialRisks.map((e) => (
-              <div>{e}</div>
+              <div>
+                {e}
+                <Button
+                  onClick={() =>
+                    setPotentialRisks((s) => s.filter((v) => v !== e))
+                  }
+                >
+                  X
+                </Button>
+              </div>
             ))}
           </div>
         </Grid>
@@ -486,6 +563,15 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           {chartValues.map((cv) => (
             <div>
               year : {cv.year} value : {cv.value}
+              <Button
+                onClick={() =>
+                  setChartValues((s) =>
+                    s.filter((v) => v.year !== cv.year || v.value !== cv.value)
+                  )
+                }
+              >
+                X
+              </Button>
             </div>
           ))}
         </Grid>
@@ -497,6 +583,13 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             <div>
               <Typography variant='h6'>{cv.name}</Typography>
               {cv.chartValues.map((cvv) => JSON.stringify(cvv))}
+              <Button
+                onClick={() =>
+                  setFinancials((s) => s.filter((v) => v.name !== cv.name))
+                }
+              >
+                X
+              </Button>
             </div>
           ))}
         </Grid>
@@ -515,6 +608,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               hidden
             />
           </Button>
+          <FilePreview file={opinion.file} />
           <TextField
             value={opinion.author || ''}
             label='author'
@@ -550,16 +644,26 @@ export const BoStocksMenu = ({ stock, analysis }) => {
 
           {opinions.map((cv) => (
             <div>
-              <FilePreview file={{ url: cv.authorImageUrl }} />
-              hasFile : {cv.file ? 'O' : 'X'}author : {cv.author} message :{' '}
-              {cv.message}
+              <FilePreview file={cv.file} url={cv.authorImageUrl} />
+              author : {cv.author} message : {cv.message}
+              <Button
+                onClick={() =>
+                  setOpinions((s) =>
+                    s.filter(
+                      (v) => v.author !== cv.author || v.message !== cv.message
+                    )
+                  )
+                }
+              >
+                X
+              </Button>
             </div>
           ))}
         </Grid>
 
         <Grid item xs={12}>
           <Button variant='contained' type='submit' fullWidth>
-            Add Stock
+            {isEdit ? 'Edit' : 'Add'} Stock
           </Button>
         </Grid>
       </Grid>
