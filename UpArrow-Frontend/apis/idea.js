@@ -16,6 +16,8 @@ const idea = {
     axios
       .post(`${env.serverUrl}/idea/${id}`, { ...data })
       .then((res) => res.data),
+  deleteById: (id) =>
+    axios.delete(`${env.serverUrl}/idea/${id}`).then((res) => res.data),
 };
 
 export default idea;

@@ -5,22 +5,26 @@ import storage from '../utils/storage';
 import axios from 'axios';
 import { useEffect } from 'react';
 
-export const useAppUser = () => {
+export const useAppUser = (options) => {
+  const isAuthorized = options?.isAuthorized || false;
   const router = useRouter();
   const accessToken = storage.get('access_token');
-  const { data: userResponse, refetch } = useQuery(
-    ['user profile', accessToken || 'ac'],
-    () => {
-      const accessToken = storage.get('access_token');
-      if (accessToken) {
-        return api.user.me().catch((err) => {
-          if (err.status === 401) return null;
-          return err;
-        });
-      }
-      return {};
+  const {
+    data: userResponse,
+    isLoading,
+    refetch,
+  } = useQuery(['user profile', accessToken || 'ac'], () => {
+    const accessToken = storage.get('access_token');
+    if (accessToken) {
+      return api.user.me().catch((err) => {
+        if (err.response.status === 401) {
+          return null;
+        }
+        return err;
+      });
     }
-  );
+    return {};
+  });
 
   const user = userResponse?.user;
 
@@ -37,6 +41,13 @@ export const useAppUser = () => {
     refetch();
     router.replace('/');
   };
+
+  useEffect(() => {
+    if (isAuthorized && !isLoading && !user) {
+      alert('need login');
+      window.location.href = '/';
+    }
+  }, [isAuthorized]);
 
   return { user, logout };
 };

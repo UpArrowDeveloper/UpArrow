@@ -1,4 +1,4 @@
-export const menus = ['Stocks', 'Posts', 'Users', 'Settings'];
+export const menus = ['Stocks', 'Ideas', 'Users', 'Settings'];
 
 const backofficeConfig = {
   menus,

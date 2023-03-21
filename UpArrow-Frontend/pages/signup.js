@@ -44,7 +44,7 @@ const SignupBlock = styled.div`
 
 export default function Signup() {
   const router = useRouter();
-  const { user } = useAppUser();
+  const { user } = useAppUser({ isAuthorized: true });
   const formRef = useRef();
 
   const handleSubmit = async (e) => {
@@ -90,8 +90,6 @@ export default function Signup() {
       formRef.current.cash.value = user.cash;
     }
   }, [user]);
-
-  if (!user) return 'please login';
 
   return (
     <SignupBlock>

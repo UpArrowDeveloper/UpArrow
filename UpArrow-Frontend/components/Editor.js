@@ -127,7 +127,7 @@ const InputWrapper = styled.div`
 
 const Editor = ({ editData }) => {
   const { data: stocks } = useQuery(['stock'], api.stock.get);
-  const { user } = useAppUser();
+  const { user } = useAppUser({ isAuthorized: true });
   // https://www.youtube.com/watch?v=fzEcKYFmQxM ex video url
   const [videoUrl, setVideoUrl] = useState('');
   const [postForm, setPostForm] = useState(
