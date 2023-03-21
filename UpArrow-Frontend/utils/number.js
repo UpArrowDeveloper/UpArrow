@@ -7,6 +7,7 @@ export const isNumber = (v) => {
 };
 
 export const getNumberUnit = (labelValue) => {
+  console.log('label value : ', labelValue);
   // Nine Zeroes for Billions
   const unit =
     Math.abs(Number(labelValue)) >= 1.0e12

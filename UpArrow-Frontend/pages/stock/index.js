@@ -109,6 +109,7 @@ function Home({ stocks }) {
                   </div>
                 </td>
                 <td className='number'>
+                  .length
                   <span>${stock.currentPrice.toLocaleString()}</span>
                 </td>
                 <td className='number'>

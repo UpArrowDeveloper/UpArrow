@@ -361,7 +361,7 @@ export const getStaticProps = async (context) => {
   const { id } = context.params;
   const idea = await api.idea.getById(id)();
 
-  const { investor, prices, stockPurchaseInfos, userIdeas, userRank } =
+  const { investor, stockPurchaseInfos, userIdeas, userRank } =
     await getInvestorProfileInfo(idea.userId);
 
   const stocks = await api.stock.getByIds(idea.stockIds.join(','))();
@@ -370,8 +370,7 @@ export const getStaticProps = async (context) => {
     return {
       ...stock,
       ...stockPurchaseInfos[stock._id],
-      totalValue:
-        stockPurchaseInfos[stock._id]?.quantity * prices[stock.ticker],
+      totalValue: stockPurchaseInfos[stock._id]?.quantity * stock.currentPrice,
     };
   });
   const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
@@ -382,7 +381,6 @@ export const getStaticProps = async (context) => {
     props: {
       idea,
       investor: { ...investor, totalInvestment, totalProfits },
-      prices,
       stockPurchaseInfos,
       stocksWithPrices,
       userPosts: userIdeas,
