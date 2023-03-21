@@ -123,6 +123,7 @@ router.post('/', async (req, res) => {
       competitiveAdvantage,
       growthOppertunities,
       potentialRisks,
+      marketCap,
       financials,
       opinions,
     } = req.body;
@@ -148,6 +149,7 @@ router.post('/', async (req, res) => {
       backgroundImageUrl,
       currentPrice,
       targetPrices,
+      marketCap,
       buyerCount: 0,
       sellerCount: 0,
       commentCount: 0,
@@ -174,6 +176,7 @@ router.put('/:id', async (req, res) => {
     thumbnailImageUrl,
     thumbnailTitle,
     thumbnailDate,
+    marketCap,
     ideaIds,
     missionStatement,
     businessModel,
@@ -187,7 +190,15 @@ router.put('/:id', async (req, res) => {
   const stock = await Stock.findById(id);
   await Stock.findOneAndUpdate(
     { _id: id },
-    { name, ticker, logoUrl, backgroundImageUrl, currentPrice, targetPrices }
+    {
+      name,
+      ticker,
+      logoUrl,
+      backgroundImageUrl,
+      currentPrice,
+      targetPrices,
+      marketCap,
+    }
   );
 
   await Analysis.findOneAndUpdate(

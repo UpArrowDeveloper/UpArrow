@@ -83,6 +83,18 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+    const ideaId = req.params.id;
+    const ideaObjectId = ObjectId(ideaId);
+    await Idea.deleteOne({ _id: ideaObjectId });
+    return res.status(200).send('delete success');
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error });
+  }
+});
+
 router.get('/:userId/userId', async (req, res) => {
   try {
     const userId = req.params.userId;
