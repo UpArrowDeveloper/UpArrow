@@ -2,13 +2,13 @@ import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
 
 const Img = styled.img`
-  width: 8rem;
-  height: 8rem;
+  width: 10rem;
+  height: 10rem;
 `;
 
 const EmptyImage = styled.div`
-  width: 8rem;
-  height: 8rem;
+  width: 10rem;
+  height: 10rem;
   background-color: silver;
 `;
 export default function FilePreview({ file, url }) {

@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 
 import Grid from '@mui/material/Grid';
-import { Button, Divider, TextField, Typography } from '@mui/material';
+import { Box, Button, Divider, TextField, Typography } from '@mui/material';
 import FilePreview from '../../../components/common/FilePreview';
 import axios from 'axios';
 import { env } from '../../../config';
 import { useRouter } from 'next/router';
 import { getYMD } from '../../../utils/date';
+import { FileUploader } from '../common/FileUploader';
+import { FormTitle } from '../common/FormTitle';
 
+const flexColumn = { display: 'flex', flexDirection: 'column' };
 export const BoStocksMenu = ({ stock, analysis }) => {
   const isEdit = !!stock;
   const router = useRouter();
@@ -155,9 +158,10 @@ export const BoStocksMenu = ({ stock, analysis }) => {
 
   return (
     <form onSubmit={onSubmit}>
-      <Typography variant='h6' gutterBottom>
-        Add Stock
+      <Typography variant='h2' sx={{ fontWeight: 'bold' }}>
+        Stock
       </Typography>
+      <FormTitle>Add Stock</FormTitle>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -185,46 +189,26 @@ export const BoStocksMenu = ({ stock, analysis }) => {
         </Grid>
         <Divider sx={{ width: '100%', mt: 4 }} variant='middle' />
         <Grid item xs={6}>
-          <Typography variant='h6' gutterBottom>
-            Upload Stock Image
-          </Typography>
-          <Button variant='contained' component='label'>
-            Upload File
-            <input
-              type='file'
-              id='stockImage'
-              name='stockImage'
-              hidden
-              onChange={(e) => {
-                setLogoImage(e.target.files[0]);
-              }}
-            />
-          </Button>
-          <FilePreview file={logoImage} url={stock?.logoUrl} />
+          <FormTitle>Stock Image</FormTitle>
+          <FileUploader
+            name='stockImage'
+            file={logoImage}
+            url={stock?.logoUrl}
+            setImage={setLogoImage}
+          />
         </Grid>
         <Grid item xs={6}>
-          <Typography variant='h6' gutterBottom>
-            Upload Stock Background Image
-          </Typography>
-          <Button variant='contained' component='label'>
-            Upload File
-            <input
-              type='file'
-              id='backgroundImage'
-              name='backgroundImage'
-              hidden
-              onChange={(e) => {
-                setBackgroundImage(e.target.files[0]);
-              }}
-            />
-          </Button>
-          <FilePreview file={backgroundImage} url={stock?.backgroundImageUrl} />
+          <FormTitle>Stock Background Image</FormTitle>
+          <FileUploader
+            name='backgroundImage'
+            file={backgroundImage}
+            url={stock?.backgroundImageUrl}
+            setImage={setBackgroundImage}
+          />
         </Grid>
         <Divider sx={{ width: '100%', mt: 4 }} variant='middle' />
-        <Grid item xs={4}>
-          <Typography variant='h6' gutterBottom>
-            Price
-          </Typography>
+        <Grid item xs={12}>
+          <FormTitle>Price</FormTitle>
           <TextField
             id='currentPrice'
             name='currentPrice'
@@ -234,17 +218,14 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             variant='standard'
             type='number'
           />
-        </Grid>
-        <Grid item xs={4}>
-          <Typography variant='h6' gutterBottom>
-            Target Prices
-          </Typography>
+          <FormTitle>Target Prices</FormTitle>
           <TextField
             id='targetPriceName'
             name='targetPriceName'
             label='Name'
             variant='standard'
             value={targetPrice.name || ''}
+            InputLabelProps={{ shrink: true }}
             onChange={(e) => {
               setTargetPrice((s) => ({ ...s, name: e.target.value }));
             }}
@@ -277,9 +258,10 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           </Button>
           {targetPrices.map((targetPrice) => (
             <div>
-              <span>{targetPrice.name}</span>
-              <span>({targetPrice.price})</span>
+              <span style={{ paddingRight: '11rem' }}>{targetPrice.name}</span>
+              <span style={{ paddingRight: '10rem' }}>{targetPrice.price}</span>
               <Button
+                size='large'
                 onClick={() =>
                   setTargetPrices((s) =>
                     s.filter((v) => v.name !== targetPrice.name)
@@ -290,11 +272,8 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               </Button>
             </div>
           ))}
-        </Grid>
-        <Grid item xs={4}>
-          <Typography variant='h6' gutterBottom>
-            Market Cap
-          </Typography>
+
+          <FormTitle>Market Cap</FormTitle>
           <TextField
             id='marketCap'
             name='marketCap'
@@ -306,73 +285,69 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             variant='standard'
           />
         </Grid>
+        <Divider sx={{ width: '100%', mt: 4 }} variant='middle' />
         <Grid item xs={12}>
-          <Typography variant='h3' gutterBottom>
+          <Typography variant='h2' sx={{ fontWeight: 'bold' }} gutterBottom>
             Analyses
           </Typography>
         </Grid>
-        <Grid item xs={8}>
-          <Typography variant='h6' gutterBottom>
-            Thumbnail
-          </Typography>
-          <Button variant='contained' component='label'>
-            Thumbnail Image Upload
-            <input
-              type='file'
-              id='thumbnailImage'
-              name='thumbnailImage'
-              hidden
-              onChange={(e) => {
-                setThumbnailImage(e.target.files[0]);
-              }}
-            />
-          </Button>
-          <FilePreview
+        <Grid item xs={4}>
+          <FormTitle>Thumbnail</FormTitle>
+          <FileUploader
+            name='thumbnailImage'
             file={thumbnailImage}
             url={analysis?.thumbnailImageUrl}
-          />
-          <TextField
-            id='thumbnailTitle'
-            name='thumbnailTitle'
-            label='thumbnail title'
-            value={thumbnailTitle}
-            onChange={(e) => setThumbnailTitle(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-            variant='standard'
-            sx={{ marginLeft: 2 }}
-          />
-          <TextField
-            id='thumbnailDate'
-            name='thumbnailDate'
-            label='thumbnail date'
-            value={getYMD(thumbnailDate || new Date())}
-            onChange={(e) => setThumbnailDate(new Date(e.target.value))}
-            variant='outlined'
-            type='date'
-            InputLabelProps={{ shrink: true }}
-            sx={{ marginLeft: 2 }}
+            setImage={setThumbnailImage}
           />
         </Grid>
-
         <Grid item xs={4}>
-          <Typography variant='h6' gutterBottom>
-            Insights of Giants
-          </Typography>
-          <TextField
-            label='idea id'
-            variant='outlined'
-            value={ideaId}
-            onChange={(e) => setIdeaId(e.target.value)}
-          />
-          <Button
-            variant='contained'
-            onClick={() => {
-              setIdeaIds((s) => [...s, ideaId]);
-              setIdeaId('');
-            }}
-          >
-            Add
-          </Button>
+          <FormTitle></FormTitle>
+          <div style={flexColumn}>
+            <TextField
+              id='thumbnailTitle'
+              name='thumbnailTitle'
+              label='thumbnail title'
+              value={thumbnailTitle}
+              onChange={(e) => setThumbnailTitle(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              variant='standard'
+              sx={{ marginLeft: 2, marginBottom: 4 }}
+            />
+            <TextField
+              id='thumbnailDate'
+              name='thumbnailDate'
+              label='thumbnail date'
+              value={getYMD(thumbnailDate || new Date())}
+              onChange={(e) => setThumbnailDate(new Date(e.target.value))}
+              variant='outlined'
+              type='date'
+              InputLabelProps={{ shrink: true }}
+              sx={{ marginLeft: 2 }}
+            />
+          </div>
+        </Grid>
+        <Grid item xs={4}></Grid>
+        <Grid item xs={4}>
+          <FormTitle>Insights of Giants</FormTitle>
+          <div style={flexColumn}>
+            <TextField
+              label='idea id'
+              variant='outlined'
+              value={ideaId}
+              onChange={(e) => setIdeaId(e.target.value)}
+            />
+            <Button
+              variant='contained'
+              onClick={() => {
+                setIdeaIds((s) => [...s, ideaId]);
+                setIdeaId('');
+              }}
+            >
+              Add
+            </Button>
+          </div>
+        </Grid>
+        <Grid item xs={8}>
           <div>
             {ideaIds.map((e) => (
               <div>
@@ -387,9 +362,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           </div>
         </Grid>
         <Grid item xs={4}>
-          <Typography variant='h6' gutterBottom>
-            missionStatement
-          </Typography>
+          <FormTitle>Mission Statement</FormTitle>
           <TextField
             id='missionStatement'
             name='missionStatement'
@@ -403,9 +376,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <Typography variant='h6' gutterBottom>
-            businessModel
-          </Typography>
+          <FormTitle>Business Model</FormTitle>
           <TextField
             id='businessModel'
             name='businessModel'
@@ -419,9 +390,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <Typography variant='h6' gutterBottom>
-            Competitive Advantages
-          </Typography>
+          <FormTitle>Competitive Advantages</FormTitle>
           <TextField
             id='competitiveAdvantage'
             name='competitiveAdvantage'
@@ -435,29 +404,30 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          <Typography variant='h6' gutterBottom>
-            Growth Opportunities
-          </Typography>
-          <TextField
-            label='Growth Opportunities'
-            variant='outlined'
-            value={growthOppertunity}
-            onChange={(e) => setGrowthOppertunity(e.target.value)}
-          />
-          <Button
-            variant='contained'
-            onClick={() => {
-              setGrowthOppertunities((s) => [...s, growthOppertunity]);
-              setGrowthOppertunity('');
-            }}
-          >
-            Add
-          </Button>
+          <FormTitle>Growth Opportunities</FormTitle>
+          <div style={flexColumn}>
+            <TextField
+              label='Growth Opportunities'
+              variant='outlined'
+              value={growthOppertunity}
+              onChange={(e) => setGrowthOppertunity(e.target.value)}
+            />
+            <Button
+              variant='contained'
+              onClick={() => {
+                setGrowthOppertunities((s) => [...s, growthOppertunity]);
+                setGrowthOppertunity('');
+              }}
+            >
+              Add
+            </Button>
+          </div>
           <div>
             {growthOppertunities.map((e) => (
-              <div>
+              <div style={{ padding: '0.6rem', fontSize: '1.4rem' }}>
                 {e}
                 <Button
+                  size='large'
                   onClick={() =>
                     setGrowthOppertunities((s) => s.filter((v) => v !== e))
                   }
@@ -468,30 +438,31 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             ))}
           </div>
         </Grid>
-        <Grid item xs={8}>
-          <Typography variant='h6' gutterBottom>
-            Potential Risks
-          </Typography>
-          <TextField
-            label='Potential Risks'
-            variant='outlined'
-            value={potentialRisk}
-            onChange={(e) => setPotentialRisk(e.target.value)}
-          />
-          <Button
-            variant='contained'
-            onClick={() => {
-              setPotentialRisks((s) => [...s, potentialRisk]);
-              setPotentialRisk('');
-            }}
-          >
-            Add
-          </Button>
+        <Grid item xs={4}>
+          <FormTitle>Potential Risks</FormTitle>
+          <div style={flexColumn}>
+            <TextField
+              label='Potential Risks'
+              variant='outlined'
+              value={potentialRisk}
+              onChange={(e) => setPotentialRisk(e.target.value)}
+            />
+            <Button
+              variant='contained'
+              onClick={() => {
+                setPotentialRisks((s) => [...s, potentialRisk]);
+                setPotentialRisk('');
+              }}
+            >
+              Add
+            </Button>
+          </div>
           <div>
             {potentialRisks.map((e) => (
-              <div>
+              <div style={{ padding: '0.6rem', fontSize: '1.4rem' }}>
                 {e}
                 <Button
+                  size='large'
                   onClick={() =>
                     setPotentialRisks((s) => s.filter((v) => v !== e))
                   }
@@ -503,13 +474,12 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           </div>
         </Grid>
         <Grid item xs={8}>
-          <Typography variant='h6' gutterBottom>
-            Financials
-          </Typography>
+          <FormTitle>Financials</FormTitle>
           <TextField
             label='name'
-            variant='outlined'
+            variant='standard'
             value={chartName}
+            InputLabelProps={{ shrink: true }}
             onChange={(e) => setChartName(e.target.value)}
           />
           <TextField
@@ -521,6 +491,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               if (Number(e.target.value) < 0) return;
               setChartValue((s) => ({ ...s, year: Number(e.target.value) }));
             }}
+            sx={{ marginLeft: '1rem' }}
             InputLabelProps={{ shrink: true }}
           />
           <TextField
@@ -547,19 +518,6 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           >
             Add
           </Button>
-
-          <Button
-            variant='contained'
-            disabled={!chartName || chartValues.length === 0}
-            onClick={() => {
-              if (!chartName) return;
-              setFinancials((s) => [...s, { name: chartName, chartValues }]);
-              setChartValues([]);
-              setChartName('');
-            }}
-          >
-            Add
-          </Button>
           {chartValues.map((cv) => (
             <div>
               year : {cv.year} value : {cv.value}
@@ -574,11 +532,23 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               </Button>
             </div>
           ))}
+          <Button
+            sx={{ marginTop: '3rem' }}
+            fullWidth
+            variant='contained'
+            disabled={!chartName || chartValues.length === 0}
+            onClick={() => {
+              if (!chartName) return;
+              setFinancials((s) => [...s, { name: chartName, chartValues }]);
+              setChartValues([]);
+              setChartName('');
+            }}
+          >
+            Financial Add
+          </Button>
         </Grid>
         <Grid item xs={4}>
-          <Typography variant='h6' gutterBottom>
-            Financials
-          </Typography>
+          <FormTitle></FormTitle>
           {financials.map((cv) => (
             <div>
               <Typography variant='h6'>{cv.name}</Typography>
@@ -593,55 +563,54 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             </div>
           ))}
         </Grid>
-        <Grid item xs={8}>
-          <Typography variant='h6' gutterBottom>
-            Opinions
-          </Typography>
-
-          <Button variant='contained' component='label'>
-            Upload File
-            <input
-              type='file'
-              onChange={(e) =>
-                setOpinion((s) => ({ ...s, file: e.target.files[0] }))
-              }
-              hidden
+        <Grid item xs={4}>
+          <FormTitle>Opinions</FormTitle>
+          <FileUploader
+            name='opinion'
+            onChange={(e) =>
+              setOpinion((s) => ({ ...s, file: e.target.files[0] }))
+            }
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <FormTitle></FormTitle>
+          <div style={flexColumn}>
+            <TextField
+              value={opinion.author || ''}
+              label='author'
+              variant='outlined'
+              sx={{ marginLeft: 2, marginBottom: 2 }}
+              InputLabelProps={{ shrink: true }}
+              onChange={(e) => {
+                setOpinion((s) => ({ ...s, author: e.target.value }));
+              }}
             />
-          </Button>
-          <FilePreview file={opinion.file} />
-          <TextField
-            value={opinion.author || ''}
-            label='author'
-            variant='outlined'
-            sx={{ marginLeft: 2 }}
-            InputLabelProps={{ shrink: true }}
-            onChange={(e) => {
-              setOpinion((s) => ({ ...s, author: e.target.value }));
-            }}
-          />
-          <TextField
-            value={opinion.message || ''}
-            label='message'
-            variant='outlined'
-            sx={{ marginLeft: 2 }}
-            InputLabelProps={{ shrink: true }}
-            onChange={(e) => {
-              setOpinion((s) => ({ ...s, message: e.target.value }));
-            }}
-          />
-          <Button
-            variant='contained'
-            component='label'
-            sx={{ marginLeft: 2, marginTop: 2 }}
-            disabled={!opinion.author || !opinion.message}
-            onClick={() => {
-              setOpinions((s) => [...s, { ...opinion }]);
-              setOpinion({});
-            }}
-          >
-            Add
-          </Button>
-
+            <TextField
+              value={opinion.message || ''}
+              label='message'
+              variant='outlined'
+              sx={{ marginLeft: 2 }}
+              InputLabelProps={{ shrink: true }}
+              onChange={(e) => {
+                setOpinion((s) => ({ ...s, message: e.target.value }));
+              }}
+            />
+            <Button
+              variant='contained'
+              component='label'
+              sx={{ marginLeft: 2, marginTop: 2 }}
+              disabled={!opinion.author || !opinion.message}
+              onClick={() => {
+                setOpinions((s) => [...s, { ...opinion }]);
+                setOpinion({});
+              }}
+            >
+              Add
+            </Button>
+          </div>
+        </Grid>
+        <Grid item xs={4}>
+          <FormTitle></FormTitle>
           {opinions.map((cv) => (
             <div>
               <FilePreview file={cv.file} url={cv.authorImageUrl} />
