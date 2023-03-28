@@ -1,1 +1,0 @@
-cd Uparrow-Backend && npm start
