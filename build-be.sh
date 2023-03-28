@@ -1,0 +1,1 @@
+cd Uparrow-Backend && npm i
