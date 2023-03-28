@@ -41,5 +41,7 @@ app.use('/api/v1', routes);
 app.get('/', (req, res) => {
   res.send('ok');
 });
-
+app.get('/health', (req, res) => {
+  res.send('ok');
+});
 app.listen(port, () => console.info(`API Server Listening on port ${port}`));
