@@ -15,7 +15,7 @@ const MainLayoutBlock = styled.main`
 const MainLayout = ({ children }) => {
   const stockRef = useRef(null);
   const ideaRef = useRef(null);
-e const investorRef = useRef(null);
+  const investorRef = useRef(null);
   return (
     <MainLayoutBlock className='mainlayout'>
       <Navbar
