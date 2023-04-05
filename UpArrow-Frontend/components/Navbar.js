@@ -6,6 +6,67 @@ import { UpArrowLogo } from './icons';
 import { HeadH6Bold } from '../styles/typography';
 import { useAppUser } from '../hooks/useAppUser';
 
+const getFirstCharacterCapitalString = (str) => {
+  return str[0].toUpperCase() + str.slice(1);
+};
+
+const Navbar = () => {
+  const router = useRouter();
+  const { user, logout } = useAppUser();
+
+  const isAdmin = user?.isAdmin;
+
+  const goToIndex = () => {
+    router.push('/');
+  };
+
+  console.log('router ', router.asPath);
+
+  const routes = [
+    { name: 'stocks', path: 'stock' },
+    { name: 'ideas', path: 'idea' },
+    { name: 'investors', path: 'investor' },
+    // { name: 'principles', path: 'principles' },
+  ];
+
+  const goToAdminPage = () => {
+    router.push('/admin');
+  };
+
+  return (
+    <NavBlock>
+      <div className='left-items'>
+        <div className='uparrow-logo' onClick={goToIndex}>
+          <UpArrowLogo />
+        </div>
+
+        <div className='buttons'>
+          {routes.map((route) => (
+            <div key={route.path} onClick={() => router.push(`/${route.path}`)}>
+              {getFirstCharacterCapitalString(route.name)}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        {isAdmin ? (
+          <button className='admin-button' onClick={goToAdminPage}>
+            Switch to Admin mode
+          </button>
+        ) : null}
+      </div>
+
+      <div className='right-items'>
+        <ProfileIcon data={user} logout={logout} />
+      </div>
+      {router.asPath !== '/signup' && user && !user?.username && (
+        <div className='cover'></div>
+      )}
+    </NavBlock>
+  );
+};
+
 export const navbarHeight = '7.8rem';
 const NavBlock = styled.div`
   display: flex;
@@ -55,8 +116,8 @@ const NavBlock = styled.div`
   .profile-icon {
     width: 5rem;
     height: 5rem;
-    border: 0.1rem solid gray;
     cursor: pointer;
+    object-fit: cover;
   }
 
   .user-profile-picture {
@@ -84,62 +145,16 @@ const NavBlock = styled.div`
       background-color: red;
     }
   }
+
+  .cover {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: white;
+    z-index: 1000;
+  }
 `;
-
-const getFirstCharacterCapitalString = (str) => {
-  return str[0].toUpperCase() + str.slice(1);
-};
-
-const Navbar = ({ stockRef, ideaRef, investorRef }) => {
-  const router = useRouter();
-  const { user, logout } = useAppUser();
-
-  const isAdmin = user?.isAdmin;
-
-  const goToIndex = () => {
-    router.push('/');
-  };
-
-  const routes = [
-    { name: 'stocks', path: 'stock' },
-    { name: 'ideas', path: 'idea' },
-    { name: 'investors', path: 'investor' },
-    // { name: 'principles', path: 'principles' },
-  ];
-
-  const goToAdminPage = () => {
-    router.push('/admin');
-  };
-
-  return (
-    <NavBlock>
-      <div className='left-items'>
-        <div className='uparrow-logo' onClick={goToIndex}>
-          <UpArrowLogo />
-        </div>
-
-        <div className='buttons'>
-          {routes.map((route) => (
-            <div key={route.path} onClick={() => router.push(`/${route.path}`)}>
-              {getFirstCharacterCapitalString(route.name)}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        {isAdmin ? (
-          <button className='admin-button' onClick={goToAdminPage}>
-            Switch to Admin mode
-          </button>
-        ) : null}
-      </div>
-
-      <div className='right-items'>
-        <ProfileIcon data={user} logout={logout} />
-      </div>
-    </NavBlock>
-  );
-};
 
 export default Navbar;
