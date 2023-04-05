@@ -1,57 +1,22 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import api from '../apis';
 import { useAppUser } from '../hooks/useAppUser';
+import { FileUploader } from '../backoffice/components/common/FileUploader';
+import { getUploadUrl } from '../utils/file';
+import { MainLayout } from '../Layouts';
 
-const SignupBlock = styled.div`
-  padding-top: 11rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-bottom: 10rem;
-
-  .signup-form {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .text-field {
-    margin-bottom: 3rem;
-    display: flex;
-    flex-direction: column;
-    font-size: 2rem;
-
-    & > label {
-      margin-bottom: 1rem;
-    }
-  }
-
-  .button {
-    background-color: transparent;
-    border: solid 0.3rem transparent;
-    box-shadow: 0rem 0rem 1rem #c4c7cc;
-    border-radius: 0.6rem;
-    width: 12rem;
-    color: rgb(32, 38, 46);
-    font-size: 1.6rem;
-    margin-bottom: 2rem;
-    font-weight: 900;
-    :hover {
-      border: 0.3rem solid gray;
-    }
-  }
-`;
-
-export default function Signup() {
+export function SignupPage() {
   const router = useRouter();
   const { user } = useAppUser({ isAuthorized: true });
   const formRef = useRef();
+  const [profileImage, setProfileImage] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const name = e.target.name.value;
-    const profileImageUrl = e.target.profileImageUrl.value;
     const username = e.target.username.value;
     const investmentPhilosophy = e.target.investmentPhilosophy.value;
     const websiteUrl = e.target.websiteUrl.value;
@@ -60,7 +25,11 @@ export default function Signup() {
     if (!username || username === '') {
       return alert('need username');
     }
+    if (!profileImage) {
+      return alert('need profile image');
+    }
 
+    const profileImageUrl = await getUploadUrl(profileImage);
     const userDocument = await api.user.updateById(user._id, {
       name,
       profileImageUrl,
@@ -86,7 +55,6 @@ export default function Signup() {
   useEffect(() => {
     if (user) {
       formRef.current.name.value = user.name;
-      formRef.current.profileImageUrl.value = user.profileImageUrl;
       formRef.current.cash.value = user.cash;
     }
   }, [user]);
@@ -110,13 +78,12 @@ export default function Signup() {
         </div>
 
         <div className='text-field'>
-          <label htmlFor='profileImageUrl'>Profile Image URL</label>
-          <input
-            type='text'
-            id='profileImageUrl'
+          Profile Image
+          <FileUploader
             name='profileImageUrl'
-            placeholder='This is the profile image visible to other UpArrow users'
-          ></input>
+            file={profileImage}
+            setImage={setProfileImage}
+          />
         </div>
 
         <div className='text-field'>
@@ -166,3 +133,46 @@ export default function Signup() {
     </SignupBlock>
   );
 }
+
+export default function MainPage(props) {
+  return (
+    <MainLayout>
+      <SignupPage {...props} />
+    </MainLayout>
+  );
+}
+
+const SignupBlock = styled.div`
+  padding: 2rem;
+
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .text-field {
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 2rem;
+
+    & > label {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .button {
+    background-color: transparent;
+    border: solid 0.3rem transparent;
+    box-shadow: 0rem 0rem 1rem #c4c7cc;
+    border-radius: 0.6rem;
+    width: 12rem;
+    color: rgb(32, 38, 46);
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    font-weight: 900;
+    :hover {
+      border: 0.3rem solid gray;
+    }
+  }
+`;
