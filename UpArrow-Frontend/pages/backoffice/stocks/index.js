@@ -88,7 +88,6 @@ const BackofficeStockList = () => {
   if (!data) return 'loading';
   return (
     <Box>
-      {JSON.stringify(selectedIds)}
       <Button onClick={() => router.push('/backoffice/stocks/new')}>
         Create
       </Button>
