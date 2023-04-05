@@ -8,9 +8,9 @@ export const getUploadUrl = async (image, originUrl) => {
     const { link } = (
       await axios.post(`${env.serverUrl}/file/upload`, formData)
     ).data;
-    console.log('link : ', link);
     return link;
-  } else if (originUrl) {
+  }
+  if (originUrl) {
     return originUrl;
   }
 
