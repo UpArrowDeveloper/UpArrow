@@ -20,8 +20,6 @@ const Navbar = () => {
     router.push('/');
   };
 
-  console.log('router ', router.asPath);
-
   const routes = [
     { name: 'stocks', path: 'stock' },
     { name: 'ideas', path: 'idea' },

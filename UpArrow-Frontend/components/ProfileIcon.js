@@ -5,41 +5,6 @@ import { EmptyAvatar } from './icons';
 import { env } from '../config';
 import storage from '../utils/storage';
 
-const ProfileIconWrapper = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-
-  .menu {
-    position: absolute;
-    bottom: -20rem;
-    right: 0.2rem;
-    width: 20rem;
-    background-color: white;
-    border-radius: 0.6rem;
-    box-shadow: 0.5rem 0.5rem 0.8rem 0.5rem rgba(0, 0, 0, 0.28);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-  }
-
-  a {
-    padding: 1.6rem;
-    cursor: pointer;
-  }
-
-  .profile-icon {
-    width: 6rem;
-    height: 6rem;
-    border: 1px solid black;
-    border-radius: 9999rem;
-
-    &.no-border {
-      border: none;
-    }
-  }
-`;
-
 const InvisibleCover = styled.div`
   background-color: rgba(0 0 0 / 10%);
   position: fixed;
@@ -104,5 +69,39 @@ const ProfileIcon = ({ className, data, logout }) => {
     </>
   );
 };
+
+const ProfileIconWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .menu {
+    position: absolute;
+    bottom: -20rem;
+    right: 0.2rem;
+    width: 20rem;
+    background-color: white;
+    border-radius: 0.6rem;
+    box-shadow: 0.5rem 0.5rem 0.8rem 0.5rem rgba(0, 0, 0, 0.28);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+  }
+
+  a {
+    padding: 1.6rem;
+    cursor: pointer;
+  }
+
+  .profile-icon {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 9999rem;
+
+    &.no-border {
+      border: none;
+    }
+  }
+`;
 
 export default ProfileIcon;
