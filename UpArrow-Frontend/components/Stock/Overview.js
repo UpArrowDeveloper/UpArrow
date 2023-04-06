@@ -159,7 +159,11 @@ const Layer1 = ({ analysis, ideaList }) => {
         <h6>Analyses</h6>
         <Card>
           <div className='image-wrapper'>
-            <Image src={analysis.thumbnailImageUrl} layout='fill' />
+            <Image
+              src={analysis.thumbnailImageUrl}
+              layout='fill'
+              objectFit='cover'
+            />
           </div>
           <div className='card-content'>
             <h4 className='bold'>{analysis.thumbnailTitle}</h4>

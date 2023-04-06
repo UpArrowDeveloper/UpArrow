@@ -5,7 +5,58 @@ import { NextIcon } from '../icons';
 import { numberComma } from '../../utils/number';
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { getYMD } from '../../utils/date';
+import { getBannerYMD, getYMD } from '../../utils/date';
+
+const Banner = ({ config: initConfig }) => {
+  const { config, getConfig } = useConfig(initConfig);
+  const bannerImageUrl = config?.bannerImageUrl;
+  const stock = config?.board;
+  const timerRef = useRef();
+  const dotLocation = stock?.dotLocation;
+
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      getConfig();
+    }, 10000);
+    return () => clearInterval(timerRef.current);
+  }, []);
+
+  if (!stock) return null;
+
+  return (
+    <BannerBlock stockColor={stock.color} dotLocation={dotLocation}>
+      <div className='image-wrapper'>
+        <Image layout='fill' objectFit='cover' src={bannerImageUrl} />
+      </div>
+      <div className='board'>
+        <img className='stock-icon' src={stock.imageUrl} />
+        <div className='text'>
+          If You Invested $10,000 in{' '}
+          <span className='stock-name'>{stock.name}</span> on{' '}
+          {getBannerYMD(new Date(stock.importantDateString))}, you have $
+          {numberComma(
+            (
+              (10000 / stock.importantDatePrice) *
+              (config.prices?.[stock.ticker] || 1)
+            ).toFixed(2)
+          )}
+        </div>
+        <div className='chart'>
+          {stock.chartImageUrl ? (
+            <Image layout='fill' src={stock.chartImageUrl} />
+          ) : null}
+          <div className='dot' />
+        </div>
+        <div className='more'>
+          <span>Let's find the next Tesla</span>
+          <NextIcon />
+        </div>
+      </div>
+    </BannerBlock>
+  );
+};
+
+export default Banner;
 
 const BannerBlock = styled.div`
   background-color: gray;
@@ -83,53 +134,3 @@ const BannerBlock = styled.div`
     }
   }
 `;
-const Banner = ({ config: initConfig }) => {
-  const { config, getConfig } = useConfig(initConfig);
-  const bannerImageUrl = config?.bannerImageUrl;
-  const stock = config?.board;
-  const timerRef = useRef();
-  const dotLocation = stock?.dotLocation;
-
-  useEffect(() => {
-    timerRef.current = setInterval(() => {
-      getConfig();
-    }, 10000);
-    return () => clearInterval(timerRef.current);
-  }, []);
-
-  if (!stock) return null;
-
-  return (
-    <BannerBlock stockColor={stock.color} dotLocation={dotLocation}>
-      <div className='image-wrapper'>
-        <Image layout='fill' objectFit='cover' src={bannerImageUrl} />
-      </div>
-      <div className='board'>
-        <img className='stock-icon' src={stock.imageUrl} />
-        <div className='text'>
-          If You Invested $10,000 in{' '}
-          <span className='stock-name'>{stock.name}</span> on{' '}
-          {getYMD(new Date(stock.importantDateString))}, you have $
-          {numberComma(
-            (
-              (10000 / stock.importantDatePrice) *
-              (config.prices?.[stock.ticker] || 1)
-            ).toFixed(2)
-          )}
-        </div>
-        <div className='chart'>
-          {stock.chartImageUrl ? (
-            <Image layout='fill' src={stock.chartImageUrl} />
-          ) : null}
-          <div className='dot' />
-        </div>
-        <div className='more'>
-          <span>Let's find the next Tesla</span>
-          <NextIcon />
-        </div>
-      </div>
-    </BannerBlock>
-  );
-};
-
-export default Banner;

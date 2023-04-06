@@ -36,6 +36,7 @@ const InvestSimulatorIdeasBlock = styled.div`
     border: 0.1rem solid rgba(0 0 0 / 10%);
     border-radius: 1.6rem;
     &.post-cell {
+      width: 46rem;
       padding: 2rem;
       display: flex;
       flex-direction: column;

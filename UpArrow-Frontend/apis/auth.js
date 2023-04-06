@@ -8,6 +8,16 @@ const auth = {
         params: { code },
       })
       .then((res) => res.data),
+  customLogin: async ({ email, password }) => {
+    return axios
+      .post(`${env.serverUrl}/oauth/local/auth`, { email, password })
+      .then((res) => res.data);
+  },
+  customSignup: async ({ email, name }) => {
+    return axios
+      .post(`${env.serverUrl}/oauth/local/signup`, { email, name })
+      .then((res) => res.data);
+  },
 };
 
 export default auth;

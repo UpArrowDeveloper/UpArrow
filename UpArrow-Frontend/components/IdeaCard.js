@@ -17,15 +17,15 @@ const IdeaWrapper = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  width: 59rem;
+  width: 100%;
   gap: 2rem;
   cursor: pointer;
 
   .textBlock {
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 0.4rem;
-    width: 100%;
 
     .title {
       ${HeadH4Bold}

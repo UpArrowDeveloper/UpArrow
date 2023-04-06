@@ -29,6 +29,7 @@ const IndexWrapper = styled.div`
   }
 
   .ideaList {
+    max-width: 59rem;
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 2rem;
@@ -140,6 +141,16 @@ export async function getStaticProps() {
       limit: 6,
     },
   });
+  const userAddedTopSixIdea = [];
+
+  for await (const v of topSixIdea) {
+    const username = (await api.user.getById(v.userId)()).username;
+    userAddedTopSixIdea.push({
+      ...v,
+      username,
+    });
+  }
+
   const investorProfitPercentageList = await Promise.all(
     investorList.map((investor) =>
       api.user.getProfitPercentageById(investor._id)
@@ -171,7 +182,7 @@ export async function getStaticProps() {
   return {
     props: {
       stockList,
-      topSixIdea,
+      topSixIdea: userAddedTopSixIdea,
       investorDataList: percentBindDataList,
       config,
     },
