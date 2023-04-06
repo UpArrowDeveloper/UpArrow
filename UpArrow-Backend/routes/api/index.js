@@ -13,6 +13,7 @@ const vote = require('./vote');
 const price = require('./price');
 const file = require('./fileRouter');
 const google = require('./oauth/google');
+const localAuth = require('./oauth/local');
 
 router.use('/analysis', analysis);
 router.use('/idea', idea);
@@ -26,5 +27,6 @@ router.use('/vote', vote);
 router.use('/price', price);
 router.use('/file', file);
 router.use('/oauth', google);
+router.use('/oauth/local', localAuth);
 
 module.exports = router;
