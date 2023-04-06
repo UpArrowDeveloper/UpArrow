@@ -22,6 +22,7 @@ import { RecoilRoot } from 'recoil';
 import api from '../../../apis';
 import BackofficeLayout from '../../../Layouts/Backoffice';
 import { useRouter } from 'next/router';
+import storage from '../../../utils/storage';
 
 const columns = [
   {
@@ -86,7 +87,6 @@ const BackofficeIdeaList = () => {
   if (!data) return 'loading';
   return (
     <Box>
-      {JSON.stringify(selectedIds)}
       <Button onClick={clickDelete}>Delete</Button>
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
@@ -109,6 +109,41 @@ const App = () => {
       <StyledEngineProvider injectFirst>
         <BackofficeLayout>
           <BackofficeIdeaList />
+          <div>
+            <h1>custom login</h1>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const res = await api.auth.customLogin({
+                  email: e.target.email.value,
+                  password: e.target.password.value,
+                });
+                storage.set('access_token', res.accessToken);
+                alert('signin success!');
+              }}
+            >
+              <input placeholder='email' name='email' />
+              <input placeholder='password' type='password' name='password' />
+              <input type='submit' value='login' />
+            </form>
+          </div>
+          <div>
+            <h1>custom signup</h1>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const res = await api.auth.customSignup({
+                  email: e.target.email.value,
+                  name: e.target.name.value,
+                });
+                alert('signup success!');
+              }}
+            >
+              <input placeholder='email' name='email' />
+              <input placeholder='name' name='name' />
+              <input type='submit' value='signup' />
+            </form>
+          </div>
         </BackofficeLayout>
       </StyledEngineProvider>
     </RecoilRoot>

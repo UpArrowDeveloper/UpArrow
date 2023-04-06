@@ -17,6 +17,141 @@ import {
 } from '../../styles/typography';
 import color from '../../styles/color';
 import api from '../../apis';
+import { MainLayout } from '../../Layouts';
+
+// -> 한 함수 / 모듈 / 는 한가지 일만 해야한다.  clean code
+// Investor : Investor 페이지를 보여주는 일 // 다른 기능들은 다른 파일에서 .
+
+export function Investor({ investor, stocksWithPrices, rank }) {
+  const {
+    cash,
+    comments,
+    description,
+    email,
+    followers,
+    followings,
+    isAdmin,
+    likes,
+    name,
+    password,
+    ideas,
+    profileImageUrl,
+    // purchases,
+    stockPreference,
+    totalInvestment,
+    totalProfits,
+    username,
+    websiteUrl,
+  } = investor;
+
+  return (
+    <InvestorBlock>
+      <InvestorProfileView
+        profileImageUrl={profileImageUrl}
+        username={username}
+        investedCompanies={stocksWithPrices}
+        followers={followers}
+        followings={followings}
+        description={description}
+        websiteUrl={websiteUrl}
+        cash={cash}
+        totalInvestment={totalInvestment}
+        totalProfits={totalProfits}
+        totalAssets={totalInvestment + cash}
+        rank={rank}
+      />
+      <InvestorDataBlock>
+        <div className='portfolio-wrapper'>
+          <div className='investor-title'>{username}'s Portfolio</div>
+          <div className='stocks'>
+            {stocksWithPrices.map((company) => (
+              <div className='stock'>
+                <img className='stock-logo' src={company.logoUrl} />
+                <div className='stock-info'>
+                  <div className='stock-name'>{company.name}</div>
+                  <div className='stock-quantity'>
+                    {company.quantity} shares
+                  </div>
+                  <div className='stock-total-value'>
+                    ${numberComma(company.totalValue)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className='view-all'>View All</div>
+        </div>
+        <div className='ideas-wrapper'>
+          <div className='ideas'>
+            <div className='investor-title'>{username}'s Ideas</div>
+            <div className='ideas-content-wrapper'>
+              {ideas.map((idea) => (
+                <IdeaCard
+                  theme={'none'}
+                  ideaId={idea._id}
+                  ideaImage={idea.thumbnailImageUrl}
+                  ideaTitle={idea.title}
+                  ideaAuthor={username}
+                  ideaDate={idea.date}
+                  stockId={idea.stockId}
+                />
+              ))}
+            </div>
+          </div>
+          <div className='view-all'>View All</div>
+        </div>
+      </InvestorDataBlock>
+    </InvestorBlock>
+  );
+}
+
+export default function Page(props) {
+  return (
+    <MainLayout>
+      <Investor {...props} />
+    </MainLayout>
+  );
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking', // can also be true or 'blocking'
+  };
+}
+
+export async function getStaticProps(context) {
+  const { id } = context.params;
+  const { investor, prices, stockPurchaseInfos, userIdeas, userRank } =
+    await getInvestorProfileInfo(id);
+
+  const { totalInvestment, totalProfits } = await getInvestorInvestInfo(id);
+  const stockIds = Object.keys(stockPurchaseInfos);
+
+  const stocks =
+    stockIds.length > 0 ? await api.stock.getByIds(stockIds.join(','))() : [];
+
+  const stocksWithPrices = stocks.map((stock) => {
+    return {
+      ...stock,
+      ...stockPurchaseInfos[stock._id],
+      totalValue: stockPurchaseInfos[stock._id].quantity * prices[stock.ticker],
+    };
+  });
+
+  return {
+    props: {
+      investor: {
+        ...investor,
+        ideas: userIdeas,
+        totalInvestment,
+        totalProfits,
+      },
+      stocksWithPrices,
+      rank: userRank,
+    },
+  };
+}
 
 const InvestorBlock = styled.div`
   display: flex;
@@ -113,129 +248,3 @@ const InvestorDataBlock = styled.div`
     }
   }
 `;
-
-// -> 한 함수 / 모듈 / 는 한가지 일만 해야한다.  clean code
-// Investor : Investor 페이지를 보여주는 일 // 다른 기능들은 다른 파일에서 .
-
-export default function Investor({ investor, stocksWithPrices, rank }) {
-  const {
-    cash,
-    comments,
-    description,
-    email,
-    followers,
-    followings,
-    isAdmin,
-    likes,
-    name,
-    password,
-    ideas,
-    profileImageUrl,
-    // purchases,
-    stockPreference,
-    totalInvestment,
-    totalProfits,
-    username,
-    websiteUrl,
-  } = investor;
-
-  return (
-    <InvestorBlock>
-      <InvestorProfileView
-        profileImageUrl={profileImageUrl}
-        username={username}
-        investedCompanies={stocksWithPrices}
-        followers={followers}
-        followings={followings}
-        description={description}
-        websiteUrl={websiteUrl}
-        cash={cash}
-        totalInvestment={totalInvestment}
-        totalProfits={totalProfits}
-        totalAssets={totalInvestment + cash}
-        rank={rank}
-      />
-      <InvestorDataBlock>
-        <div className='portfolio-wrapper'>
-          <div className='investor-title'>{username}'s Portfolio</div>
-          <div className='stocks'>
-            {stocksWithPrices.map((company) => (
-              <div className='stock'>
-                <img className='stock-logo' src={company.logoUrl} />
-                <div className='stock-info'>
-                  <div className='stock-name'>{company.name}</div>
-                  <div className='stock-quantity'>
-                    {company.quantity} shares
-                  </div>
-                  <div className='stock-total-value'>
-                    ${numberComma(company.totalValue)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className='view-all'>View All</div>
-        </div>
-        <div className='ideas-wrapper'>
-          <div className='ideas'>
-            <div className='investor-title'>{username}'s Ideas</div>
-            <div className='ideas-content-wrapper'>
-              {ideas.map((idea) => (
-                <IdeaCard
-                  theme={'none'}
-                  ideaId={idea._id}
-                  ideaImage={idea.thumbnailImageUrl}
-                  ideaTitle={idea.title}
-                  ideaAuthor={username}
-                  ideaDate={idea.date}
-                  stockId={idea.stockId}
-                />
-              ))}
-            </div>
-          </div>
-          <div className='view-all'>View All</div>
-        </div>
-      </InvestorDataBlock>
-    </InvestorBlock>
-  );
-}
-
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: 'blocking', // can also be true or 'blocking'
-  };
-}
-
-export async function getStaticProps(context) {
-  const { id } = context.params;
-  const { investor, prices, stockPurchaseInfos, userIdeas, userRank } =
-    await getInvestorProfileInfo(id);
-
-  const { totalInvestment, totalProfits } = await getInvestorInvestInfo(id);
-  const stockIds = Object.keys(stockPurchaseInfos);
-
-  const stocks =
-    stockIds.length > 0 ? await api.stock.getByIds(stockIds.join(','))() : [];
-
-  const stocksWithPrices = stocks.map((stock) => {
-    return {
-      ...stock,
-      ...stockPurchaseInfos[stock._id],
-      totalValue: stockPurchaseInfos[stock._id].quantity * prices[stock.ticker],
-    };
-  });
-
-  return {
-    props: {
-      investor: {
-        ...investor,
-        ideas: userIdeas,
-        totalInvestment,
-        totalProfits,
-      },
-      stocksWithPrices,
-      rank: userRank,
-    },
-  };
-}

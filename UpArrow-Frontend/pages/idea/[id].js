@@ -27,6 +27,7 @@ import {
   ThumbUpIcon,
 } from '../../components/icons';
 import { useAppUser } from '../../hooks/useAppUser';
+import { MainLayout } from '../../Layouts';
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
@@ -154,12 +155,7 @@ const IdeaContent = styled.div`
   }
 `;
 
-export default function Ideas({
-  investor,
-  idea: serverIdea,
-  rank,
-  stocksWithPrices,
-}) {
+export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   const {
     description,
     followers,
@@ -347,6 +343,14 @@ export default function Ideas({
         </FloattingMenu>
       </PostBlock>
     </IdeasBlock>
+  );
+}
+
+export default function Page(props) {
+  return (
+    <MainLayout>
+      <Idea {...props} />
+    </MainLayout>
   );
 }
 
