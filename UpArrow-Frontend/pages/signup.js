@@ -1,11 +1,17 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import api from '../apis';
 import { useAppUser } from '../hooks/useAppUser';
 import { FileUploader } from '../backoffice/components/common/FileUploader';
 import { getUploadUrl } from '../utils/file';
 import { MainLayout } from '../Layouts';
+import { Body16Regular, HeadH5Bold } from '../styles/typography';
+import color from '../styles/color';
+import Input from '../components/common/Input';
+import Textarea from '../components/common/Textarea';
+import Button from '../components/common/Button';
+import { ProfileImageUploader } from '../components/common/ProfileImageUploader';
 
 export function SignupPage() {
   const router = useRouter();
@@ -20,7 +26,6 @@ export function SignupPage() {
     const username = e.target.username.value;
     const investmentPhilosophy = e.target.investmentPhilosophy.value;
     const websiteUrl = e.target.websiteUrl.value;
-    const cash = e.target.cash.value;
     const isAdmin = false;
     if (!username || username === '') {
       return alert('need username');
@@ -38,7 +43,6 @@ export function SignupPage() {
       investmentPhilosophy,
       websiteUrl,
       isAdmin,
-      cash,
     });
 
     if (userDocument) {
@@ -52,34 +56,15 @@ export function SignupPage() {
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      formRef.current.name.value = user.name;
-      formRef.current.cash.value = user.cash;
-    }
-  }, [user]);
-
   return (
     <SignupBlock>
+      <div className='title-block'>
+        <h1>Welcome!</h1>
+        <h3>Please enter your basic information.</h3>
+      </div>
       <form ref={formRef} className='signup-form' onSubmit={handleSubmit}>
-        <div className='text-field'>
-          <label htmlFor='firstname'>name</label>
-          <input type='text' id='name' name='name'></input>
-        </div>
-
-        <div className='text-field'>
-          <label htmlFor='username'>Username</label>
-          <input
-            type='text'
-            id='username'
-            name='username'
-            placeholder='This is the name visible to other UpArrow users'
-          ></input>
-        </div>
-
-        <div className='text-field'>
-          Profile Image
-          <FileUploader
+        <div className='file-uploader-wrapper'>
+          <ProfileImageUploader
             name='profileImageUrl'
             file={profileImage}
             setImage={setProfileImage}
@@ -87,48 +72,33 @@ export function SignupPage() {
         </div>
 
         <div className='text-field'>
-          <label htmlFor='websiteUrl'>Social Media</label>
-          <input
-            type='text'
-            id='websiteUrl'
-            name='websiteUrl'
-            placeholder='YouTube, Instagram, Twitter, LinkedIn, or your personal website for other UpArrow users to follow you'
-          ></input>
+          <Input label='Username' type='text' id='username' name='username' />
         </div>
 
         <div className='text-field'>
-          <label htmlFor='investmentPhilosophy'>Investment Philosophy</label>
-          <textarea
-            rows='3'
-            type='investmentPhilosophy'
-            id='investmentPhilosophy'
-            name='investmentPhilosophy'
-            placeholder='Tell us about your investment philosophy. What made you start investing? What type of stocks are you interested?'
+          <Input
+            label='Social Media'
+            type='text'
+            id='websiteUrl'
+            name='websiteUrl'
+            placeholder='ex. Youtube, Instagram, Twitter, Linkedin'
           />
         </div>
 
         <div className='text-field'>
-          <label htmlFor='cash'>Simulation Money</label>
-          <input
-            type='text'
-            id='cash'
-            name='cash'
-            placeholder=''
-            disabled
-          ></input>
-          {/* <select id='cash' name='cash' disabled>
-            <option selected value={100000}>
-              $100,000
-            </option>
-          </select> */}
+          <Textarea
+            label='Investment Philosophy'
+            rows='5'
+            type='investmentPhilosophy'
+            id='investmentPhilosophy'
+            name='investmentPhilosophy'
+            placeholder='ex. I like to invest long-term in growth stocks.'
+          />
         </div>
 
-        <div className='text-field'>
-          * Simulation Money is the money you can use in UpArrow to simulate
-          stock investment.
-        </div>
-
-        <input className='button' type='submit' value='Submit'></input>
+        <Button className='button' type='submit'>
+          Summit
+        </Button>
       </form>
     </SignupBlock>
   );
@@ -144,10 +114,33 @@ export default function MainPage(props) {
 
 const SignupBlock = styled.div`
   padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .title-block {
+    & > h1 {
+      font-style: normal;
+      font-weight: 600;
+      font-size: 4.8rem;
+      line-height: 5.8rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    & > h3 {
+      ${Body16Regular}
+      margin-bottom: 4rem;
+    }
+  }
 
   .signup-form {
+    width: 65rem;
     display: flex;
     flex-direction: column;
+    border: 0.1rem solid ${color.B80};
+    border-radius: 1.6rem;
+    padding: 2.4rem 3.2rem;
   }
 
   .text-field {
@@ -161,18 +154,22 @@ const SignupBlock = styled.div`
     }
   }
 
-  .button {
-    background-color: transparent;
-    border: solid 0.3rem transparent;
-    box-shadow: 0rem 0rem 1rem #c4c7cc;
-    border-radius: 0.6rem;
-    width: 12rem;
-    color: rgb(32, 38, 46);
-    font-size: 1.6rem;
-    margin-bottom: 2rem;
-    font-weight: 900;
-    :hover {
-      border: 0.3rem solid gray;
+  button {
+    height: 5.6rem;
+    font-family: 'Inter';
+    ${HeadH5Bold}
+    color: ${color.B96}
+  }
+
+  .file-uploader-wrapper {
+    display: flex;
+    justify-content: center;
+
+    img.empty-image {
+      background-image: url('/images/profile-upload.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      border-image-width: 0;
     }
   }
 `;
