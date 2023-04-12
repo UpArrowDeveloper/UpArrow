@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import api from '../apis';
 import { useAppUser } from '../hooks/useAppUser';
-import { FileUploader } from '../backoffice/components/common/FileUploader';
 import { getUploadUrl } from '../utils/file';
 import { MainLayout } from '../Layouts';
 import { Body16Regular, HeadH5Bold } from '../styles/typography';
@@ -12,12 +11,15 @@ import Input from '../components/common/Input';
 import Textarea from '../components/common/Textarea';
 import Button from '../components/common/Button';
 import { ProfileImageUploader } from '../components/common/ProfileImageUploader';
+import useModal from '../hooks/useModal';
+import { SignupCelebrate } from '../components/Popup/SignupCelebrate';
 
 export function SignupPage() {
   const router = useRouter();
   const { user } = useAppUser({ isAuthorized: true });
   const formRef = useRef();
   const [profileImage, setProfileImage] = useState();
+  const { openModal, closeModal } = useModal();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,7 +48,13 @@ export function SignupPage() {
     });
 
     if (userDocument) {
-      router.push('/');
+      openModal({
+        children: SignupCelebrate,
+        onConfirm: () => {
+          router.push('/');
+          closeModal();
+        },
+      });
     } else {
       // if posting a user fails, reload the page and then show snack bar that tells them why
       // if I get 400 make a message that you already registered with this email and show the email they registered
