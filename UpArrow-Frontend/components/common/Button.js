@@ -10,6 +10,20 @@ const buttonCssCreator = (theme) => {
       color: white;
     `;
   }
+  if (theme === 'secondary') {
+    return css`
+      background-color: white;
+      border: 0.1rem solid ${color.B80};
+      color: black;
+    `;
+  }
+  if (theme === 'danger') {
+    return css`
+      border: 0.1rem solid ${color.DISAGREE_RED};
+      background: none;
+      color: ${color.DISAGREE_RED};
+    `;
+  }
   return css`
     background-color: red;
   `;
@@ -31,7 +45,7 @@ const ButtonBlock = styled.button`
 
 const Button = ({ children, theme = 'primary', ...props }) => {
   return (
-    <ButtonBlock {...props} theme={theme}>
+    <ButtonBlock {...props} theme={theme} type={props.type || 'button'}>
       {children}
     </ButtonBlock>
   );
