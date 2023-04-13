@@ -172,12 +172,5 @@ const SignupBlock = styled.div`
   .file-uploader-wrapper {
     display: flex;
     justify-content: center;
-
-    img.empty-image {
-      background-image: url('/images/profile-upload.jpg');
-      background-size: cover;
-      background-repeat: no-repeat;
-      border-image-width: 0;
-    }
   }
 `;

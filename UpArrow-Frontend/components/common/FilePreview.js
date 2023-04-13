@@ -4,6 +4,12 @@ import React, { useEffect, useState } from 'react';
 const Img = styled.img`
   width: 10rem;
   height: 10rem;
+  &.empty-image {
+    background-image: url('/images/profile-upload.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-image-width: 0;
+  }
 `;
 
 const EmptyImage = styled.div`
@@ -25,10 +31,11 @@ export default function FilePreview({ file, url, hasEmptyImage, ...props }) {
       setImageUrl();
     }
   }, [file]);
+
   return (
     <>
       {imageUrl ? (
-        <Img src={imageUrl} {...props}></Img>
+        <Img src={imageUrl} {...props} />
       ) : hasEmptyImage ? (
         <Img className='empty-image' />
       ) : (
