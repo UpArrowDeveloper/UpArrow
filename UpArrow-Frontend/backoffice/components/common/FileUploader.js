@@ -8,9 +8,13 @@ export const FileUploader = ({
   setImage,
   onChange,
   hasEmptyImage = true,
+  ...props
 }) => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '10rem' }}>
+    <div
+      {...props}
+      style={{ display: 'flex', flexDirection: 'column', width: '10rem' }}
+    >
       <label htmlFor={name} style={{ marginBottom: '0.4rem' }}>
         <FilePreview file={file} url={url} hasEmptyImage={hasEmptyImage} />
       </label>

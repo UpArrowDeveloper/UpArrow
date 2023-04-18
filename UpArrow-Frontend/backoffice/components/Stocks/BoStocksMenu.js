@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 
-import Grid from '@mui/material/Grid';
-import { Button as MuiButton, TextField, Typography } from '@mui/material';
 import FilePreview from '../../../components/common/FilePreview';
 import axios from 'axios';
 import { env } from '../../../config';
 import { useRouter } from 'next/router';
 import { FileUploader } from '../common/FileUploader';
-import { FormTitle } from '../common/FormTitle';
 import styled from '@emotion/styled';
 import {
   Body12Medium,
+  Body16Regular,
   HeadH3Bold,
+  HeadH5Bold,
   HeadH6Bold,
 } from '../../../styles/typography';
 import color from '../../../styles/color';
@@ -19,6 +18,7 @@ import Input from '../../../components/common/Input';
 import Button from '../../../components/common/Button';
 import Divider from '../../../components/Divider';
 import Textarea from '../../../components/common/Textarea';
+import { TrashIcon } from '../../../components/icons';
 
 const flexColumn = { display: 'flex', flexDirection: 'column' };
 export const BoStocksMenu = ({ stock, analysis }) => {
@@ -235,10 +235,54 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             <div>
               <h6 className='mb-8'>Target Price</h6>
               <div className='target-prices'>
-                {targetPrices.map((targetPrice) => (
+                {targetPrices.map((targetPrice, index) => (
                   <div className='target-price-input-wrapper'>
-                    <Input value={targetPrice.name}></Input>
-                    <Input value={targetPrice.price}></Input>
+                    <Input
+                      value={targetPrice.name}
+                      onChange={(e) => {
+                        setTargetPrices((s) => {
+                          const newTargetPrices = [...s];
+                          newTargetPrices[index] = {
+                            ...newTargetPrices[index],
+                            name: e.target.value,
+                          };
+                          return newTargetPrices;
+                        });
+                      }}
+                      onCancel={() =>
+                        setTargetPrices((s) => {
+                          const newTargetPrices = [...s];
+                          newTargetPrices[index] = {
+                            ...newTargetPrices[index],
+                            name: '',
+                          };
+                          return newTargetPrices;
+                        })
+                      }
+                    />
+                    <Input
+                      value={targetPrice.price}
+                      onChange={(e) => {
+                        setTargetPrices((s) => {
+                          const newTargetPrices = [...s];
+                          newTargetPrices[index] = {
+                            ...newTargetPrices[index],
+                            price: e.target.value,
+                          };
+                          return newTargetPrices;
+                        });
+                      }}
+                      onCancel={() =>
+                        setTargetPrices((s) => {
+                          const newTargetPrices = [...s];
+                          newTargetPrices[index] = {
+                            ...newTargetPrices[index],
+                            price: 0,
+                          };
+                          return newTargetPrices;
+                        })
+                      }
+                    />
                     <Button
                       className='target-price-button'
                       theme='danger'
@@ -298,14 +342,12 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             <h6 className='mb-8'>Insight of Giants URL</h6>
             <div>
               {ideaIds.map((e) => (
-                <Input className='mb-8' value={e} />
-                // <MuiButton
-                //   onClick={() =>
-                //     setIdeaIds((s) => s.filter((v) => v !== e))
-                //   }
-                // >
-                //   X
-                // </MuiButton>
+                <Input
+                  className='mb-8'
+                  value={e}
+                  onClose={() => 0}
+                  onCancel={() => 0}
+                />
               ))}
             </div>
             <Input
@@ -425,30 +467,6 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               </div>
             ))}
           </div>
-          <h6 className='mb-8'>Growth Opportunities</h6>
-          <div className='mb-8'>
-            {growthOppertunities.map((e) => (
-              <div
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  padding: '0.6rem 0',
-                  fontSize: '1.4rem',
-                  gap: '0.8rem',
-                }}
-              >
-                <Input style={{ flex: 1 }} value={e} />
-                <Button
-                  theme='danger'
-                  onClick={() =>
-                    setGrowthOppertunities((s) => s.filter((v) => v !== e))
-                  }
-                >
-                  DELETE
-                </Button>
-              </div>
-            ))}
-          </div>
           <div style={flexColumn}>
             <Input
               label=''
@@ -515,117 +533,130 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               </Button>
             </div>
           </div>
-          <Grid item xs={8}>
-            <FormTitle>Financials</FormTitle>
-            <TextField
-              label='name'
-              variant='standard'
-              value={chartName}
-              InputLabelProps={{ shrink: true }}
-              onChange={(e) => setChartName(e.target.value)}
-            />
-            <TextField
-              label='year'
-              variant='standard'
-              value={chartValue.year || 0}
-              type='number'
-              onChange={(e) => {
-                if (Number(e.target.value) < 0) return;
-                setChartValue((s) => ({
-                  ...s,
-                  year: Number(e.target.value),
-                }));
-              }}
-              sx={{ marginLeft: '1rem' }}
-              InputLabelProps={{ shrink: true }}
-            />
-            <TextField
-              value={chartValue.value || 0}
-              label='value'
-              variant='standard'
-              sx={{ marginLeft: 2 }}
-              InputLabelProps={{ shrink: true }}
-              type='number'
-              onChange={(e) => {
-                if (Number(e.target.value) < 0) return;
-                setChartValue((s) => ({
-                  ...s,
-                  value: Number(e.target.value),
-                }));
-              }}
-            />
-            <MuiButton
-              variant='contained'
-              component='label'
-              sx={{ marginLeft: 2, marginTop: 2 }}
-              disabled={!chartValue.year || !chartValue.value}
-              onClick={() => {
-                setChartValues((s) => [...s, { ...chartValue }]);
-                setChartValue({});
-              }}
-            >
-              Add
-            </MuiButton>
-            {chartValues.map((cv) => (
-              <div>
-                year : {cv.year} value : {cv.value}
-                <MuiButton
-                  onClick={() =>
-                    setChartValues((s) =>
-                      s.filter(
-                        (v) => v.year !== cv.year || v.value !== cv.value
-                      )
-                    )
-                  }
+          <h3 className='mb-24'>Financials</h3>
+          <div className='financial mb-48'>
+            <div className='financial-left'>
+              <h6 className='mb-8'>Add Chart</h6>
+              <div className='add-chart'>
+                <Input
+                  value={chartName}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) => setChartName(e.target.value)}
+                />
+                <Input
+                  value={chartValue.year || 0}
+                  type='number'
+                  onChange={(e) => {
+                    if (Number(e.target.value) < 0) return;
+                    setChartValue((s) => ({
+                      ...s,
+                      year: Number(e.target.value),
+                    }));
+                  }}
+                  sx={{ marginLeft: '1rem' }}
+                  InputLabelProps={{ shrink: true }}
+                />
+                <Input
+                  value={chartValue.value || 0}
+                  sx={{ marginLeft: 2 }}
+                  InputLabelProps={{ shrink: true }}
+                  type='number'
+                  onChange={(e) => {
+                    if (Number(e.target.value) < 0) return;
+                    setChartValue((s) => ({
+                      ...s,
+                      value: Number(e.target.value),
+                    }));
+                  }}
+                />
+                <Button
+                  theme='secondary'
+                  className='add-btn'
+                  component='label'
+                  sx={{ marginLeft: 2, marginTop: 2 }}
+                  disabled={!chartValue.year || !chartValue.value}
+                  onClick={() => {
+                    setChartValues((s) => [...s, { ...chartValue }]);
+                    setChartValue({});
+                  }}
                 >
-                  X
-                </MuiButton>
+                  ADD
+                </Button>
               </div>
-            ))}
-            <MuiButton
-              sx={{ marginTop: '3rem' }}
-              fullWidth
-              variant='contained'
-              disabled={!chartName || chartValues.length === 0}
-              onClick={() => {
-                if (!chartName) return;
-                setFinancials((s) => [...s, { name: chartName, chartValues }]);
-                setChartValues([]);
-                setChartName('');
-              }}
-            >
-              Financial Add
-            </MuiButton>
-          </Grid>
-          <Grid item xs={4}>
-            <FormTitle></FormTitle>
-            {financials.map((cv) => (
-              <div>
-                <Typography variant='h6'>{cv.name}</Typography>
-                {cv.chartValues.map((cvv) => JSON.stringify(cvv))}
-                <MuiButton
-                  onClick={() =>
-                    setFinancials((s) => s.filter((v) => v.name !== cv.name))
-                  }
-                >
-                  X
-                </MuiButton>
+              <Divider />
+              <h6 className='mb-8'>Name : Revenue</h6>
+              <div className='chart-value-wrapper'>
+                {chartValues.map((f) => (
+                  <div className='chart-value'>
+                    <p>
+                      year : {f.year} / value : {f.value}
+                    </p>
+                    <TrashIcon
+                      className='trash-icon'
+                      onClick={() =>
+                        setChartValues((s) =>
+                          s.filter(
+                            (v) => v.year !== f.year && v.value !== f.value
+                          )
+                        )
+                      }
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </Grid>
-          <Grid item xs={4}>
-            <FormTitle>Opinions</FormTitle>
-            <FileUploader
-              name='opinion'
-              onChange={(e) =>
-                setOpinion((s) => ({ ...s, file: e.target.files[0] }))
-              }
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <FormTitle></FormTitle>
-            <div style={flexColumn}>
-              <TextField
+              <Button
+                className='create-chart'
+                variant='contained'
+                disabled={!chartName || chartValues.length === 0}
+                onClick={() => {
+                  if (!chartName) return;
+                  setFinancials((s) => [
+                    ...s,
+                    { name: chartName, chartValues },
+                  ]);
+                  setChartValues([]);
+                  setChartName('');
+                }}
+              >
+                Create Chart {'>'}
+              </Button>
+            </div>
+            <div className='financial-right'>
+              <h6 className='mb-8'>Created Chart</h6>
+              <div className='created-chart-wrapper'>
+                {financials.map((cv) => (
+                  <div className='created-chart'>
+                    <div className='created-chart-left'>
+                      <h6>{cv.name}</h6>
+                      {cv.chartValues.map((cvv) => JSON.stringify(cvv))}
+                    </div>
+                    <TrashIcon
+                      onClick={() =>
+                        setFinancials((s) =>
+                          s.filter((v) => v.name !== cv.name)
+                        )
+                      }
+                    >
+                      X
+                    </TrashIcon>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <h3 className='mb-24'>Opinions</h3>
+          <div className='opinion-wrapper mb-48'>
+            <div className='opinion-left'>
+              <h6 className='mb-8'>Profile Image</h6>
+              <FileUploader
+                className='mb-32'
+                name='opinion'
+                onChange={(e) =>
+                  setOpinion((s) => ({ ...s, file: e.target.files[0] }))
+                }
+              />
+              <Input
                 value={opinion.author || ''}
                 label='author'
                 variant='outlined'
@@ -634,21 +665,22 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 onChange={(e) => {
                   setOpinion((s) => ({ ...s, author: e.target.value }));
                 }}
+                className='mb-32'
               />
-              <TextField
+              <Textarea
                 value={opinion.message || ''}
                 label='message'
                 variant='outlined'
                 sx={{ marginLeft: 2 }}
+                rows={6}
                 InputLabelProps={{ shrink: true }}
                 onChange={(e) => {
                   setOpinion((s) => ({ ...s, message: e.target.value }));
                 }}
+                className='mb-32'
               />
-              <MuiButton
-                variant='contained'
-                component='label'
-                sx={{ marginLeft: 2, marginTop: 2 }}
+              <Button
+                className='add-opinion'
                 disabled={!opinion.author || !opinion.message}
                 onClick={() => {
                   setOpinions((s) => [...s, { ...opinion }]);
@@ -656,36 +688,46 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 }}
               >
                 Add
-              </MuiButton>
+              </Button>
             </div>
-          </Grid>
-          <Grid item xs={4}>
-            <FormTitle></FormTitle>
-            {opinions.map((cv) => (
-              <div>
-                <FilePreview file={cv.file} url={cv.authorImageUrl} />
-                author : {cv.author} message : {cv.message}
-                <MuiButton
-                  onClick={() =>
-                    setOpinions((s) =>
-                      s.filter(
-                        (v) =>
-                          v.author !== cv.author || v.message !== cv.message
-                      )
-                    )
-                  }
-                >
-                  X
-                </MuiButton>
+            <div className='opinion-right'>
+              <h6 className='mb-8'>Created Opinions</h6>
+              <div className='opinion-block-wrapper'>
+                {opinions.map((cv) => (
+                  <div className='opinion-block'>
+                    <div className='opinion-block-left'>
+                      <FilePreview
+                        className='opinion-block-image'
+                        file={cv.file}
+                        url={cv.authorImageUrl}
+                      />
+                      <div>
+                        <h6 clasName='mb-4'>{cv.author}</h6>
+                        <p>"{cv.message}"</p>
+                      </div>
+                    </div>
+                    <TrashIcon
+                      onClick={() =>
+                        setOpinions((s) =>
+                          s.filter(
+                            (v) =>
+                              v.author !== cv.author || v.message !== cv.message
+                          )
+                        )
+                      }
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </Grid>
+            </div>
+          </div>
 
-          <Grid item xs={12}>
-            <MuiButton variant='contained' type='submit' fullWidth>
-              {isEdit ? 'Edit' : 'Add'} Stock
-            </MuiButton>
-          </Grid>
+          <Divider />
+          <div className='submit-button-wrapper'>
+            <Button type='submit' className='submit-button'>
+              {isEdit ? 'Edit' : 'Add'} Stocks
+            </Button>
+          </div>
         </form>
       </div>
     </BoStocksMenuBlock>
@@ -717,6 +759,10 @@ const BoStocksMenuBlock = styled.div`
       ${HeadH6Bold}
     }
 
+    .mb-48 {
+      margin-bottom: 4.8rem;
+    }
+
     .mb-32 {
       margin-bottom: 3.2rem;
     }
@@ -731,6 +777,10 @@ const BoStocksMenuBlock = styled.div`
 
     .mb-8 {
       margin-bottom: 0.8rem;
+    }
+
+    .mb-4 {
+      margin-bottom: 0.4rem;
     }
   }
 
@@ -775,5 +825,126 @@ const BoStocksMenuBlock = styled.div`
   .add-btn {
     align-items: flex-end;
     padding: 1.2rem 1.6rem;
+  }
+
+  .add-chart {
+    display: flex;
+    gap: 0.8rem;
+  }
+
+  .financial {
+    display: flex;
+    gap: 2.4rem;
+
+    &-left {
+      flex: 1;
+    }
+    &-right {
+      flex: 1;
+    }
+
+    .trash-icon {
+      cursor: pointer;
+    }
+
+    .chart-value-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .chart-value {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 1.2rem;
+      border: 0.1rem solid ${color.B80};
+      border-radius: 0.8rem;
+      ${Body16Regular}
+    }
+
+    .create-chart {
+      width: 100%;
+      margin-top: 2.4rem;
+      ${HeadH5Bold}
+    }
+
+    .created-chart {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.8rem 1.2rem;
+      background: rgba(56, 95, 233, 0.05);
+      border: 0.1rem solid ${color.UpArrow_Blue};
+      border-radius: 0.8rem;
+
+      &-left {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        ${Body16Regular}
+      }
+    }
+
+    .created-chart-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+  }
+  .opinion-wrapper {
+    display: flex;
+    gap: 2.4rem;
+
+    .opinion-left {
+      flex: 1;
+    }
+    .opinion-right {
+      flex: 1;
+    }
+  }
+  .add-opinion {
+    width: 100%;
+    ${HeadH5Bold}
+  }
+
+  .opinion-block-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    .opinion-block {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(56, 95, 233, 0.05);
+      border: 0.1rem solid ${color.UpArrow_Blue};
+      border-radius: 0.8rem;
+      padding: 0.8rem 1.2rem;
+
+      .opinion-block-left {
+        display: flex;
+      }
+
+      .opinion-block-image {
+        width: 4.8rem;
+        height: 4.8rem;
+        border-radius: 9999rem;
+        margin-right: 1.6rem;
+      }
+    }
+  }
+
+  .submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24rem;
+    height: 5.6rem;
+    ${HeadH5Bold}
+  }
+
+  .submit-button-wrapper {
+    display: flex;
+    justify-content: flex-end;
   }
 `;
