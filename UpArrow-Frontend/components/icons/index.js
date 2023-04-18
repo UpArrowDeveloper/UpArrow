@@ -14,3 +14,5 @@ export { default as RiskIcon } from './Risk.svg';
 export { default as ChevronLeftIcon } from './Chevron-left.svg';
 export { default as ChevronRightIcon } from './Chevron-right.svg';
 export { default as ChevronBottomIcon } from './Chevron-bottom.svg';
+export { default as TrashIcon } from './Trash.svg';
+export { default as FillXIcon } from './FillXIcon.svg';
