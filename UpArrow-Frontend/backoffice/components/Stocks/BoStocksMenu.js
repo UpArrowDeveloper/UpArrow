@@ -341,12 +341,28 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             <Input className='mb-16' label='UpArrow Analysis Youtube URL' />
             <h6 className='mb-8'>Insight of Giants URL</h6>
             <div>
-              {ideaIds.map((e) => (
+              {ideaIds.map((e, index) => (
                 <Input
                   className='mb-8'
                   value={e}
-                  onClose={() => 0}
-                  onCancel={() => 0}
+                  onChange={(event) => {
+                    setIdeaIds((s) => {
+                      const newIdeaIds = [...s];
+                      newIdeaIds[index] = event.target.value;
+                      return newIdeaIds;
+                    });
+                  }}
+                  onClose={() => setIdeaIds((s) => s.filter((v) => v !== e))}
+                  onCancel={() =>
+                    setIdeaIds((s) =>
+                      s.map((v) => {
+                        if (v === e) {
+                          return '';
+                        }
+                        return v;
+                      })
+                    )
+                  }
                 />
               ))}
             </div>
