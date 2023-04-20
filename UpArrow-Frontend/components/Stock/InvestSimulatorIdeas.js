@@ -233,10 +233,10 @@ const InvestSimulatorIdeas = ({
           <div className='target-price-block'>
             <TargetIcon />
             <span className='target-price'>
-              <strong>${targetPrice.price}</strong>(
-              {getProfitPercent(stock.currentPrice, targetPrice.price)})
+              <strong>${targetPrice?.price}</strong>(
+              {getProfitPercent(stock.currentPrice, targetPrice?.price)})
             </span>
-            <div className='recommander'>{targetPrice.name}</div>
+            <div className='recommander'>{targetPrice?.name}</div>
           </div>
           <div>
             <h4>Order</h4>

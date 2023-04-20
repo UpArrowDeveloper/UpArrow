@@ -96,11 +96,13 @@ function Home({ stocks }) {
                   <div className='name-ticker'>
                     <div className='image-container'>
                       <div className='image-wrapper'>
-                        <Image
-                          src={stock.logoUrl}
-                          layout='fill'
-                          alt={stock.name}
-                        />
+                        {stock.logoUrl && (
+                          <Image
+                            src={stock.logoUrl}
+                            layout='fill'
+                            alt={stock.name}
+                          />
+                        )}
                       </div>
                     </div>
                     <p>
@@ -109,7 +111,6 @@ function Home({ stocks }) {
                   </div>
                 </td>
                 <td className='number'>
-                  .length
                   <span>${stock.currentPrice.toLocaleString()}</span>
                 </td>
                 <td className='number'>
@@ -126,7 +127,7 @@ function Home({ stocks }) {
                   </span>
                 </td>
                 <td className='number'>
-                  <span>{stock.ideaIds.length.toLocaleString()}</span>
+                  <span>{stock.ideaIds?.length.toLocaleString()}</span>
                 </td>
                 <td className='number'>
                   <span>{stock.commentCount.toLocaleString()}</span>

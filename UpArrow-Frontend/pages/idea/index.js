@@ -111,11 +111,11 @@ function Ideas({ ideas }) {
                   <div className='title wrapper'>
                     <div className='image-container'>
                       <div className='image-wrapper'>
-                        <Image
+                        {/* <Image
                           src={idea.thumbnailImageUrl}
                           layout='fill'
                           alt={idea.title}
-                        />
+                        /> */}
                       </div>
                     </div>
                     <div className='title-author'>

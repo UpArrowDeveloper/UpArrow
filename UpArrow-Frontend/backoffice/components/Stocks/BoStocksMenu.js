@@ -28,12 +28,11 @@ export const BoStocksMenu = ({ stock, analysis }) => {
   const [ticker, setTicker] = useState(stock?.ticker || '');
   const [currentPrice, setCurrentPrice] = useState(stock?.currentPrice || 0);
   const [marketCap, setMarketCap] = useState(stock?.marketCap || 0);
-  const [thumbnailTitle, setThumbnailTitle] = useState(
-    analysis?.thumbnailTitle || ''
+  const [youtubeUrl, setYoutubeUrl] = useState(analysis?.youtubeUrl || '');
+  const [youtubeTitle, setYoutubeTitle] = useState(
+    analysis?.youtubeTitle || ''
   );
-  const [thumbnailDate, setThumbnailDate] = useState(
-    analysis?.thumbnailDate ? new Date(analysis?.thumbnailDate) : undefined
-  );
+  const [youtubeDate, setYoutubeDate] = useState(analysis?.youtubeDate || '');
 
   const [missionStatement, setMissionStatement] = useState(
     analysis?.missionStatement || ''
@@ -67,12 +66,13 @@ export const BoStocksMenu = ({ stock, analysis }) => {
   );
   const [potentialRisk, setPotentialRisk] = useState('');
 
-  const [ideaIds, setIdeaIds] = useState(analysis?.ideaIds || []);
-  const [ideaId, setIdeaId] = useState('');
+  const [insightOfGiantsUrls, setInsightOfGiantsUrls] = useState(
+    analysis?.insightOfGiantsUrls || []
+  );
+  const [insightOfGiant, setInsightOfGiant] = useState('');
 
   const [logoImage, setLogoImage] = useState();
   const [backgroundImage, setBackgroundImage] = useState();
-  const [thumbnailImage, setThumbnailImage] = useState();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -80,9 +80,6 @@ export const BoStocksMenu = ({ stock, analysis }) => {
     const ticker = e.target.ticker.value;
     const currentPrice = e.target.currentPrice.value;
     const marketCap = e.target.marketCap.value;
-
-    const thumbnailTitle = e.target.thumbnailTitle.value;
-    const thumbnailDate = e.target.thumbnailDate.value;
 
     const missionStatement = e.target.missionStatement.value;
     const businessModel = e.target.businessModel.value;
@@ -126,18 +123,6 @@ export const BoStocksMenu = ({ stock, analysis }) => {
       backgroundImageUrl = stock.backgroundImageUrl;
     }
 
-    let thumbnailImageUrl = '';
-    if (thumbnailImage) {
-      const thumbnailFormData = new FormData();
-      thumbnailFormData.append('image', thumbnailImage);
-      const { link } = (
-        await axios.post(`${env.serverUrl}/file/upload`, thumbnailFormData)
-      ).data;
-      thumbnailImageUrl = link;
-    } else if (analysis?.thumbnailImageUrl) {
-      thumbnailImageUrl = analysis.thumbnailImageUrl;
-    }
-
     const payload = {
       name,
       ticker,
@@ -145,16 +130,17 @@ export const BoStocksMenu = ({ stock, analysis }) => {
       backgroundImageUrl,
       currentPrice,
       targetPrices,
-      thumbnailImageUrl,
-      thumbnailTitle,
-      thumbnailDate,
       missionStatement,
       businessModel,
+      youtubeUrl,
+      youtubeTitle,
+      youtubeDate,
+      insightOfGiantsUrls,
       competitiveAdvantage,
       growthOppertunities,
       potentialRisks,
       financials,
-      ideaIds,
+      ideaIds: insightOfGiantsUrls,
       marketCap,
       opinions: newOpinions,
     };
@@ -338,23 +324,47 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           <Divider />
           <div className='analysis-wrapper'>
             <h3 className='mb-24'>Analysis</h3>
-            <Input className='mb-16' label='UpArrow Analysis Youtube URL' />
+            <Input
+              className='mb-16'
+              name='youtubeUrl'
+              label='UpArrow Analysis Youtube URL (Code)'
+              value={youtubeUrl}
+              onChange={(e) => setYoutubeUrl(e.target.value)}
+            />
+            <Input
+              className='mb-16'
+              name='youtubeTitle'
+              label=''
+              placeholder='Youtube Title'
+              value={youtubeTitle}
+              onChange={(e) => setYoutubeTitle(e.target.value)}
+            />
+            <Input
+              className='mb-16'
+              name='youtubeDate'
+              label=''
+              placeholder='Youtube Date (ex: 2021. 01. 01)'
+              value={youtubeDate}
+              onChange={(e) => setYoutubeDate(e.target.value)}
+            />
             <h6 className='mb-8'>Insight of Giants URL</h6>
             <div>
-              {ideaIds.map((e, index) => (
+              {insightOfGiantsUrls.map((e, index) => (
                 <Input
                   className='mb-8'
                   value={e}
                   onChange={(event) => {
-                    setIdeaIds((s) => {
-                      const newIdeaIds = [...s];
-                      newIdeaIds[index] = event.target.value;
-                      return newIdeaIds;
+                    setInsightOfGiantsUrls((s) => {
+                      const insightOfGiantsUrls = [...s];
+                      insightOfGiantsUrls[index] = event.target.value;
+                      return insightOfGiantsUrls;
                     });
                   }}
-                  onClose={() => setIdeaIds((s) => s.filter((v) => v !== e))}
+                  onClose={() =>
+                    setInsightOfGiantsUrls((s) => s.filter((v) => v !== e))
+                  }
                   onCancel={() =>
-                    setIdeaIds((s) =>
+                    setInsightOfGiantsUrls((s) =>
                       s.map((v) => {
                         if (v === e) {
                           return '';
@@ -369,8 +379,8 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             <Input
               label=''
               className='mb-16'
-              value={ideaId}
-              onChange={(e) => setIdeaId(e.target.value)}
+              value={insightOfGiant}
+              onChange={(e) => setInsightOfGiant(e.target.value)}
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button
@@ -378,48 +388,13 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 className='add-btn'
                 type='button'
                 onClick={() => {
-                  setIdeaIds((s) => [...s, ideaId]);
-                  setIdeaId('');
+                  setInsightOfGiantsUrls((s) => [...s, insightOfGiant]);
+                  setInsightOfGiant('');
                 }}
               >
                 ADD
               </Button>
             </div>
-            {/* <Grid item xs={4}> */}
-            {/* <h6>Thumbnail</h6>
-              <FileUploader
-                name='thumbnailImage'
-                file={thumbnailImage}
-                url={analysis?.thumbnailImageUrl}
-                setImage={setThumbnailImage}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <FormTitle></FormTitle>
-              <div style={flexColumn}>
-                <TextField
-                  id='thumbnailTitle'
-                  name='thumbnailTitle'
-                  label='thumbnail title'
-                  value={thumbnailTitle}
-                  onChange={(e) => setThumbnailTitle(e.target.value)}
-                  InputLabelProps={{ shrink: true }}
-                  variant='standard'
-                  sx={{ marginLeft: 2, marginBottom: 4 }}
-                />
-                <TextField
-                  id='thumbnailDate'
-                  name='thumbnailDate'
-                  label='thumbnail date'
-                  value={getYMD(thumbnailDate || new Date())}
-                  onChange={(e) => setThumbnailDate(new Date(e.target.value))}
-                  variant='outlined'
-                  type='date'
-                  InputLabelProps={{ shrink: true }}
-                  sx={{ marginLeft: 2 }}
-                />
-              </div>
-            </Grid> */}
           </div>
 
           <Divider />

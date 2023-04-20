@@ -62,7 +62,7 @@ const PrincipleCard = ({ message, author, imageUrl, index }) => {
       <h1>{message}</h1>
       <span>by {author}</span>
       <div className='image-wrapper'>
-        <Image src={imageUrl} layout='fill' />
+        {imageUrl && <Image src={imageUrl} layout='fill' />}
       </div>
     </PrincipleCardBlock>
   );

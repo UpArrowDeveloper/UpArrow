@@ -1,18 +1,7 @@
 // material-ui
-import {
-  Box,
-  Button,
-  StyledEngineProvider,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { Box, Button, StyledEngineProvider } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 
-import Paper from '@mui/material/Paper';
 import Image from 'next/image';
 
 import { useQuery } from '@tanstack/react-query';

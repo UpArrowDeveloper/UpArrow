@@ -86,15 +86,16 @@ export function Investor({ investor, stocksWithPrices, rank }) {
             <div className='investor-title'>{username}'s Ideas</div>
             <div className='ideas-content-wrapper'>
               {ideas.map((idea) => (
-                <IdeaCard
-                  theme={'none'}
-                  ideaId={idea._id}
-                  ideaImage={idea.thumbnailImageUrl}
-                  ideaTitle={idea.title}
-                  ideaAuthor={username}
-                  ideaDate={idea.date}
-                  stockId={idea.stockId}
-                />
+                <div>{idea}</div>
+                // <IdeaCard
+                //   theme={'none'}
+                //   ideaId={idea._id}
+                //   ideaImage={idea.thumbnailImageUrl}
+                //   ideaTitle={idea.title}
+                //   ideaAuthor={username}
+                //   ideaDate={idea.date}
+                //   stockId={idea.stockId}
+                // />
               ))}
             </div>
           </div>

@@ -72,14 +72,6 @@ function Stock({ stock, analysis }) {
     api.stock.getIdeasById(stock._id),
     { enabled: !!stock._id }
   );
-  console.log('idea list : ', ideaList);
-
-  const { data: analysisIdeaList } = useQuery(
-    ['analysisIdeaList', stock?.ideaIds],
-    api.idea.getByIds(analysis.ideaIds.join(',')),
-    { enabled: analysis?.ideaIds?.length > 0 }
-  );
-
   const { data: comments, refetch: refetchComments } = useQuery(
     ['stockComments', stock._id],
     (stock._id && api.comment.getByStockId(stock._id)) || []
@@ -150,7 +142,7 @@ function Stock({ stock, analysis }) {
         <Overview
           className='section'
           analysis={analysis}
-          analysisIdeaList={analysisIdeaList || []}
+          analysisIdeaList={analysis.insightOfGiantsUrls || []}
         />
         <Financials className='section' analysis={analysis} />
         <Opinions
