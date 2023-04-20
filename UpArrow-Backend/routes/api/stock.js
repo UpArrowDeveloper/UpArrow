@@ -111,13 +111,10 @@ router.post('/', async (req, res) => {
       backgroundImageUrl,
       currentPrice,
       targetPrices,
-      // analysisId: ObjectId,
-      // commentIds: [ObjectId],
-      stockId,
-      thumbnailImageUrl,
-      thumbnailTitle,
-      thumbnailDate,
-      ideaIds,
+      youtubeUrl,
+      youtubeTitle,
+      youtubeDate,
+      insightOfGiantsUrls,
       missionStatement,
       businessModel,
       competitiveAdvantage,
@@ -129,10 +126,10 @@ router.post('/', async (req, res) => {
     } = req.body;
 
     const newAnalysisId = await Analysis.create({
-      thumbnailImageUrl,
-      thumbnailTitle,
-      thumbnailDate,
-      ideaIds,
+      youtubeUrl,
+      youtubeTitle,
+      youtubeDate,
+      insightOfGiantsUrls,
       missionStatement,
       businessModel,
       competitiveAdvantage,
@@ -165,24 +162,22 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const {
-    // stock payload
     name,
     ticker,
     logoUrl,
     backgroundImageUrl,
     currentPrice,
     targetPrices,
-    // analysis payload
-    thumbnailImageUrl,
-    thumbnailTitle,
-    thumbnailDate,
-    marketCap,
-    ideaIds,
+    youtubeUrl,
+    youtubeTitle,
+    youtubeDate,
+    insightOfGiantsUrls,
     missionStatement,
     businessModel,
     competitiveAdvantage,
     growthOppertunities,
     potentialRisks,
+    marketCap,
     financials,
     opinions,
   } = req.body;
@@ -204,10 +199,10 @@ router.put('/:id', async (req, res) => {
   await Analysis.findOneAndUpdate(
     { _id: stock.analysisId },
     {
-      thumbnailImageUrl,
-      thumbnailTitle,
-      thumbnailDate,
-      ideaIds,
+      youtubeUrl,
+      youtubeTitle,
+      youtubeDate,
+      insightOfGiantsUrls,
       missionStatement,
       businessModel,
       competitiveAdvantage,

@@ -1,6 +1,5 @@
 const config = require('../config/env');
 const storage = require('../config/s3');
-// const File = require('../models/File');
 const fs = require('fs');
 
 const uploadFileToS3 = async (fileData) => {
@@ -14,13 +13,6 @@ const uploadFileToS3 = async (fileData) => {
     };
 
     const result = await storage.upload(params).promise();
-
-    // const file = new File({
-    //   link: result.Location,
-    //   fileName: fileData.originalname,
-    // });
-
-    // await file.save();
 
     const data = {
       // _id: file._id,

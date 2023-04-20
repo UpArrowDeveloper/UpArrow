@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -20,10 +19,10 @@ const OpinionSchema = new Schema({
 
 const AnalysisSchema = new Schema(
   {
-    thumbnailImageUrl: String,
-    thumbnailTitle: String,
-    thumbnailDate: Date,
-    ideaIds: [ObjectId], // for Insights of Giants
+    youtubeUrl: String,
+    youtubeTitle: String,
+    youtubeDate: String,
+    insightOfGiantsUrls: [String], // for Insights of Giants
     missionStatement: String,
     businessModel: String,
     competitiveAdvantage: String,

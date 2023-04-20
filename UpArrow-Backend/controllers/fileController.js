@@ -7,7 +7,6 @@ const uploadFileToS3 = async (req, res) => {
 
   try {
     const data = await FileService.uploadFileToS3(fileData);
-
     res.status(201).send(data);
   } catch (error) {
     console.error(error);

@@ -11,7 +11,6 @@ const StockSchema = new Schema(
     backgroundImageUrl: String,
     currentPrice: Number,
     targetPrices: [TargetPriceSchema],
-    ideaIds: [ObjectId],
     analysisId: ObjectId,
     marketCap: Number,
     buyerCount: Number, // 하루 한번 업데이트
