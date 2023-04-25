@@ -149,8 +149,12 @@ export const BoStocksMenu = ({ stock, analysis }) => {
     } else {
       await axios.post(`${env.serverUrl}/stock`, payload);
     }
-    await axios.get('/api/revalidate');
-    router.push('/backoffice/stocks');
+    try {
+      await axios.get('/api/revalidate');
+      router.push('/backoffice/stocks');
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
