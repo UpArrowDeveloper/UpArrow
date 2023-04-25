@@ -151,6 +151,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
     }
     // no async
     axios.get('/api/revalidate/stock');
+    axios.get(`/api/revalidate/stock/${ticker}`);
     axios.get('/api/revalidate');
     axios.get('/api/revalidate/idea');
     axios.get('/api/revalidate/investor');
