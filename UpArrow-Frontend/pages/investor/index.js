@@ -158,7 +158,7 @@ function Investors({ investors, top3Stocks }) {
                   <div className='wrapper'>
                     <TagGroup
                       tags={top3Stocks[index]?.map(({ name, profit }) => ({
-                        name: `${name} ${profit.toLocaleString('en-US')}%`,
+                        name: `${name} ${profit?.toLocaleString('en-US')}%`,
                         type:
                           profit > 0
                             ? 'plus'
@@ -171,18 +171,18 @@ function Investors({ investors, top3Stocks }) {
                 </td>
                 <td>
                   <div className='comments wrapper numbers'>
-                    {investor.ideas.length.toLocaleString('en-US')}
+                    {investor.ideas.length?.toLocaleString('en-US')}
                   </div>
                 </td>
                 <td>
                   <div className='comments wrapper numbers'>
-                    ${investor.totalProfits.toLocaleString('en-US')}
+                    ${investor.totalProfits?.toLocaleString('en-US')}
                   </div>
                 </td>
                 <td>
                   <div className='comments wrapper numbers'>
                     $
-                    {(investor.totalInvestment + investor.cash).toLocaleString(
+                    {(investor.totalInvestment + investor.cash)?.toLocaleString(
                       'en-US'
                     )}
                   </div>
@@ -234,6 +234,10 @@ export async function getStaticProps() {
         ideas,
       };
     })
+  );
+  console.log(
+    '**********\n\n\n\n\n\n\n\n\n\n\n\n\ninvestDataIncludedUsers',
+    investDataIncludedUsers
   );
 
   return {
