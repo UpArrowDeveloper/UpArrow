@@ -26,8 +26,8 @@ export const BoStocksMenu = ({ stock, analysis }) => {
   const router = useRouter();
   const [name, setName] = useState(stock?.name || '');
   const [ticker, setTicker] = useState(stock?.ticker || '');
-  const [currentPrice, setCurrentPrice] = useState(stock?.currentPrice || 0);
-  const [marketCap, setMarketCap] = useState(stock?.marketCap || 0);
+  const [currentPrice, setCurrentPrice] = useState(stock?.currentPrice);
+  const [marketCap, setMarketCap] = useState(stock?.marketCap);
   const [youtubeUrl, setYoutubeUrl] = useState(analysis?.youtubeUrl || '');
   const [youtubeTitle, setYoutubeTitle] = useState(
     analysis?.youtubeTitle || ''
@@ -204,7 +204,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 name='currentPrice'
                 label='Price'
                 value={currentPrice}
-                onChange={(e) => setCurrentPrice(Number(e.target.value))}
+                onChange={(e) => setCurrentPrice(e.target.value)}
                 type='number'
                 className='mb-24'
               />
@@ -212,7 +212,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 id='marketCap'
                 name='marketCap'
                 value={marketCap}
-                onChange={(e) => setMarketCap(Number(e.target.value))}
+                onChange={(e) => setMarketCap(e.target.value)}
                 label='Market Cap'
                 type='number'
                 className='mb-24'
@@ -296,7 +296,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                   <Input
                     id='targetPrice'
                     name='targetPrice'
-                    value={targetPrice.price || 0}
+                    value={targetPrice.price}
                     placeholder='Target Price'
                     sx={{ marginLeft: 2 }}
                     type='number'
@@ -531,24 +531,25 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               <div className='add-chart'>
                 <Input
                   value={chartName}
+                  placeholder='Chart Name'
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setChartName(e.target.value)}
                 />
                 <Input
-                  value={chartValue.year || 0}
+                  value={chartValue.year}
                   type='number'
                   onChange={(e) => {
                     if (Number(e.target.value) < 0) return;
                     setChartValue((s) => ({
                       ...s,
-                      year: Number(e.target.value),
+                      year: e.target.value,
                     }));
                   }}
                   sx={{ marginLeft: '1rem' }}
                   InputLabelProps={{ shrink: true }}
                 />
                 <Input
-                  value={chartValue.value || 0}
+                  value={chartValue.value}
                   sx={{ marginLeft: 2 }}
                   InputLabelProps={{ shrink: true }}
                   type='number'
@@ -556,7 +557,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                     if (Number(e.target.value) < 0) return;
                     setChartValue((s) => ({
                       ...s,
-                      value: Number(e.target.value),
+                      value: e.target.value,
                     }));
                   }}
                 />
@@ -643,6 +644,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               <FileUploader
                 className='mb-32'
                 name='opinion'
+                file={opinion.file}
                 onChange={(e) =>
                   setOpinion((s) => ({ ...s, file: e.target.files[0] }))
                 }
