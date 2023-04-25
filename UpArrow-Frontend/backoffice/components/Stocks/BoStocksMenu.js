@@ -149,12 +149,12 @@ export const BoStocksMenu = ({ stock, analysis }) => {
     } else {
       await axios.post(`${env.serverUrl}/stock`, payload);
     }
-    try {
-      await axios.get('/api/revalidate');
-      router.push('/backoffice/stocks');
-    } catch (err) {
-      console.error(err);
-    }
+    // no async
+    axios.get('/api/revalidate/stock');
+    axios.get('/api/revalidate');
+    axios.get('/api/revalidate/idea');
+    axios.get('/api/revalidate/investor');
+    router.push('/backoffice/stocks');
   };
 
   return (
