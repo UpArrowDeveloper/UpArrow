@@ -50,4 +50,17 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.put('/toggle-like', async (req, res) => {
+  const { commentId, userId } = req.body;
+  const comment = await commentService.getCommentById(commentId);
+  const hasComment = comment.likes.includes(userId);
+  if (hasComment) {
+    await commentService.removeLike(commentId, userId);
+    return res.status(200).send({ message: 'remove like' });
+  } else {
+    await commentService.addLike(commentId, userId);
+    return res.status(200).send({ message: 'add like' });
+  }
+});
+
 module.exports = router;
