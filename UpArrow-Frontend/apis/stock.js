@@ -3,7 +3,7 @@ import { env } from '../config';
 
 const stock = {
   get: () => axios.get(`${env.serverUrl}/stock`).then((res) => res.data),
-  getId: (id) => () =>
+  getById: (id) => () =>
     axios.get(`${env.serverUrl}/stock/${id}`).then((res) => res.data),
   getByIds: (ids) => () =>
     axios.get(`${env.serverUrl}/stock/${ids}/ids`).then((res) => res.data),

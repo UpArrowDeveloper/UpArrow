@@ -27,6 +27,11 @@ function Stock({ stock, analysis }) {
     api.price.get(stock?._id, user?._id),
     { enabled: !!(stock?._id && user?._id) }
   );
+  const { data: liveStock, refetch: refetchLiveStock } = useQuery(
+    ['liveStock', stock?.ticker],
+    api.stock.getById(stock?._id),
+    { enabled: !!stock?.ticker }
+  );
 
   const { data: ideaList } = useQuery(
     ['ideaList', stock?._id],
@@ -40,7 +45,11 @@ function Stock({ stock, analysis }) {
   );
 
   const postOrder = useMutation(api.order.post, {
-    onSuccess: () => refetch() && refetchUser(),
+    onSuccess: () => {
+      refetch();
+      refetchUser();
+      refetchLiveStock();
+    },
   });
 
   const submitComment = async () => {
@@ -95,7 +104,7 @@ function Stock({ stock, analysis }) {
           stockName={stock.name}
         />
         <InvestSimulatorIdeas
-          stock={stock}
+          stock={liveStock || stock}
           user={user}
           ideaList={ideaList || []}
           onBuyClick={onBuyClick}

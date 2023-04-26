@@ -49,5 +49,5 @@ export const useAppUser = (options) => {
     }
   }, [isAuthorized]);
 
-  return { user, logout };
+  return { user, logout, refetch };
 };
