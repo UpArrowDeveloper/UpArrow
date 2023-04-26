@@ -12,7 +12,6 @@ const UserSchema = new Schema(
     websiteUrl: String,
     isAdmin: Boolean,
     orderIds: Array,
-    commentIds: Array,
     totalInvestment: Number,
     totalProfits: Number,
     totalAssets: Number,

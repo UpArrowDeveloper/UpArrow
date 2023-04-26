@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const User = require('../../models/User');
 const { getStockPrices } = require('../config');
 const { getCalculatedOrdersByUser } = require('../order');
@@ -13,17 +12,6 @@ const getUserById = async (userId) => {
 const getUserByEmail = async (email) => {
   const user = await User.findOne({ email });
   return user;
-};
-
-const addComment = async (userId, commentId) => {
-  const userObjectId = ObjectId(userId);
-  const userDocument = await User.findById(userObjectId);
-  const userCommentList = [...userDocument.commentIds, commentId];
-  const userQuery = { _id: userObjectId };
-  const updatedUserValue = {
-    commentIds: userCommentList,
-  };
-  await User.findOneAndUpdate(userQuery, updatedUserValue);
 };
 
 const changeCash = async ({ userId, cash }) => {
@@ -101,7 +89,6 @@ const updateUserById = async (
       investmentPhilosophy,
       websiteUrl,
       isAdmin: false,
-      commentIds: [],
       followers: [],
       followings: [],
     }
@@ -112,7 +99,6 @@ const updateUserById = async (
 module.exports = {
   addUser,
   updateUserById,
-  addComment,
   changeCash,
   getUserById,
   getUserByEmail,
