@@ -18,7 +18,6 @@ export const BackofficeNavbarContent = () => {
       {backofficeConfig.menus.map((text, index) => (
         <Box
           key={text}
-          disablePadding
           onClick={() => {
             router.push('/backoffice/' + text.toLocaleLowerCase());
           }}

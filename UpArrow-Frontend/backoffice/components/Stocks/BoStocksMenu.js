@@ -123,6 +123,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
       backgroundImageUrl = stock.backgroundImageUrl;
     }
 
+    const splitedVideoUrl = youtubeUrl?.split('=')?.[1];
     const payload = {
       name,
       ticker,
@@ -132,7 +133,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
       targetPrices,
       missionStatement,
       businessModel,
-      youtubeUrl,
+      youtubeUrl: splitedVideoUrl,
       youtubeTitle,
       youtubeDate,
       insightOfGiantsUrls,
