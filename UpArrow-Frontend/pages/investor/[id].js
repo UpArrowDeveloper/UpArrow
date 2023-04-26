@@ -62,7 +62,7 @@ export function Investor({ investor, stocksWithPrices, rank }) {
           <div className='investor-title'>{username}'s Portfolio</div>
           <div className='stocks'>
             {stocksWithPrices.map((company) => (
-              <div className='stock'>
+              <div className='stock' key={company.name}>
                 <img className='stock-logo' src={company.logoUrl} />
                 <div className='stock-info'>
                   <div className='stock-name'>{company.name}</div>
@@ -120,7 +120,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context) {
   const { id } = context.params;
-  const { investor, prices, stockPurchaseInfos, userIdeas, userRank } =
+  const { investor, stockPurchaseInfos, userIdeas, userRank } =
     await getInvestorProfileInfo(id);
 
   const { totalInvestment, totalProfits } = await getInvestorInvestInfo(id);
@@ -133,7 +133,7 @@ export async function getStaticProps(context) {
     return {
       ...stock,
       ...stockPurchaseInfos[stock._id],
-      totalValue: stockPurchaseInfos[stock._id].quantity * prices[stock.ticker],
+      totalValue: stockPurchaseInfos[stock._id].quantity * stock.currentPrice,
     };
   });
 

@@ -6,8 +6,6 @@ export const getInvestorProfileInfo = async (id) => {
   const orders =
     orderIds?.length > 0 ? await api.order.getByIds(orderIds.join(','))() : [];
 
-  const prices = (await api.config.get()).prices;
-
   const stockPurchaseInfos = orders.reduce((acc, order) => {
     if (acc[order.stockId]) {
       return {
@@ -35,7 +33,6 @@ export const getInvestorProfileInfo = async (id) => {
 
   return {
     investor,
-    prices,
     stockPurchaseInfos,
     userIdeas,
     userRank: userRank.rank,
