@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { useRef } from 'react';
 import Navbar, { navbarHeight } from '../components/Navbar';
 
 const MainLayoutBlock = styled.main`
