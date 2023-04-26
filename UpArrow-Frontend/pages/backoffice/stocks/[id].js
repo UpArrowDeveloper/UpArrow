@@ -10,7 +10,7 @@ import BackofficeLayout from '../../../Layouts/Backoffice';
 const Backoffice = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data } = useQuery(['boStock', id], api.stock.getId(id));
+  const { data } = useQuery(['boStock', id], api.stock.getById(id));
   const { data: analysis } = useQuery(
     ['analysis', data?.analysisId],
     data?.analysisId ? api.analysis.getById(data?.analysisId) : () => {},

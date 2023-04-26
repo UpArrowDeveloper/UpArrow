@@ -173,7 +173,7 @@ export async function getStaticProps() {
   for (let i = 0; i < ideas.length; i++) {
     const item = ideas[i];
     stocksList.push(
-      Promise.all(item.stockIds.map((id) => api.stock.getId(id)()))
+      Promise.all(item.stockIds.map((id) => api.stock.getById(id)()))
     );
   }
   const resStockList = await Promise.all(stocksList);
