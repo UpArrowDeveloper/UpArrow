@@ -10,6 +10,7 @@ import { Body14Medium, Body16Regular, HeadH6Bold } from '../styles/typography';
 import color from '../styles/color';
 import api from '../apis';
 import { useAppUser } from '../hooks/useAppUser';
+import { useRouter } from 'next/router';
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
@@ -52,10 +53,11 @@ const CommentView = ({
 };
 
 const Comment = ({ comment }) => {
+  const router = useRouter();
+  const ticker = router.query.ticker;
   const [username, setUsername] = useState('');
   const [investorProfilePicture, setInvestorProfilePicture] = useState('');
   const [likes, setLikes] = useState(0);
-  let uid = '';
   const { user } = useAppUser();
 
   const [checked, setChecked] = useState(false);
@@ -77,22 +79,10 @@ const Comment = ({ comment }) => {
       const likesList = comment.likes;
 
       const user = await api.user.getByEmail(email)();
-      let isLiked = false;
+      const isLiked = likesList.includes(String(user._id));
 
-      for (let i = 0; i < likesList.length; i++) {
-        const userId = String(likesList[i]);
-        if (userId === String(user._id)) {
-          isLiked = true;
-        }
-      }
-
-      if (isLiked == true) {
-        setLikes(comment.likes.length);
-        setChecked(true);
-      } else {
-        setLikes(comment.likes.length);
-        setChecked(false);
-      }
+      setChecked(isLiked);
+      setLikes(comment.likes.length);
 
       const data = await api.user.getById(comment.userId)();
       setUsername(data.username);
@@ -103,26 +93,11 @@ const Comment = ({ comment }) => {
 
   const callLikesApi = async () => {
     const commentId = String(comment._id);
-
     const userData = await api.user.getByEmail(user.email)();
-    const userIdString = String(userData._id);
-    uid = userIdString;
-
-    if (checked == false) {
-      const response = await axios.put(
-        `http://localhost:4000/api/v1/investor/update/likes/comment/${commentId}/${uid}`,
-        {}
-      );
-      setLikes(response.data.likes.length);
-      setChecked(!checked);
-    } else {
-      const response = await axios.put(
-        `http://localhost:4000/api/v1/investor/update/likes/comment/${commentId}/${uid}`,
-        {}
-      );
-      setLikes(response.data.likes.length);
-      setChecked(!checked);
-    }
+    const userId = String(userData._id);
+    await api.comment.toggleLike({ commentId, userId })();
+    await axios.get(`/api/revalidate/stock/${ticker}`);
+    router.reload();
   };
 
   const onHeartClick = () => {
