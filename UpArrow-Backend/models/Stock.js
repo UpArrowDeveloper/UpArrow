@@ -16,6 +16,7 @@ const StockSchema = new Schema(
     buyerCount: Number, // 하루 한번 업데이트
     sellerCount: Number,
     commentCount: Number,
+    commentIds: [ObjectId],
   },
   { timestamps: true }
 );

@@ -14,6 +14,135 @@ import { useAppUser } from '../hooks/useAppUser';
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
 
+const CommentView = ({
+  imageUrl,
+  username,
+  content,
+  createdAt,
+  likeCount,
+  checked,
+  onHeartClick,
+}) => {
+  return (
+    <CommentBlock>
+      <div className='profile'>
+        <div className='picture-wrapper'>
+          <UserIcon className='picture' src={imageUrl} />
+        </div>
+        <div className='comment-content-wrapper'>
+          <div className='user-info'>
+            <div className='comment-name'>{username}</div>
+            <div className='comment-time'>
+              {timeAgo.format(new Date(createdAt))} · {likeCount} Likes
+            </div>
+          </div>
+          <div className='comment-content'>{content}</div>
+        </div>
+      </div>
+
+      <div className='thumb-up' onClick={onHeartClick}>
+        {checked ? (
+          <ThumbUpIcon />
+        ) : (
+          <ThumbUpIcon style={{ fill: color.B40 }} />
+        )}
+      </div>
+    </CommentBlock>
+  );
+};
+
+const Comment = ({ comment }) => {
+  const [username, setUsername] = useState('');
+  const [investorProfilePicture, setInvestorProfilePicture] = useState('');
+  const [likes, setLikes] = useState(0);
+  let uid = '';
+  const { user } = useAppUser();
+
+  const [checked, setChecked] = useState(false);
+
+  const handleChange = (event) => {
+    if (checked == false) {
+      setChecked(true);
+      setLikes(comment.likes.length);
+    } else {
+      setChecked(false);
+      setLikes(comment.likes.length);
+    }
+  };
+
+  useEffect(() => {
+    const email = user?.email;
+    const getUser = async () => {
+      if (!email || !comment.userId) return;
+      const likesList = comment.likes;
+
+      const user = await api.user.getByEmail(email)();
+      let isLiked = false;
+
+      for (let i = 0; i < likesList.length; i++) {
+        const userId = String(likesList[i]);
+        if (userId === String(user._id)) {
+          isLiked = true;
+        }
+      }
+
+      if (isLiked == true) {
+        setLikes(comment.likes.length);
+        setChecked(true);
+      } else {
+        setLikes(comment.likes.length);
+        setChecked(false);
+      }
+
+      const data = await api.user.getById(comment.userId)();
+      setUsername(data.username);
+      setInvestorProfilePicture(data.profileImageUrl);
+    };
+    getUser();
+  }, [user?.email && comment.userId]);
+
+  const callLikesApi = async () => {
+    const commentId = String(comment._id);
+
+    const userData = await api.user.getByEmail(user.email)();
+    const userIdString = String(userData._id);
+    uid = userIdString;
+
+    if (checked == false) {
+      const response = await axios.put(
+        `http://localhost:4000/api/v1/investor/update/likes/comment/${commentId}/${uid}`,
+        {}
+      );
+      setLikes(response.data.likes.length);
+      setChecked(!checked);
+    } else {
+      const response = await axios.put(
+        `http://localhost:4000/api/v1/investor/update/likes/comment/${commentId}/${uid}`,
+        {}
+      );
+      setLikes(response.data.likes.length);
+      setChecked(!checked);
+    }
+  };
+
+  const onHeartClick = () => {
+    handleChange();
+    callLikesApi();
+  };
+
+  return (
+    <CommentView
+      imageUrl={investorProfilePicture}
+      username={username}
+      content={comment.content}
+      createdAt={comment.createdAt}
+      likeCount={likes}
+      onHeartClick={onHeartClick}
+      checked={checked}
+    />
+  );
+};
+
 const CommentBlock = styled.div`
   display: flex;
   padding: 0.6rem;
@@ -32,7 +161,7 @@ const CommentBlock = styled.div`
     }
   }
 
-  .content {
+  .comment-content-wrapper {
     display: flex;
     flex-direction: column;
     margin-right: 1.6rem;
@@ -71,137 +200,5 @@ const CommentBlock = styled.div`
     }
   }
 `;
-
-const CommentView = ({
-  imageUrl,
-  username,
-  content,
-  createdAt,
-  likeCount,
-  checked,
-  onHeartClick,
-}) => {
-  return (
-    <CommentBlock>
-      <div className='profile'>
-        <div className='picture-wrapper'>
-          <UserIcon className='picture' src={imageUrl} />
-        </div>
-        <div className='content'>
-          <div className='user-info'>
-            <div className='comment-name'>{username}</div>
-            <div className='comment-time'>
-              {timeAgo.format(new Date(createdAt))} · {likeCount} Likes
-            </div>
-          </div>
-          <div className='comment-content'>{content}</div>
-        </div>
-      </div>
-
-      <div className='thumb-up' onClick={onHeartClick}>
-        {checked ? (
-          <ThumbUpIcon />
-        ) : (
-          <ThumbUpIcon style={{ fill: color.B40 }} />
-        )}
-      </div>
-    </CommentBlock>
-  );
-};
-
-const Comment = ({ comment: comment }) => {
-  const [username, setUsername] = useState('');
-  const [investorProfilePicture, setInvestorProfilePicture] = useState('');
-  const [likes, setLikes] = useState(0);
-  var uid = '';
-  const { user } = useAppUser();
-
-  const [checked, setChecked] = useState(false);
-
-  const handleChange = (event) => {
-    if (checked == false) {
-      setChecked(true);
-      setLikes(comment.likes.length);
-    } else {
-      setChecked(false);
-      setLikes(comment.likes.length);
-    }
-  };
-
-  useEffect(() => {
-    const email = user?.email;
-    const getUser = async () => {
-      if (!email || !comment.userId) return;
-      const likesList = comment.likes;
-
-      const user = await api.user.getByEmail(email)();
-      let isLiked = false;
-
-      for (let i = 0; i < likesList.length; i++) {
-        const userId = String(likesList[i]);
-        if (userId == String(user._id)) {
-          isLiked = true;
-        }
-      }
-
-      if (isLiked == true) {
-        setLikes(comment.likes.length);
-        setChecked(true);
-      } else {
-        setLikes(comment.likes.length);
-        setChecked(false);
-      }
-
-      const data = await api.user.getById(comment.userId)();
-      setUsername(data.username);
-      setInvestorProfilePicture(data.profileImageUrl);
-    };
-    getUser();
-  }, [user?.email && comment.userId]);
-
-  const callLikesApi = async () => {
-    const commentId = String(comment._id);
-
-    var userResponse = await fetch(
-      `http://localhost:4000/api/v1/user/${user.email}/email`
-    );
-    var userData = await userResponse.json();
-    var userIdString = String(userData._id);
-    uid = userIdString;
-
-    if (checked == false) {
-      const response = await axios.put(
-        `http://localhost:4000/api/v1/investor/update/likes/comment/${commentId}/${uid}`,
-        {}
-      );
-      setLikes(response.data.likes.length);
-      setChecked(!checked);
-    } else {
-      const response = await axios.put(
-        `http://localhost:4000/api/v1/investor/update/likes/comment/${commentId}/${uid}`,
-        {}
-      );
-      setLikes(response.data.likes.length);
-      setChecked(!checked);
-    }
-  };
-
-  const onHeartClick = () => {
-    handleChange();
-    callLikesApi();
-  };
-
-  return (
-    <CommentView
-      imageUrl={investorProfilePicture}
-      username={username}
-      content={comment.content}
-      createdAt={comment.createdAt}
-      likeCount={likes}
-      onHeartClick={onHeartClick}
-      checked={checked}
-    />
-  );
-};
 
 export default Comment;

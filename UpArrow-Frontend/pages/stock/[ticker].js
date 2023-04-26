@@ -11,45 +11,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import api from '../../apis';
 import { MainLayout } from '../../Layouts';
 
-const StockWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-
-  .section {
-    margin-bottom: 3.2rem;
-  }
-  .stock-content {
-    max-width: 128rem;
-  }
-
-  .content {
-    padding: 0 3rem;
-
-    .button-wrapper {
-      display: flex;
-      justify-content: center;
-      gap: 5rem;
-    }
-  }
-
-  .financial {
-    margin-bottom: 5rem;
-  }
-
-  .investor-wrapper {
-    display: flex;
-    gap: 5rem;
-  }
-
-  .buy-sale-btn-group {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 5rem;
-    margin-bottom: 10rem;
-  }
-`;
-
 export default function StockPage(props) {
   return (
     <MainLayout>
@@ -74,9 +35,9 @@ function Stock({ stock, analysis }) {
   );
   const { data: comments, refetch: refetchComments } = useQuery(
     ['stockComments', stock._id],
-    (stock._id && api.comment.getByStockId(stock._id)) || []
+    (stock?.commentIds && api.comment.getByIds(stock.commentIds?.join(','))) ||
+      []
   );
-  console.log('comments : ', comments);
 
   const postOrder = useMutation(api.order.post, {
     onSuccess: () => refetch() && refetchUser(),
@@ -93,7 +54,10 @@ function Stock({ stock, analysis }) {
           content: comment,
           likes: [],
         })();
-        refetchComments();
+        await axios.get(`/api/revalidate/stock/${stock.ticker}`);
+        setTimeout(() => {
+          refetchComments();
+        }, 500);
       } catch (e) {
         console.error('e : ', e);
       } finally {
@@ -183,3 +147,42 @@ export async function getStaticProps(context) {
     props: { stock, analysis },
   };
 }
+
+const StockWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+
+  .section {
+    margin-bottom: 3.2rem;
+  }
+  .stock-content {
+    max-width: 128rem;
+  }
+
+  .content {
+    padding: 0 3rem;
+
+    .button-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 5rem;
+    }
+  }
+
+  .financial {
+    margin-bottom: 5rem;
+  }
+
+  .investor-wrapper {
+    display: flex;
+    gap: 5rem;
+  }
+
+  .buy-sale-btn-group {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 5rem;
+    margin-bottom: 10rem;
+  }
+`;

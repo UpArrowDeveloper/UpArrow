@@ -1,6 +1,6 @@
 const Comment = require('../../models/Comment');
 const ideaService = require('../idea');
-const userService = require('../user');
+const stockService = require('../stock');
 
 const addStockComment = async ({
   stockId,
@@ -17,32 +17,31 @@ const addStockComment = async ({
     likes,
   });
 
-  await userService.addComment(userId, newComment._id);
+  await stockService.addComment(stockId, newComment._id);
 
   await newComment.save();
   return newComment;
 };
 
-const addPostComment = async ({
-  postId,
+const addIdeaComment = async ({
+  ideaId,
   userId,
   content,
   timeStamp,
   likes,
 }) => {
   const newComment = new Comment({
-    postId,
+    ideaId,
     userId,
     content,
     timeStamp,
     likes,
   });
 
-  await ideaService.addComment(postId, newComment._id);
-  await userService.addComment(userId, newComment._id);
+  await ideaService.addComment(ideaId, newComment._id);
 
   await newComment.save();
   return newComment;
 };
 
-module.exports = { addStockComment, addPostComment };
+module.exports = { addStockComment, addIdeaComment };

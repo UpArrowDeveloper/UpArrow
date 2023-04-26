@@ -19,9 +19,6 @@ import color from '../../styles/color';
 import api from '../../apis';
 import { MainLayout } from '../../Layouts';
 
-// -> 한 함수 / 모듈 / 는 한가지 일만 해야한다.  clean code
-// Investor : Investor 페이지를 보여주는 일 // 다른 기능들은 다른 파일에서 .
-
 export function Investor({ investor, stocksWithPrices, rank }) {
   const {
     cash,
@@ -117,7 +114,7 @@ export default function Page(props) {
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: 'blocking', // can also be true or 'blocking'
+    fallback: 'blocking',
   };
 }
 

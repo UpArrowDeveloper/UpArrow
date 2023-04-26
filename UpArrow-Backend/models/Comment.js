@@ -6,6 +6,7 @@ const CommentSchema = new Schema(
     content: String,
     timeStamp: Date,
     likes: Array,
+    userId: String,
   },
   { timestamps: true }
 );
