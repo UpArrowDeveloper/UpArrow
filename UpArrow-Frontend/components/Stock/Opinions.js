@@ -7,6 +7,70 @@ import CommentInput from '../CommentInput';
 import { ChevronLeftIcon, ChevronRightIcon } from '../icons';
 import CommentList from '../CommentList';
 
+const OpinionCard = ({ authorImageUrl, author, message }) => {
+  return (
+    <OpinionCardBlock>
+      <div className='opinion-card-image-wrapper'>
+        <Image
+          src={authorImageUrl}
+          layout='fill'
+          className='opinion-author-image'
+        />
+      </div>
+      <div className='author'>{author} says</div>
+      <div className='message'>{message}</div>
+    </OpinionCardBlock>
+  );
+};
+
+const Opinions = ({
+  comment,
+  setComment,
+  submitComment,
+  analysis,
+  comments,
+  ...restProps
+}) => {
+  const opinionCards = analysis.opinions;
+  const [index, setIndex] = useState(0);
+
+  const increaseIndex = () => {
+    setIndex((i) => (i < opinionCards.length - 1 ? i + 1 : i));
+  };
+  const decreaseIndex = () => {
+    setIndex((i) => (i > 0 ? i - 1 : i));
+  };
+
+  return (
+    <OpinionsBlock {...restProps} index={index} cardWidth={52 + 2.4}>
+      <h3>Opinions</h3>
+      <div className='opinion-cards'>
+        <div className='left-button' onClick={decreaseIndex}>
+          <ChevronLeftIcon />
+        </div>
+        <div className='opinion-cards-outer-wrapper'>
+          <div className='opinion-cards-wrapper'>
+            {opinionCards.map((card) => (
+              <OpinionCard {...card} />
+            ))}
+          </div>
+        </div>
+        <div className='right-button' onClick={increaseIndex}>
+          <ChevronRightIcon />
+        </div>
+      </div>
+
+      <CommentList className='comment-list' comments={comments} />
+      <div className='comment-wrapper'>
+        <CommentInput value={comment} setValue={setComment} />
+        <button className='comment-submit-btn' onClick={submitComment}>
+          Comment
+        </button>
+      </div>
+    </OpinionsBlock>
+  );
+};
+
 const OpinionsBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -124,67 +188,10 @@ const OpinionCardBlock = styled.div`
     font-size: 2.4rem;
     line-height: 2.9rem;
   }
+
+  .opinion-author-image {
+    border-radius: 999rem;
+    object-fit: cover;
+  }
 `;
-
-const OpinionCard = ({ authorImageUrl, author, message }) => {
-  return (
-    <OpinionCardBlock>
-      <div className='opinion-card-image-wrapper'>
-        <Image src={authorImageUrl} layout='fill' />
-      </div>
-      <div className='author'>{author} says</div>
-      <div className='message'>{message}</div>
-    </OpinionCardBlock>
-  );
-};
-
-const Opinions = ({
-  comment,
-  setComment,
-  submitComment,
-  analysis,
-  comments,
-  ...restProps
-}) => {
-  const opinionCards = analysis.opinions;
-  const [index, setIndex] = useState(0);
-
-  const increaseIndex = () => {
-    setIndex((i) => (i < opinionCards.length - 1 ? i + 1 : i));
-  };
-  const decreaseIndex = () => {
-    setIndex((i) => (i > 0 ? i - 1 : i));
-  };
-  console.log('opinionCards  :', opinionCards);
-
-  return (
-    <OpinionsBlock {...restProps} index={index} cardWidth={52 + 2.4}>
-      <h3>Opinions</h3>
-      <div className='opinion-cards'>
-        <div className='left-button' onClick={decreaseIndex}>
-          <ChevronLeftIcon />
-        </div>
-        <div className='opinion-cards-outer-wrapper'>
-          <div className='opinion-cards-wrapper'>
-            {opinionCards.map((card) => (
-              <OpinionCard {...card} />
-            ))}
-          </div>
-        </div>
-        <div className='right-button' onClick={increaseIndex}>
-          <ChevronRightIcon />
-        </div>
-      </div>
-
-      <CommentList className='comment-list' comments={comments} />
-      <div className='comment-wrapper'>
-        <CommentInput value={comment} setValue={setComment} />
-        <button className='comment-submit-btn' onClick={submitComment}>
-          Comment
-        </button>
-      </div>
-    </OpinionsBlock>
-  );
-};
-
 export default Opinions;
