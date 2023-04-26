@@ -9,48 +9,6 @@ import Banner from '../components/common/Banner';
 import api from '../apis';
 import { getInvestorInvestInfo } from '../utils/investor';
 
-const IndexWrapper = styled.div`
-  margin-bottom: 5rem;
-
-  .text {
-    ${HeadH2Bold}
-    margin-bottom: 2.4rem;
-  }
-
-  .main-items {
-    padding: 3.2rem;
-  }
-
-  .stockList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2.4rem 4.2rem;
-    padding-bottom: 3.2rem;
-  }
-
-  .ideaList {
-    max-width: 59rem;
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 2rem;
-    gap: 2rem;
-
-    /* & > div {
-      &:not(
-          :nth-last-child(-n + ${({ postLength }) => (postLength % 2 ? 1 : 2)})
-        ) {
-        border-bottom: 0.1rem solid #d9d9d9;
-      }
-    } */
-  }
-
-  .investorList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-`;
-
 function Home({
   stockList,
   topSixIdea,
@@ -72,7 +30,7 @@ function Home({
           Stocks
         </div>
         <div className='stockList'>
-          {stockList.slice(0, 14).map((data) => {
+          {stockList.slice(0, 100).map((data) => {
             return (
               <Logo
                 key={data._id}
@@ -199,3 +157,45 @@ export default function MainPage(props) {
     </>
   );
 }
+
+const IndexWrapper = styled.div`
+  margin-bottom: 5rem;
+
+  .text {
+    ${HeadH2Bold}
+    margin-bottom: 2.4rem;
+  }
+
+  .main-items {
+    padding: 3.2rem;
+  }
+
+  .stockList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.4rem 4.2rem;
+    padding-bottom: 3.2rem;
+  }
+
+  .ideaList {
+    max-width: 59rem;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    gap: 2rem;
+
+    /* & > div {
+      &:not(
+          :nth-last-child(-n + ${({ postLength }) => (postLength % 2 ? 1 : 2)})
+        ) {
+        border-bottom: 0.1rem solid #d9d9d9;
+      }
+    } */
+  }
+
+  .investorList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+`;
