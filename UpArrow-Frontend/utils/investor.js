@@ -39,9 +39,11 @@ export const getInvestorProfileInfo = async (id) => {
   };
 };
 
+let stocksCache = undefined;
 export const getInvestorInvestInfo = async (id) => {
   const investor = await api.user.getById(id)();
-  const stocks = await api.stock.get();
+  stocksCache = stocksCache ? stocksCache : await api.stock.get();
+  const stocks = stocksCache;
   const orderIds = investor.orderIds;
   const orders =
     orderIds.length > 0 ? await api.order.getByIds(orderIds.join(','))() : [];
