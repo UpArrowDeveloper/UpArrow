@@ -28,8 +28,8 @@ const getTop3StocksByUserId = async (userId) => {
       const stock = await getStockById(value.stockId);
       return {
         ...value,
-        ticker: stock.ticker,
-        name: stock.name,
+        ticker: stock?.ticker,
+        name: stock?.name,
         stock,
       };
     })
