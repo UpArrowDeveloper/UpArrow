@@ -38,10 +38,11 @@ router.post('/', async (req, res) => {
     const orders = await getOrdersByUserAndStock(userId, stockId);
     const totalQuantity =
       orders.reduce(
-        (acc, order) => (acc + order.quantity * order.type === 'buy' ? 1 : -1),
+        (acc, order) => acc + order.quantity * (order.type === 'buy' ? 1 : -1),
         0
       ) +
       quantity * (type === 'buy' ? 1 : -1);
+    console.log('totalQuantity : ', totalQuantity);
     if (totalQuantity < 0) {
       throw new Error('exceed quantity');
     }
