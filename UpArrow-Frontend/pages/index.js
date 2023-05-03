@@ -19,6 +19,8 @@ function Home({
 }) {
   const router = useRouter();
 
+  console.log('investorData List : ', investorDataList);
+
   return (
     <IndexWrapper postLength={topSixIdea.length}>
       <div className='main-items'>
