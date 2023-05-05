@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import FilePreview from '../../../components/common/FilePreview';
 import axios from 'axios';
 import { env } from '../../../config';
@@ -157,6 +157,19 @@ export const BoStocksMenu = ({ stock, analysis }) => {
     axios.get('/api/revalidate/idea');
     axios.get('/api/revalidate/investor');
     router.push('/backoffice/stocks');
+  };
+
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    console.log('result : ', result);
+    const newItems = [...financials];
+    const [removed] = newItems.splice(result.source.index, 1);
+    newItems.splice(result.destination.index, 0, removed);
+
+    setFinancials(newItems);
   };
 
   return (
@@ -621,25 +634,51 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             </div>
             <div className='financial-right'>
               <h6 className='mb-8'>Created Chart</h6>
-              <div className='created-chart-wrapper'>
-                {financials.map((cv) => (
-                  <div className='created-chart'>
-                    <div className='created-chart-left'>
-                      <h6>{cv.name}</h6>
-                      {cv.chartValues.map((cvv) => JSON.stringify(cvv))}
-                    </div>
-                    <TrashIcon
-                      onClick={() =>
-                        setFinancials((s) =>
-                          s.filter((v) => v.name !== cv.name)
-                        )
-                      }
+              <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId='chart'>
+                  {(provided) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className='created-chart-wrapper'
                     >
-                      X
-                    </TrashIcon>
-                  </div>
-                ))}
-              </div>
+                      {financials.map((cv, index) => (
+                        <Draggable
+                          index={index}
+                          key={cv.name}
+                          draggableId={cv.name}
+                        >
+                          {(provided) => (
+                            <div
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              ref={provided.innerRef}
+                              className='created-chart'
+                            >
+                              <div className='created-chart-left'>
+                                <h6>{cv.name}</h6>
+                                {cv.chartValues.map((cvv) =>
+                                  JSON.stringify(cvv)
+                                )}
+                              </div>
+                              <TrashIcon
+                                onClick={() =>
+                                  setFinancials((s) =>
+                                    s.filter((v) => v.name !== cv.name)
+                                  )
+                                }
+                              >
+                                X
+                              </TrashIcon>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
             </div>
           </div>
 
