@@ -159,17 +159,28 @@ export const BoStocksMenu = ({ stock, analysis }) => {
     router.push('/backoffice/stocks');
   };
 
-  const onDragEnd = (result) => {
+  const onDragEndForChart = (result) => {
     if (!result.destination) {
       return;
     }
 
-    console.log('result : ', result);
     const newItems = [...financials];
     const [removed] = newItems.splice(result.source.index, 1);
     newItems.splice(result.destination.index, 0, removed);
 
     setFinancials(newItems);
+  };
+
+  const onDragEndForOpinion = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const newItems = [...opinions];
+    const [removed] = newItems.splice(result.source.index, 1);
+    newItems.splice(result.destination.index, 0, removed);
+
+    setOpinions(newItems);
   };
 
   return (
@@ -634,7 +645,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             </div>
             <div className='financial-right'>
               <h6 className='mb-8'>Created Chart</h6>
-              <DragDropContext onDragEnd={onDragEnd}>
+              <DragDropContext onDragEnd={onDragEndForChart}>
                 <Droppable droppableId='chart'>
                   {(provided) => (
                     <div
@@ -730,33 +741,58 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             </div>
             <div className='opinion-right'>
               <h6 className='mb-8'>Created Opinions</h6>
-              <div className='opinion-block-wrapper'>
-                {opinions.map((cv) => (
-                  <div className='opinion-block'>
-                    <div className='opinion-block-left'>
-                      <FilePreview
-                        className='opinion-block-image'
-                        file={cv.file}
-                        url={cv.authorImageUrl}
-                      />
-                      <div>
-                        <h6 clasName='mb-4'>{cv.author}</h6>
-                        <p>"{cv.message}"</p>
-                      </div>
+              <DragDropContext onDragEnd={onDragEndForOpinion}>
+                <Droppable droppableId='opinions'>
+                  {(provided) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className='opinion-block-wrapper'
+                    >
+                      {opinions.map((cv, index) => (
+                        <Draggable
+                          index={index}
+                          key={cv.author}
+                          draggableId={`opinions-${cv.author}`}
+                        >
+                          {(provided2) => (
+                            <div
+                              {...provided2.draggableProps}
+                              {...provided2.dragHandleProps}
+                              ref={provided2.innerRef}
+                              className='opinion-block'
+                            >
+                              <div className='opinion-block-left'>
+                                <FilePreview
+                                  className='opinion-block-image'
+                                  file={cv.file}
+                                  url={cv.authorImageUrl}
+                                />
+                                <div>
+                                  <h6 clasName='mb-4'>{cv.author}</h6>
+                                  <p>"{cv.message}"</p>
+                                </div>
+                              </div>
+                              <TrashIcon
+                                onClick={() =>
+                                  setOpinions((s) =>
+                                    s.filter(
+                                      (v) =>
+                                        v.author !== cv.author ||
+                                        v.message !== cv.message
+                                    )
+                                  )
+                                }
+                              />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
                     </div>
-                    <TrashIcon
-                      onClick={() =>
-                        setOpinions((s) =>
-                          s.filter(
-                            (v) =>
-                              v.author !== cv.author || v.message !== cv.message
-                          )
-                        )
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
             </div>
           </div>
 
