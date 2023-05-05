@@ -195,7 +195,7 @@ const post = {
 };
 
 const getProfitPercent = (currentPrice, targetPrice) => {
-  const sign = currentPrice - targetPrice >= 0 ? '+' : '';
+  const sign = targetPrice - currentPrice >= 0 ? '+' : '';
   return `${sign}${(
     ((targetPrice - currentPrice) / currentPrice) *
     100
