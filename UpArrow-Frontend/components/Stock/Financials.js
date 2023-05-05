@@ -64,7 +64,12 @@ const FinancialsBlock = styled.div`
   .chart-wrapper {
     display: grid;
     grid-template-columns: 50% 50%;
+
+    .chart {
+      margin: 0.8rem 0;
+    }
   }
+
   .bar-wrapper {
     width: 28.2rem;
     height: 14.6rem;
