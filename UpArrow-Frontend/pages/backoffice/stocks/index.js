@@ -11,6 +11,7 @@ import { RecoilRoot } from 'recoil';
 import api from '../../../apis';
 import BackofficeLayout from '../../../Layouts/Backoffice';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const columns = [
   {
@@ -53,7 +54,7 @@ const columns = [
 ];
 
 const BackofficeStockList = () => {
-  const { data } = useQuery(['stock list'], api.stock.get);
+  const { data, refetch } = useQuery(['stock list'], api.stock.get);
   const [selectedIds, setSelectedIds] = useState([]);
   const router = useRouter();
   const handleClick = (params, e) => {
@@ -69,11 +70,21 @@ const BackofficeStockList = () => {
       return s.filter((v) => params.row._id !== v);
     });
   };
-  const clickDelete = () => {
-    selectedIds.forEach((id) => {
-      api.stock.deleteById(id);
-    });
+  const clickDelete = async () => {
+    await Promise.all(
+      selectedIds.map((id) => {
+        return api.stock.deleteById(id);
+      })
+    );
+    await Promise.all([
+      axios.get('/api/revalidate/stock'),
+      axios.get('/api/revalidate'),
+      axios.get('/api/revalidate/idea'),
+      axios.get('/api/revalidate/investor'),
+    ]);
+    refetch();
   };
+
   if (!data) return 'loading';
   return (
     <Box>
