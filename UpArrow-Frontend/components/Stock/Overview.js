@@ -56,17 +56,17 @@ const Layer2 = ({ analysis }) => {
       <div className='top-message'>
         <div className='message'>
           <h6>Mission Statement</h6>
-          <p>{analysis.missionStatement}</p>
+          <pre>{analysis.missionStatement}</pre>
         </div>
         <div className='message'>
           <h6>Business Model</h6>
-          <p>{analysis.businessModel}</p>
+          <pre>{analysis.businessModel}</pre>
         </div>
       </div>
       <div className='bottom-message'>
         <div className='message'>
           <h6>Competitive Advantages</h6>
-          <p>{analysis.competitiveAdvantage}</p>
+          <pre>{analysis.competitiveAdvantage}</pre>
         </div>
       </div>
     </div>
@@ -185,9 +185,11 @@ const OverviewBlock = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    width: 100%;
+    flex: 1;
 
-    p {
+    pre {
+      flex: 1;
+      white-space: pre-wrap;
       ${Body16Regular}
     }
 
