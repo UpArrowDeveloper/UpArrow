@@ -1,5 +1,10 @@
 const cheerio = require('cheerio');
 const axios = require('axios');
+require('dotenv').config();
+
+const httpClient = axios.create({
+  baseURL: process.env.API_URI,
+});
 
 const getPage = async (ticker) => {
   try {
@@ -14,10 +19,10 @@ const getPage = async (ticker) => {
   }
 };
 
-const changePrice = async (data) => {
+const changePrice = async (id, stock) => {
   try {
-    const res = await axios.put('http://localhost:4000/api/v1/config', {
-      prices: data,
+    const res = await httpClient.put(`/api/v1/stock/${id}`, {
+      ...stock,
     });
   } catch (error) {
     console.error('change error : ', error);
@@ -31,61 +36,45 @@ const getPrice = async (ticker) => {
 };
 
 const parseHtml = async () => {
-  const stockList = [
-    'TSLA',
-    'AAPL',
-    'AAPL',
-    'TSLA',
-    'RIVN',
-    'AMZN',
-    'LMND',
-    'ATVI',
-    'ADBE',
-    'AEVA',
-    'AFRM',
-    'UAVS',
-    'ABNB',
-    'BABA',
-    'AMD',
-    'ARCH',
-    'ARVL',
-    'BYND',
-    'BKSY',
-    'GOEV',
-    'CVNA',
-    'GOOGL',
-    'MSFT',
-    'NIO',
-    'NVDA',
-  ];
+  const stocks = (await httpClient.get('/api/v1/stock')).data;
+  console.log('stocks : ', stocks);
+
   const priceListPromises = [];
 
-  stockList.forEach((stock) => {
-    priceListPromises.push(getPrice(stock));
+  stocks.forEach((stock) => {
+    priceListPromises.push(getPrice(stock.ticker));
   });
 
   try {
     const priceList = await Promise.all(priceListPromises);
-    const priceObject = priceList.reduce((acc, [ticker, price]) => {
-      return {
-        ...acc,
-        [ticker]: Number(price),
-      };
-    }, {});
-    await changePrice(priceObject);
+    console.log('priceList : ', priceList);
+    const res = priceList.map(([ticker, price], idx) => {
+      return changePrice(stocks[idx]._id, {
+        currentPrice: Number(price),
+      });
+    });
+    await Promise.all(res);
+    // const priceObject = priceList.reduce((acc, [ticker, price]) => {
+    //   return {
+    //     ...acc,
+    //     [ticker]: Number(price),
+    //   };
+    // }, {});
+    // await changePrice(priceObject);
   } catch (error) {
     console.error(error);
   }
 };
+parseHtml();
 
-setInterval(() => {
-  try {
-    parseHtml();
-  } catch (error) {
-    console.error('fetch failed', error);
-    exit();
-  }
-}, 10000);
+// setInterval(() => {
+//   try {
+//     parseHtml();
+//   } catch (error) {
+//     console.error('fetch failed', error);
+//     exit();
+//   }
+// }, 10000);
 
 // $('h2.title').text('Hello there!');
 // $('h2').addClass('welcome');
