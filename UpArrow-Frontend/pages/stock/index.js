@@ -10,6 +10,120 @@ import { getNumberUnit } from '../../utils/number';
 import { useRouter } from 'next/router';
 import { commonListCss, commonTableCss } from '../../styles/table';
 
+const orderOptions = ['Popular', 'Trending', 'Market Cap'];
+
+const getSortAlgorithmByOrderOption = (orderOption) => {
+  switch (orderOption) {
+    case 'Popular':
+      return (a, b) => b.commentIds.length - a.commentIds.length;
+    case 'Trending':
+      return (a, b) => b.ideaIds?.length - a.ideaIds?.length;
+    case 'Market Cap':
+      return (a, b) => b.marketCap - a.marketCap;
+    default:
+      return (a, b) => 0;
+  }
+};
+function Home({ stocks }) {
+  const [orderOption, setOrderOption] = useState();
+
+  const router = useRouter();
+  return (
+    <StockBlock>
+      <header>
+        <h1>Stocks</h1>
+      </header>
+      <nav className='order-option-wrapper'>
+        {orderOptions.map((order) => (
+          <OrderChip
+            selected={order === orderOption}
+            onClick={() => setOrderOption(order)}
+            key={order}
+            order={order}
+          />
+        ))}
+      </nav>
+      <div className='table-wrapper'>
+        <table>
+          <thead>
+            <tr>
+              <th>Name/Ticker</th>
+              <th>Price</th>
+              <th>Market Cap</th>
+              <th>Buyer</th>
+              <th>Seller</th>
+              <th>Ideas</th>
+              <th>Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            {stocks
+              ?.sort(getSortAlgorithmByOrderOption(orderOption))
+              ?.map((stock) => (
+                <tr
+                  key={stock._id}
+                  onClick={() => router.push(`/stock/${stock.ticker}`)}
+                >
+                  <td>
+                    <div className='name-ticker'>
+                      <div className='image-container'>
+                        <div className='image-wrapper'>
+                          {stock.logoUrl && (
+                            <Image
+                              src={stock.logoUrl}
+                              layout='fill'
+                              alt={stock.name}
+                            />
+                          )}
+                        </div>
+                      </div>
+                      <p>
+                        {stock.name} / {stock.ticker}
+                      </p>
+                    </div>
+                  </td>
+                  <td className='number'>
+                    <span>${stock.currentPrice.toLocaleString()}</span>
+                  </td>
+                  <td className='number'>
+                    <span className='divider'>
+                      ${getNumberUnit(stock.marketCap)}
+                    </span>
+                  </td>
+                  <td className='number'>
+                    <span>{stock.buyerCount.toLocaleString()}</span>
+                  </td>
+                  <td className='number'>
+                    <span className='divider'>
+                      {stock.sellerCount.toLocaleString()}
+                    </span>
+                  </td>
+                  <td className='number'>
+                    <span>{stock.ideaIds?.length.toLocaleString()}</span>
+                  </td>
+                  <td className='number'>
+                    <span>{stock.commentIds.length.toLocaleString()}</span>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+      <div className='view-more-wrapper'>
+        <Viewmore className='view-more' />
+      </div>
+    </StockBlock>
+  );
+}
+
+export default function StockPage(props) {
+  return (
+    <MainLayout>
+      <Home {...props} />
+    </MainLayout>
+  );
+}
+
 const StockBlock = styled.div`
   ${commonListCss}
 
@@ -52,105 +166,6 @@ const StockBlock = styled.div`
     }
   }
 `;
-
-const orderOptions = ['Popular', 'Trending', 'Market Cap'];
-
-function Home({ stocks }) {
-  const [orderOption, setOrderOption] = useState();
-  const router = useRouter();
-  return (
-    <StockBlock>
-      <header>
-        <h1>Stocks</h1>
-      </header>
-      <nav className='order-option-wrapper'>
-        {orderOptions.map((order) => (
-          <OrderChip
-            selected={order === orderOption}
-            onClick={() => setOrderOption(order)}
-            key={order}
-            order={order}
-          />
-        ))}
-      </nav>
-      <div className='table-wrapper'>
-        <table>
-          <thead>
-            <tr>
-              <th>Name/Ticker</th>
-              <th>Price</th>
-              <th>Market Cap</th>
-              <th>Buyer</th>
-              <th>Seller</th>
-              <th>Ideas</th>
-              <th>Comments</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stocks?.map((stock) => (
-              <tr
-                key={stock._id}
-                onClick={() => router.push(`/stock/${stock.ticker}`)}
-              >
-                <td>
-                  <div className='name-ticker'>
-                    <div className='image-container'>
-                      <div className='image-wrapper'>
-                        {stock.logoUrl && (
-                          <Image
-                            src={stock.logoUrl}
-                            layout='fill'
-                            alt={stock.name}
-                          />
-                        )}
-                      </div>
-                    </div>
-                    <p>
-                      {stock.name} / {stock.ticker}
-                    </p>
-                  </div>
-                </td>
-                <td className='number'>
-                  <span>${stock.currentPrice.toLocaleString()}</span>
-                </td>
-                <td className='number'>
-                  <span className='divider'>
-                    ${getNumberUnit(stock.marketCap)}
-                  </span>
-                </td>
-                <td className='number'>
-                  <span>{stock.buyerCount.toLocaleString()}</span>
-                </td>
-                <td className='number'>
-                  <span className='divider'>
-                    {stock.sellerCount.toLocaleString()}
-                  </span>
-                </td>
-                <td className='number'>
-                  <span>{stock.ideaIds?.length.toLocaleString()}</span>
-                </td>
-                <td className='number'>
-                  <span>{stock.commentCount.toLocaleString()}</span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className='view-more-wrapper'>
-        <Viewmore className='view-more' />
-      </div>
-    </StockBlock>
-  );
-}
-
-export default function StockPage(props) {
-  return (
-    <MainLayout>
-      <Home {...props} />
-    </MainLayout>
-  );
-}
 
 export async function getStaticProps() {
   const stocks = await api.stock.get();

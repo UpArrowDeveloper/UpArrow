@@ -35,8 +35,8 @@ router.post('/', async (req, res) => {
       });
     } else {
       const { postId, userId, content, timeStamp, likes } = req.body;
-      newComment = await commentService.addPostComment({
-        postId,
+      newComment = await commentService.addIdeaComment({
+        ideaId: postId,
         userId,
         content,
         timeStamp,

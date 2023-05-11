@@ -14,6 +14,185 @@ import color from '../../styles/color';
 import { MainLayout } from '../../Layouts';
 import { getInvestorInvestInfo } from '../../utils/investor';
 TimeAgo.addDefaultLocale(en);
+
+const orderOptions = [
+  'Most Profitable',
+  'Most Assests',
+  'Most Ideas',
+  'Newest',
+];
+
+const getSortAlgorithmByOrderOption = (orderOption) => {
+  switch (orderOption) {
+    case 'Most Profitable':
+      return (a, b) => b.totalProfits - a.totalProfits;
+    case 'Most Assests':
+      return (a, b) =>
+        b.totalInvestment + b.cash - (a.totalInvestment + a.cash);
+    case 'Most Ideas':
+      return (a, b) => b.ideas?.length - a.ideas?.length;
+    case 'Newest':
+      return (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    default:
+      return (a, b) => 0;
+  }
+};
+
+function Investors({ investors, top3Stocks }) {
+  console.log('investors: ', investors);
+  const [orderOption, setOrderOption] = useState();
+  const router = useRouter();
+
+  return (
+    <IdeasBlock>
+      <header>
+        <h1>Investors</h1>
+      </header>
+      <nav className='order-option-wrapper'>
+        {orderOptions.map((order) => (
+          <OrderChip
+            key={order}
+            selected={order === orderOption}
+            onClick={() => setOrderOption(order)}
+            order={order}
+          />
+        ))}
+      </nav>
+      <div className='table-wrapper'>
+        <table>
+          <thead>
+            <tr>
+              <th style={{ paddingLeft: '1rem' }}>Ranks</th>
+              <th style={{ paddingLeft: '0.8rem' }}>Investors</th>
+              <th>Top3 Stocks</th>
+              <th>Ideas</th>
+              <th>Total Profits</th>
+              <th>Total Assets</th>
+            </tr>
+          </thead>
+          <tbody>
+            {investors
+              ?.sort(getSortAlgorithmByOrderOption(orderOption))
+              ?.map((investor, index) => (
+                <tr
+                  key={investor._id}
+                  onClick={() => router.push(`/investor/${investor._id}`)}
+                >
+                  <td className='comments wrapper index'>{index + 1}</td>
+                  <td>
+                    <div className='title wrapper investors'>
+                      <div className='image-container'>
+                        <div className='image-wrapper rounded'>
+                          {!!investor.profileImageUrl && (
+                            <Image
+                              objectFit='cover'
+                              src={investor.profileImageUrl}
+                              layout='fill'
+                              alt={investor.name}
+                            />
+                          )}
+                        </div>
+                      </div>
+                      <div className='title-author'>
+                        <h5>{investor.name}</h5>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div className='wrapper'>
+                      <TagGroup
+                        tags={top3Stocks[index]?.map(({ name, profit }) => ({
+                          name: `${name} ${profit?.toLocaleString('en-US')}%`,
+                          type:
+                            profit > 0
+                              ? 'plus'
+                              : profit === 0
+                              ? 'outline'
+                              : 'minus',
+                        }))}
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <div className='comments wrapper numbers'>
+                      {investor.ideas.length?.toLocaleString('en-US')}
+                    </div>
+                  </td>
+                  <td>
+                    <div className='comments wrapper numbers'>
+                      ${investor.totalProfits?.toLocaleString('en-US')}
+                    </div>
+                  </td>
+                  <td>
+                    <div className='comments wrapper numbers'>
+                      $
+                      {(
+                        investor.totalInvestment + investor.cash
+                      )?.toLocaleString('en-US')}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+      <div className='view-more-wrapper'>
+        <Viewmore className='view-more' />
+      </div>
+    </IdeasBlock>
+  );
+}
+
+export default function IdeasPage(props) {
+  return (
+    <MainLayout>
+      <Investors {...props} />
+    </MainLayout>
+  );
+}
+
+// 항상 실시간 <=
+// 장점 : 항상 실시간
+// 단점 : 사람이 많아질수록 서버 부하가 커짐.
+
+// 꼭 실시간은 아니고 (10분에 한번 || 우현님 원하실때) 씩 실시간 <=
+// 장점 : 서버 부하가 줄어듬. & 훨씬 빠름
+// 단점 : 실시간이 아니다.
+
+export async function getStaticProps() {
+  const users = await api.user.get();
+  const top3Stocks = await Promise.all(
+    users.map((user) => api.user.getTop3StocksById(user._id))
+  );
+
+  const investDataIncludedUsers = await Promise.all(
+    users.map(async (user) => {
+      const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
+        user._id
+      );
+      const ideas = await api.user.getIdeasById(user._id)();
+      return {
+        ...user,
+        totalInvestment,
+        totalProfits,
+        ideas,
+      };
+    })
+  );
+  console.log(
+    '**********\n\n\n\n\n\n\n\n\n\n\n\n\ninvestDataIncludedUsers',
+    investDataIncludedUsers
+  );
+
+  return {
+    props: {
+      investors: investDataIncludedUsers,
+      top3Stocks,
+    },
+  };
+}
+
 const IdeasBlock = styled.div`
   ${commonListCss};
   ${commonTableCss};
@@ -89,161 +268,3 @@ const IdeasBlock = styled.div`
     width: 32rem;
   }
 `;
-
-const orderOptions = [
-  'Most Profitable',
-  'Most Assests',
-  'Most Ideas',
-  'Newest',
-];
-
-function Investors({ investors, top3Stocks }) {
-  const [orderOption, setOrderOption] = useState();
-  const router = useRouter();
-
-  return (
-    <IdeasBlock>
-      <header>
-        <h1>Investors</h1>
-      </header>
-      <nav className='order-option-wrapper'>
-        {orderOptions.map((order) => (
-          <OrderChip
-            key={order}
-            selected={order === orderOption}
-            onClick={() => setOrderOption(order)}
-            order={order}
-          />
-        ))}
-      </nav>
-      <div className='table-wrapper'>
-        <table>
-          <thead>
-            <tr>
-              <th style={{ paddingLeft: '1rem' }}>Ranks</th>
-              <th style={{ paddingLeft: '0.8rem' }}>Investors</th>
-              <th>Top3 Stocks</th>
-              <th>Ideas</th>
-              <th>Total Profits</th>
-              <th>Total Assets</th>
-            </tr>
-          </thead>
-          <tbody>
-            {investors?.map((investor, index) => (
-              <tr
-                key={investor._id}
-                onClick={() => router.push(`/investor/${investor._id}`)}
-              >
-                <td className='comments wrapper index'>{index + 1}</td>
-                <td>
-                  <div className='title wrapper investors'>
-                    <div className='image-container'>
-                      <div className='image-wrapper rounded'>
-                        {!!investor.profileImageUrl && (
-                          <Image
-                            objectFit='cover'
-                            src={investor.profileImageUrl}
-                            layout='fill'
-                            alt={investor.name}
-                          />
-                        )}
-                      </div>
-                    </div>
-                    <div className='title-author'>
-                      <h5>{investor.name}</h5>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div className='wrapper'>
-                    <TagGroup
-                      tags={top3Stocks[index]?.map(({ name, profit }) => ({
-                        name: `${name} ${profit?.toLocaleString('en-US')}%`,
-                        type:
-                          profit > 0
-                            ? 'plus'
-                            : profit === 0
-                            ? 'outline'
-                            : 'minus',
-                      }))}
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className='comments wrapper numbers'>
-                    {investor.ideas.length?.toLocaleString('en-US')}
-                  </div>
-                </td>
-                <td>
-                  <div className='comments wrapper numbers'>
-                    ${investor.totalProfits?.toLocaleString('en-US')}
-                  </div>
-                </td>
-                <td>
-                  <div className='comments wrapper numbers'>
-                    $
-                    {(investor.totalInvestment + investor.cash)?.toLocaleString(
-                      'en-US'
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className='view-more-wrapper'>
-        <Viewmore className='view-more' />
-      </div>
-    </IdeasBlock>
-  );
-}
-
-export default function IdeasPage(props) {
-  return (
-    <MainLayout>
-      <Investors {...props} />
-    </MainLayout>
-  );
-}
-
-// 항상 실시간 <=
-// 장점 : 항상 실시간
-// 단점 : 사람이 많아질수록 서버 부하가 커짐.
-
-// 꼭 실시간은 아니고 (10분에 한번 || 우현님 원하실때) 씩 실시간 <=
-// 장점 : 서버 부하가 줄어듬. & 훨씬 빠름
-// 단점 : 실시간이 아니다.
-
-export async function getStaticProps() {
-  const users = await api.user.get();
-  const top3Stocks = await Promise.all(
-    users.map((user) => api.user.getTop3StocksById(user._id))
-  );
-
-  const investDataIncludedUsers = await Promise.all(
-    users.map(async (user) => {
-      const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
-        user._id
-      );
-      const ideas = await api.user.getIdeasById(user._id)();
-      return {
-        ...user,
-        totalInvestment,
-        totalProfits,
-        ideas,
-      };
-    })
-  );
-  console.log(
-    '**********\n\n\n\n\n\n\n\n\n\n\n\n\ninvestDataIncludedUsers',
-    investDataIncludedUsers
-  );
-
-  return {
-    props: {
-      investors: investDataIncludedUsers,
-      top3Stocks,
-    },
-  };
-}
