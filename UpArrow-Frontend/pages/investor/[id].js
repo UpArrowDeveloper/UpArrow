@@ -1,23 +1,23 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import IdeaCard from '../../components/IdeaCard';
+import React from "react";
+import styled from "@emotion/styled";
+import IdeaCard from "../../components/IdeaCard";
 
-import axios from 'axios';
-import { numberComma } from '../../utils/number';
+import axios from "axios";
+import { numberComma } from "../../utils/number";
 import {
   getInvestorInvestInfo,
   getInvestorProfileInfo,
-} from '../../utils/investor';
-import InvestorProfileView from '../../components/common/InvestorProfile';
+} from "../../utils/investor";
+import InvestorProfileView from "../../components/common/InvestorProfile";
 import {
   Body14Medium,
   HeadH3Bold,
   HeadH5Bold,
   HeadH6Bold,
-} from '../../styles/typography';
-import color from '../../styles/color';
-import api from '../../apis';
-import { MainLayout } from '../../Layouts';
+} from "../../styles/typography";
+import color from "../../styles/color";
+import api from "../../apis";
+import { MainLayout } from "../../Layouts";
 
 export function Investor({ investor, stocksWithPrices, rank }) {
   const {
@@ -58,34 +58,34 @@ export function Investor({ investor, stocksWithPrices, rank }) {
         rank={rank}
       />
       <InvestorDataBlock>
-        <div className='portfolio-wrapper'>
-          <div className='investor-title'>{username}'s Portfolio</div>
-          <div className='stocks'>
+        <div className="portfolio-wrapper">
+          <div className="investor-title">{username}'s Portfolio</div>
+          <div className="stocks">
             {stocksWithPrices.map((company) => (
-              <div className='stock' key={company.name}>
-                <img className='stock-logo' src={company.logoUrl} />
-                <div className='stock-info'>
-                  <div className='stock-name'>{company.name}</div>
-                  <div className='stock-quantity'>
+              <div className="stock" key={company.name}>
+                <img className="stock-logo" src={company.logoUrl} />
+                <div className="stock-info">
+                  <div className="stock-name">{company.name}</div>
+                  <div className="stock-quantity">
                     {company.quantity} shares
                   </div>
-                  <div className='stock-total-value'>
+                  <div className="stock-total-value">
                     ${numberComma(company.totalValue)}
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          <div className='view-all'>View All</div>
+          <div className="view-all">View All</div>
         </div>
-        <div className='ideas-wrapper'>
-          <div className='ideas'>
-            <div className='investor-title'>{username}'s Ideas</div>
-            <div className='ideas-content-wrapper'>
+        <div className="ideas-wrapper">
+          <div className="ideas">
+            <div className="investor-title">{username}'s Ideas</div>
+            <div className="ideas-content-wrapper">
               {ideas.map((idea) => (
                 <IdeaCard
                   key={idea._id}
-                  theme={'none'}
+                  theme={"none"}
                   ideaId={idea._id}
                   ideaImage={idea.thumbnailImageUrl}
                   ideaTitle={idea.title}
@@ -96,7 +96,7 @@ export function Investor({ investor, stocksWithPrices, rank }) {
               ))}
             </div>
           </div>
-          <div className='view-all'>View All</div>
+          <div className="view-all">View All</div>
         </div>
       </InvestorDataBlock>
     </InvestorBlock>
@@ -114,7 +114,7 @@ export default function Page(props) {
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: 'blocking',
+    fallback: "blocking",
   };
 }
 
@@ -123,11 +123,13 @@ export async function getStaticProps(context) {
   const { investor, stockPurchaseInfos, userIdeas, userRank } =
     await getInvestorProfileInfo(id);
 
+  console.log("investor : ", investor);
+
   const { totalInvestment, totalProfits } = await getInvestorInvestInfo(id);
   const stockIds = Object.keys(stockPurchaseInfos);
 
   const stocks =
-    stockIds.length > 0 ? await api.stock.getByIds(stockIds.join(','))() : [];
+    stockIds.length > 0 ? await api.stock.getByIds(stockIds.join(","))() : [];
 
   const stocksWithPrices = stocks.map((stock) => {
     return {

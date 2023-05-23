@@ -1,13 +1,14 @@
-import Logo from '../components/Logo';
-import IdeaCard from '../components/IdeaCard';
-import InvestorCard from '../components/InvestorCard';
-import styled from '@emotion/styled';
-import { useRouter } from 'next/router';
-import { MainLayout } from '../Layouts';
-import { HeadH2Bold } from '../styles/typography';
-import Banner from '../components/common/Banner';
-import api from '../apis';
-import { getInvestorInvestInfo } from '../utils/investor';
+import Logo from "../components/Logo";
+import IdeaCard from "../components/IdeaCard";
+import InvestorCard from "../components/InvestorCard";
+import styled from "@emotion/styled";
+import { useRouter } from "next/router";
+import { MainLayout } from "../Layouts";
+import { HeadH2Bold } from "../styles/typography";
+import Banner from "../components/common/Banner";
+import api from "../apis";
+import { getInvestorInvestInfo } from "../utils/investor";
+import { NextIcon } from "../components/icons";
 
 function Home({
   stockList,
@@ -21,15 +22,18 @@ function Home({
 
   return (
     <IndexWrapper postLength={topSixIdea.length}>
-      <div className='main-items'>
-        <div
-          className='text'
-          ref={stockRef}
-          onClick={() => router.push('/stock')}
-        >
-          Stocks
+      <div className="main-items">
+        <div className="header-wrapper">
+          <div
+            className="text"
+            ref={stockRef}
+            onClick={() => router.push("/stock")}
+          >
+            Stocks
+          </div>
+          <NextIcon onClick={() => router.push("/stock")} />
         </div>
-        <div className='stockList'>
+        <div className="stockList">
           {stockList.slice(0, 100).map((data) => {
             return (
               <Logo
@@ -41,11 +45,15 @@ function Home({
           })}
         </div>
       </div>
-      <div className='main-items'>
-        <div className='text' ref={ideaRef}>
-          Ideas
+      <div className="main-items">
+        <div className="header-wrapper">
+          <div className="text" ref={ideaRef}>
+            Ideas
+          </div>
+          <NextIcon onClick={() => router.push("/idea")} />
         </div>
-        <div className='ideaList'>
+
+        <div className="ideaList">
           {topSixIdea.map((idea) => {
             return (
               <IdeaCard
@@ -62,11 +70,15 @@ function Home({
         </div>
       </div>
 
-      <div className='main-items'>
-        <div className='text' ref={investorRef}>
-          Investors
+      <div className="main-items">
+        <div className="header-wrapper">
+          <div className="text" ref={investorRef}>
+            Investors
+          </div>
+          <NextIcon onClick={() => router.push("/investor")} />
         </div>
-        <div className='investorList'>
+
+        <div className="investorList">
           {investorDataList.slice(0, 10).map((investor, index) => {
             return (
               <InvestorCard
@@ -95,7 +107,7 @@ export async function getStaticProps() {
   const bannerImageUrl = config.bannerImageUrl;
   const topSixIdea = await api.idea.get({
     params: {
-      order: 'desc',
+      order: "desc",
       limit: 6,
     },
   });
@@ -151,7 +163,7 @@ export default function MainPage(props) {
   return (
     <>
       <Banner config={props.config} />
-      <MainLayout>
+      <MainLayout isMain>
         <Home {...props} />
       </MainLayout>
     </>
@@ -196,6 +208,11 @@ const IndexWrapper = styled.div`
   .investorList {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 1.8rem;
+  }
+
+  .header-wrapper {
+    display: flex;
+    justify-content: space-between;
   }
 `;

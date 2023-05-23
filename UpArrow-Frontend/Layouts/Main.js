@@ -1,8 +1,8 @@
-import styled from '@emotion/styled';
-import Navbar, { navbarHeight } from '../components/Navbar';
+import styled from "@emotion/styled";
+import Navbar, { navbarHeight } from "../components/Navbar";
 
 const MainLayoutBlock = styled.main`
-  margin-top: ${navbarHeight};
+  margin-top: ${({ isMain }) => (isMain ? "3.2rem" : navbarHeight)};
   display: flex;
   justify-content: center;
 
@@ -11,11 +11,11 @@ const MainLayoutBlock = styled.main`
   }
 `;
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, isMain = false }) => {
   return (
-    <MainLayoutBlock className='mainlayout'>
+    <MainLayoutBlock className="mainlayout" isMain={isMain}>
       <Navbar />
-      <div className='content'>{children}</div>
+      <div className="content">{children}</div>
     </MainLayoutBlock>
   );
 };

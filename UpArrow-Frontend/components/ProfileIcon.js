@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { EmptyAvatar } from './icons';
-import { env } from '../config';
-import storage from '../utils/storage';
+import styled from "@emotion/styled";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { EmptyAvatar } from "./icons";
+import { env } from "../config";
+import storage from "../utils/storage";
 
 const InvisibleCover = styled.div`
   background-color: rgba(0 0 0 / 10%);
@@ -41,18 +41,18 @@ const ProfileIcon = ({ className, data, logout }) => {
       <ProfileIconWrapper className={className}>
         {isLogin ? (
           <img
-            className='profile-icon'
+            className="profile-icon"
             src={profileImageUrl}
             onClick={() => setIsOpen(!isOpen)}
           />
         ) : (
-          <div className='profile-icon no-border'>
+          <div className="profile-icon no-border">
             <EmptyAvatar onClick={() => setIsOpen(!isOpen)} />
           </div>
         )}
 
         {isOpen && (
-          <div className='menu' onClick={() => setIsOpen(!isOpen)}>
+          <div className="menu" onClick={() => setIsOpen(!isOpen)}>
             {isLogin ? (
               <>
                 <a onClick={() => navigateProfile()}>My Portfolio</a>
@@ -94,8 +94,8 @@ const ProfileIconWrapper = styled.div`
   }
 
   .profile-icon {
-    width: 6rem;
-    height: 6rem;
+    width: 4.8rem;
+    height: 4.8rem;
     border-radius: 9999rem;
 
     &.no-border {

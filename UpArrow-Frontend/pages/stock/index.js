@@ -1,24 +1,24 @@
-import styled from '@emotion/styled';
-import { useState } from 'react';
-import { MainLayout } from '../../Layouts';
-import { HeadH5Bold } from '../../styles/typography';
-import Image from 'next/image';
-import Viewmore from '../../components/common/Viewmore';
-import OrderChip from '../../components/OrderChip';
-import api from '../../apis';
-import { getNumberUnit } from '../../utils/number';
-import { useRouter } from 'next/router';
-import { commonListCss, commonTableCss } from '../../styles/table';
+import styled from "@emotion/styled";
+import { useState } from "react";
+import { MainLayout } from "../../Layouts";
+import { HeadH5Bold } from "../../styles/typography";
+import Image from "next/image";
+import Viewmore from "../../components/common/Viewmore";
+import OrderChip from "../../components/OrderChip";
+import api from "../../apis";
+import { getNumberUnit } from "../../utils/number";
+import { useRouter } from "next/router";
+import { commonListCss, commonTableCss } from "../../styles/table";
 
-const orderOptions = ['Popular', 'Trending', 'Market Cap'];
+const orderOptions = ["Popular", "Trending", "Market Cap"];
 
 const getSortAlgorithmByOrderOption = (orderOption) => {
   switch (orderOption) {
-    case 'Popular':
+    case "Popular":
       return (a, b) => b.commentIds.length - a.commentIds.length;
-    case 'Trending':
+    case "Trending":
       return (a, b) => b.ideaIds?.length - a.ideaIds?.length;
-    case 'Market Cap':
+    case "Market Cap":
       return (a, b) => b.marketCap - a.marketCap;
     default:
       return (a, b) => 0;
@@ -33,7 +33,7 @@ function Home({ stocks }) {
       <header>
         <h1>Stocks</h1>
       </header>
-      <nav className='order-option-wrapper'>
+      <nav className="order-option-wrapper">
         {orderOptions.map((order) => (
           <OrderChip
             selected={order === orderOption}
@@ -43,15 +43,17 @@ function Home({ stocks }) {
           />
         ))}
       </nav>
-      <div className='table-wrapper'>
+      <div className="table-wrapper">
         <table>
           <thead>
             <tr>
               <th>Name/Ticker</th>
               <th>Price</th>
               <th>Market Cap</th>
+              <th></th>
               <th>Buyer</th>
               <th>Seller</th>
+              <th></th>
               <th>Ideas</th>
               <th>Comments</th>
             </tr>
@@ -65,13 +67,13 @@ function Home({ stocks }) {
                   onClick={() => router.push(`/stock/${stock.ticker}`)}
                 >
                   <td>
-                    <div className='name-ticker'>
-                      <div className='image-container'>
-                        <div className='image-wrapper'>
+                    <div className="name-ticker">
+                      <div className="image-container">
+                        <div className="image-wrapper">
                           {stock.logoUrl && (
                             <Image
                               src={stock.logoUrl}
-                              layout='fill'
+                              layout="fill"
                               alt={stock.name}
                             />
                           )}
@@ -82,35 +84,39 @@ function Home({ stocks }) {
                       </p>
                     </div>
                   </td>
-                  <td className='number'>
+                  <td className="number">
                     <span>${stock.currentPrice.toLocaleString()}</span>
                   </td>
-                  <td className='number'>
-                    <span className='divider'>
-                      ${getNumberUnit(stock.marketCap)}
-                    </span>
+                  <td className="number">
+                    <span>${getNumberUnit(stock.marketCap)}</span>
                   </td>
-                  <td className='number'>
+                  <td className="divider-wrapper">
+                    <span className="divider"></span>
+                  </td>
+                  <td className="number">
                     <span>{stock.buyerCount.toLocaleString()}</span>
                   </td>
-                  <td className='number'>
-                    <span className='divider'>
+                  <td className="number">
+                    <span className="divider">
                       {stock.sellerCount.toLocaleString()}
                     </span>
                   </td>
-                  <td className='number'>
-                    <span>{stock.ideaIds?.length.toLocaleString()}</span>
+                  <td className="divider-wrapper">
+                    <span className="divider"></span>
                   </td>
-                  <td className='number'>
-                    <span>{stock.commentIds.length.toLocaleString()}</span>
+                  <td className="number">
+                    <span>{stock.ideaIds?.length.toLocaleString() || 0}</span>
+                  </td>
+                  <td className="number">
+                    <span>{stock.commentIds.length.toLocaleString() || 0}</span>
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
-      <div className='view-more-wrapper'>
-        <Viewmore className='view-more' />
+      <div className="view-more-wrapper">
+        <Viewmore className="view-more" />
       </div>
     </StockBlock>
   );
@@ -155,9 +161,14 @@ const StockBlock = styled.div`
 
     tbody {
       tr {
+        .divider-wrapper {
+          vertical-align: middle;
+        }
         .divider {
           border-right: 0.1rem solid #d9d9d9;
-          padding-right: 7.5rem;
+          font-weight: 500;
+          font-size: 1.8rem;
+          line-height: 2.2rem;
         }
         span {
           padding-left: 2.5rem;

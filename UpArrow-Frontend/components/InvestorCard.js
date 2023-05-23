@@ -1,14 +1,62 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import color from '../styles/color';
+import React from "react";
+import styled from "@emotion/styled";
+import color from "../styles/color";
 import {
   Body12Medium,
   HeadH4Bold,
   HeadH5Bold,
   HeadH6Bold,
-} from '../styles/typography';
-import Rank from './common/Rank';
-import { useRouter } from 'next/router';
+} from "../styles/typography";
+import Rank from "./common/Rank";
+import { useRouter } from "next/router";
+
+const InvestorCard = ({
+  investorId,
+  investorAvatar,
+  investorName,
+  totalInvestment,
+  totalProfits,
+  totalAssets,
+  profitPercentageList,
+  rank,
+}) => {
+  const router = useRouter();
+  return (
+    <InvestorCardWrapper
+      onClick={() => router.push(`/investor/${investorId}`)}
+      investorAvatar={investorAvatar}
+    >
+      <Rank rank={rank} />
+      <div className="investorImg">
+        {investorAvatar ? (
+          <img className="avatar" alt={investorName} src={investorAvatar} />
+        ) : (
+          <div className="empty">empty</div>
+        )}
+      </div>
+
+      <div className="investorName">{investorName}</div>
+      <div className="totalProfits">
+        <div className="label">Total Profits</div>
+        <div className="amount">
+          ${new Intl.NumberFormat().format(totalProfits)}
+        </div>
+      </div>
+      <div className="stock-wrapper">
+        {profitPercentageList
+          .sort((a, b) => b.percent - a.percent)
+          .slice(0, 3)
+          .map(({ stockName, ticker, percent }, index) => {
+            return (
+              <div className="stock" key={index}>
+                {stockName} {percent}%
+              </div>
+            );
+          })}
+      </div>
+    </InvestorCardWrapper>
+  );
+};
 
 const InvestorCardWrapper = styled.div`
   position: relative;
@@ -42,6 +90,7 @@ const InvestorCardWrapper = styled.div`
     height: 11rem;
     background-color: gray;
     border-radius: 999px;
+    margin-bottom: 0.8rem;
   }
 
   .investorName {
@@ -90,53 +139,5 @@ const InvestorCardWrapper = styled.div`
     color: ${({ totalAssetsTextColor }) => totalAssetsTextColor};
   }
 `;
-
-const InvestorCard = ({
-  investorId,
-  investorAvatar,
-  investorName,
-  totalInvestment,
-  totalProfits,
-  totalAssets,
-  profitPercentageList,
-  rank,
-}) => {
-  const router = useRouter();
-  return (
-    <InvestorCardWrapper
-      onClick={() => router.push(`/investor/${investorId}`)}
-      investorAvatar={investorAvatar}
-    >
-      <Rank rank={rank} />
-      <div className='investorImg'>
-        {investorAvatar ? (
-          <img className='avatar' alt={investorName} src={investorAvatar} />
-        ) : (
-          <div className='empty'>empty</div>
-        )}
-      </div>
-
-      <div className='investorName'>{investorName}</div>
-      <div className='totalProfits'>
-        <div className='label'>Total Profits</div>
-        <div className='amount'>
-          ${new Intl.NumberFormat().format(totalProfits)}
-        </div>
-      </div>
-      <div className='stock-wrapper'>
-        {profitPercentageList
-          .sort((a, b) => b.percent - a.percent)
-          .slice(0, 3)
-          .map(({ stockName, ticker, percent }, index) => {
-            return (
-              <div className='stock' key={index}>
-                {stockName} {percent}%
-              </div>
-            );
-          })}
-      </div>
-    </InvestorCardWrapper>
-  );
-};
 
 export default InvestorCard;
