@@ -7,19 +7,18 @@ export const isNumber = (v) => {
 };
 
 export const getNumberUnit = (labelValue) => {
-  console.log('label value : ', labelValue);
   // Nine Zeroes for Billions
   const unit =
     Math.abs(Number(labelValue)) >= 1.0e12
-      ? 'T'
+      ? "T"
       : Math.abs(Number(labelValue)) >= 1.0e9
-      ? 'B'
+      ? "B"
       : // Six Zeroes for Millions
       Math.abs(Number(labelValue)) >= 1.0e6
-      ? 'M'
+      ? "M"
       : // Three Zeroes for Thousands
       Math.abs(Number(labelValue)) >= 1.0e3
-      ? 'K'
+      ? "K"
       : Math.abs(Number(labelValue));
 
   return (

@@ -1,24 +1,24 @@
-import styled from '@emotion/styled';
-import Image from 'next/image';
-import { useState } from 'react';
-import color from '../../styles/color';
-import { HeadH3Bold, HeadH6Bold } from '../../styles/typography';
-import CommentInput from '../CommentInput';
-import { ChevronLeftIcon, ChevronRightIcon } from '../icons';
-import CommentList from '../CommentList';
+import styled from "@emotion/styled";
+import Image from "next/image";
+import { useState } from "react";
+import color from "../../styles/color";
+import { HeadH3Bold, HeadH6Bold } from "../../styles/typography";
+import CommentInput from "../CommentInput";
+import { ChevronLeftIcon, ChevronRightIcon } from "../icons";
+import CommentList from "../CommentList";
 
 const OpinionCard = ({ authorImageUrl, author, message }) => {
   return (
     <OpinionCardBlock>
-      <div className='opinion-card-image-wrapper'>
+      <div className="opinion-card-image-wrapper">
         <Image
           src={authorImageUrl}
-          layout='fill'
-          className='opinion-author-image'
+          layout="fill"
+          className="opinion-author-image"
         />
       </div>
-      <div className='author'>{author} says</div>
-      <div className='message'>{message}</div>
+      <div className="author">{author} says</div>
+      <div className="message">{message}</div>
     </OpinionCardBlock>
   );
 };
@@ -44,26 +44,26 @@ const Opinions = ({
   return (
     <OpinionsBlock {...restProps} index={index} cardWidth={52 + 2.4}>
       <h3>Opinions</h3>
-      <div className='opinion-cards'>
-        <div className='left-button' onClick={decreaseIndex}>
+      <div className="opinion-cards">
+        <div className="left-button" onClick={decreaseIndex}>
           <ChevronLeftIcon />
         </div>
-        <div className='opinion-cards-outer-wrapper'>
-          <div className='opinion-cards-wrapper'>
+        <div className="opinion-cards-outer-wrapper">
+          <div className="opinion-cards-wrapper">
             {opinionCards.map((card) => (
               <OpinionCard {...card} />
             ))}
           </div>
         </div>
-        <div className='right-button' onClick={increaseIndex}>
+        <div className="right-button" onClick={increaseIndex}>
           <ChevronRightIcon />
         </div>
       </div>
 
-      <CommentList className='comment-list' comments={comments} />
-      <div className='comment-wrapper'>
+      <CommentList className="comment-list" comments={comments} />
+      <div className="comment-wrapper">
         <CommentInput value={comment} setValue={setComment} />
-        <button className='comment-submit-btn' onClick={submitComment}>
+        <button className="comment-submit-btn" onClick={submitComment}>
           Comment
         </button>
       </div>
@@ -77,6 +77,10 @@ const OpinionsBlock = styled.div`
   padding: 3.2rem;
   border: 0.1rem solid rgba(0 0 0 / 10%);
   border-radius: 1.6rem;
+
+  & > div {
+    width: 100% !important;
+  }
 
   h3 {
     ${HeadH3Bold}

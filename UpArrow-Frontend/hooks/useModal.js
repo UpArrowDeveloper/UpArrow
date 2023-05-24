@@ -1,10 +1,11 @@
-import { useRecoilState } from 'recoil';
-import modalState from '../store/modal';
+import { useRecoilState } from "recoil";
+import modalState from "../store/modal";
 
 const useModal = () => {
   const [modal, setModal] = useRecoilState(modalState);
 
   const openModal = ({ children, onConfirm }) => {
+    console.log("children : ", children);
     setModal({
       visible: true,
       children,

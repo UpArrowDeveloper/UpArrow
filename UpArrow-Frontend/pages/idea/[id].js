@@ -1,36 +1,36 @@
-import styled from '@emotion/styled';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import React, { useLayoutEffect, useRef, useState } from 'react';
-import api from '../../apis';
-import { env } from '../../config';
-import Youtube from '../../components/Youtube';
-import InvestorProfile from '../../components/common/InvestorProfile';
+import styled from "@emotion/styled";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useRouter } from "next/router";
+import React, { useLayoutEffect, useRef, useState } from "react";
+import api from "../../apis";
+import { env } from "../../config";
+import Youtube from "../../components/Youtube";
+import InvestorProfile from "../../components/common/InvestorProfile";
 import {
   getInvestorInvestInfo,
   getInvestorProfileInfo,
-} from '../../utils/investor';
-import { Body14Regular, HeadH1Bold, HeadH3Bold } from '../../styles/typography';
-import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en';
-import color from '../../styles/color';
-import TagPill from '../../components/Editor/TagPill';
-import IdeaVote from '../../components/IdeaVote';
-import CommentInput from '../../components/CommentInput';
-import Button from '../../components/common/Button';
-import CommentList from '../../components/CommentList';
-import { useIdea } from '../../hooks/model/useIdea';
+} from "../../utils/investor";
+import { Body14Regular, HeadH1Bold, HeadH3Bold } from "../../styles/typography";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+import color from "../../styles/color";
+import TagPill from "../../components/Editor/TagPill";
+import IdeaVote from "../../components/IdeaVote";
+import CommentInput from "../../components/CommentInput";
+import Button from "../../components/common/Button";
+import CommentList from "../../components/CommentList";
+import { useIdea } from "../../hooks/model/useIdea";
 import {
   CommentIcon,
   ThumbDownIcon,
   ThumbUpIcon,
-} from '../../components/icons';
-import { useAppUser } from '../../hooks/useAppUser';
-import { MainLayout } from '../../Layouts';
+} from "../../components/icons";
+import { useAppUser } from "../../hooks/useAppUser";
+import { MainLayout } from "../../Layouts";
 
 TimeAgo.addDefaultLocale(en);
-const timeAgo = new TimeAgo('en-US');
+const timeAgo = new TimeAgo("en-US");
 
 const IdeasBlock = styled.div`
   display: flex;
@@ -77,6 +77,7 @@ const IdeasBlock = styled.div`
 const PostBlock = styled.div`
   position: relative;
   max-width: 72rem;
+  width: 100%;
   padding: 3.2rem 1.2rem;
   display: flex;
   flex-direction: column;
@@ -172,7 +173,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   const { user } = useAppUser();
 
   const { data, isLoading } = useQuery(
-    ['user', user?.email],
+    ["user", user?.email],
     api.user.getByEmail(user?.email),
     {
       enabled: !!user?.email,
@@ -185,16 +186,16 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
     data: voteData,
     isLoading: isVoteDataLoading,
     refetch,
-  } = useQuery(['voteByIdeaId', id], api.vote.getByIdeaId(id));
-  const [comment, setComment] = useState('');
+  } = useQuery(["voteByIdeaId", id], api.vote.getByIdeaId(id));
+  const [comment, setComment] = useState("");
   const { data: comments } = useQuery(
-    ['comment', commentIds],
+    ["comment", commentIds],
     commentIds.length > 0 ? api.comment.getByIds(commentIds) : []
   );
   const createVote = useMutation(api.vote.post, { onSuccess: () => refetch() });
 
   const onCommentIconClick = () => {
-    commentInputRef.current.scrollIntoView({ behavior: 'smooth' });
+    commentInputRef.current.scrollIntoView({ behavior: "smooth" });
     setTimeout(() => {
       commentInputRef.current.focus();
     }, 800);
@@ -212,10 +213,10 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
 
   const [scrollTop, setScrollTop] = useState(0);
   useLayoutEffect(() => {
-    const event = window.addEventListener('scroll', () => {
+    const event = window.addEventListener("scroll", () => {
       setScrollTop(document.documentElement.scrollTop);
     });
-    return () => window.removeEventListener('scroll', event);
+    return () => window.removeEventListener("scroll", event);
   }, []);
 
   if (isLoading || isVoteDataLoading) {
@@ -257,11 +258,11 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
         />
       </div>
       <PostBlock>
-        <h1 className='idea-title'>{serverIdea.title}</h1>
-        <div className='idea-info'>
+        <h1 className="idea-title">{serverIdea.title}</h1>
+        <div className="idea-info">
           by {username} · {timeAgo.format(new Date(serverIdea.date))}
         </div>
-        <div className='tag-pill-wrapper'>
+        <div className="tag-pill-wrapper">
           {stocksWithPrices.map((stock) => (
             <TagPill
               key={stock._id}
@@ -270,10 +271,10 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
             />
           ))}
         </div>
-        <div className='vote-wrapper'>
+        <div className="vote-wrapper">
           <IdeaVote agreeCount={agreeCount} disagreeCount={disagreeCount} />
         </div>
-        <div className='thumbnail-wrapper'>
+        <div className="thumbnail-wrapper">
           <img src={serverIdea.thumbnailImageUrl} />
         </div>
 
@@ -283,27 +284,27 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
 
         <IdeaContent dangerouslySetInnerHTML={{ __html: serverIdea.content }} />
 
-        <h2 className='sub-header'>Comments</h2>
+        <h2 className="sub-header">Comments</h2>
         {comments && (
-          <CommentList className='comment-list' comments={comments} />
+          <CommentList className="comment-list" comments={comments} />
         )}
 
         <CommentInput
-          className='comment-input-wrapper'
+          className="comment-input-wrapper"
           value={comment}
           setValue={setComment}
           commentInputRef={commentInputRef}
         />
         <Button
-          className='comment-submit-button'
+          className="comment-submit-button"
           onClick={onCommentButtonClick}
         >
           Comment
         </Button>
         <FloattingMenu scrollTop={scrollTop}>
-          <div className='menu-wrapper'>
+          <div className="menu-wrapper">
             <div
-              className='menu'
+              className="menu"
               onClick={() => {
                 createVote.mutate({
                   postId: id,
@@ -312,14 +313,14 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
                 });
               }}
             >
-              <div className='thumb'>
+              <div className="thumb">
                 <ThumbUpIcon />
               </div>
               <span>{agreeCount}</span>
             </div>
-            <div className='line' />
+            <div className="line" />
             <div
-              className='menu'
+              className="menu"
               onClick={() => {
                 createVote.mutate({
                   postId: id,
@@ -328,14 +329,14 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
                 });
               }}
             >
-              <div className='thumb'>
+              <div className="thumb">
                 <ThumbDownIcon />
               </div>
               <span>{disagreeCount}</span>
             </div>
           </div>
-          <div className='menu-wrapper'>
-            <div className='menu' onClick={onCommentIconClick}>
+          <div className="menu-wrapper">
+            <div className="menu" onClick={onCommentIconClick}>
               <CommentIcon />
               <span>{commentIds.length}</span>
             </div>
@@ -357,7 +358,7 @@ export default function Page(props) {
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: 'blocking', // can also be true or 'blocking'
+    fallback: "blocking", // can also be true or 'blocking'
   };
 }
 
@@ -368,7 +369,7 @@ export const getStaticProps = async (context) => {
   const { investor, stockPurchaseInfos, userIdeas, userRank } =
     await getInvestorProfileInfo(idea.userId);
 
-  const stocks = await api.stock.getByIds(idea.stockIds.join(','))();
+  const stocks = await api.stock.getByIds(idea.stockIds.join(","))();
 
   const stocksWithPrices = stocks.map((stock) => {
     return {

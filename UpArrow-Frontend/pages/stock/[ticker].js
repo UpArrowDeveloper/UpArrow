@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import styled from '@emotion/styled';
-import StockCover from '../../components/StockCover';
-import Financials from '../../components/Stock/Financials';
-import InvestSimulatorIdeas from '../../components/Stock/InvestSimulatorIdeas';
-import Overview from '../../components/Stock/Overview';
-import Opinions from '../../components/Stock/Opinions';
-import { useAppUser } from '../../hooks/useAppUser';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import api from '../../apis';
-import { MainLayout } from '../../Layouts';
+import React, { useMemo, useState } from "react";
+import axios from "axios";
+import styled from "@emotion/styled";
+import StockCover from "../../components/StockCover";
+import Financials from "../../components/Stock/Financials";
+import InvestSimulatorIdeas from "../../components/Stock/InvestSimulatorIdeas";
+import Overview from "../../components/Stock/Overview";
+import Opinions from "../../components/Stock/Opinions";
+import { useAppUser } from "../../hooks/useAppUser";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import api from "../../apis";
+import { MainLayout } from "../../Layouts";
+import useModal from "../../hooks/useModal";
+import { PurchaseModal } from "../../components/Popup/PurchaseModal";
 
 export default function StockPage(props) {
   return (
@@ -21,31 +23,61 @@ export default function StockPage(props) {
 
 function Stock({ stock, analysis }) {
   const { user, refetch: refetchUser } = useAppUser();
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
+  const { openModal, closeModal } = useModal();
+
+  const [stockOrderQuantity, setStockOrderQuantity] = useState(0);
   const { data: currentStockValuationData, refetch } = useQuery(
-    ['currentStockValuation', user, stock],
+    ["currentStockValuation", user, stock],
     api.price.get(stock?._id, user?._id),
     { enabled: !!(stock?._id && user?._id) }
   );
   const { data: liveStock, refetch: refetchLiveStock } = useQuery(
-    ['liveStock', stock?.ticker],
+    ["liveStock", stock?.ticker],
     api.stock.getById(stock?._id),
     { enabled: !!stock?.ticker }
   );
 
   const { data: ideaList } = useQuery(
-    ['ideaList', stock?._id],
+    ["ideaList", stock?._id],
     api.stock.getIdeasById(stock._id),
     { enabled: !!stock._id }
   );
   const { data: comments, refetch: refetchComments } = useQuery(
-    ['stockComments', stock._id],
-    (stock?.commentIds && api.comment.getByIds(stock.commentIds?.join(','))) ||
+    ["stockComments", stock._id],
+    (stock?.commentIds && api.comment.getByIds(stock.commentIds?.join(","))) ||
       []
   );
 
   const postOrder = useMutation(api.order.post, {
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      if (variables.type === "buy") {
+        openModal({
+          children: ({ onConfirm }) => (
+            <PurchaseModal
+              onConfirm={onConfirm}
+              message={`You purchased ${stockOrderQuantity} shares of ${stock?.name}`}
+            />
+          ),
+          onConfirm: closeModal,
+        });
+      } else {
+        openModal({
+          children: ({ onConfirm }) => (
+            <PurchaseModal
+              onConfirm={onConfirm}
+              message={`You sold ${stockOrderQuantity} shares of ${
+                stock?.name
+              }\n\nAvailable UpArrow Cash: $${
+                stockOrderQuantity * stock?.currentPrice
+              }  
+            `}
+            />
+          ),
+          onConfirm: closeModal,
+        });
+      }
+
       refetch();
       refetchUser();
       refetchLiveStock();
@@ -68,9 +100,9 @@ function Stock({ stock, analysis }) {
           refetchComments();
         }, 500);
       } catch (e) {
-        console.error('e : ', e);
+        console.error("e : ", e);
       } finally {
-        setComment('');
+        setComment("");
       }
     }
   };
@@ -81,7 +113,7 @@ function Stock({ stock, analysis }) {
       userId: user._id,
       price: stock.currentPrice,
       quantity: stockOrderQuantity,
-      type: 'buy',
+      type: "buy",
     });
   };
 
@@ -91,13 +123,13 @@ function Stock({ stock, analysis }) {
       userId: user._id,
       price: stock.currentPrice,
       quantity: stockOrderQuantity,
-      type: 'sell',
+      type: "sell",
     });
   };
 
   return (
     <StockWrapper>
-      <div className='stock-content'>
+      <div className="stock-content">
         <StockCover
           stockImageUrl={stock.logoUrl}
           stockCoverImageUrl={stock.backgroundImageUrl}
@@ -109,18 +141,20 @@ function Stock({ stock, analysis }) {
           ideaList={ideaList || []}
           onBuyClick={onBuyClick}
           onSellClick={onSellClick}
+          stockOrderQuantity={stockOrderQuantity}
+          setStockOrderQuantity={setStockOrderQuantity}
           currentStockValuation={currentStockValuationData?.price}
-          className='section'
+          className="section"
         />
         <Overview
-          className='section'
+          className="section"
           analysis={analysis}
           analysisIdeaList={analysis.insightOfGiantsUrls || []}
         />
-        <Financials className='section' analysis={analysis} />
+        <Financials className="section" analysis={analysis} />
         <Opinions
           analysis={analysis}
-          className='section'
+          className="section"
           comment={comment}
           setComment={setComment}
           comments={comments || []}
@@ -134,7 +168,7 @@ function Stock({ stock, analysis }) {
 export async function getStaticPaths() {
   return {
     paths: [],
-    fallback: 'blocking',
+    fallback: "blocking",
   };
 }
 
@@ -163,9 +197,13 @@ const StockWrapper = styled.div`
 
   .section {
     margin-bottom: 3.2rem;
+    & > div {
+      width: 50%;
+    }
   }
   .stock-content {
     max-width: 128rem;
+    width: 100%;
   }
 
   .content {

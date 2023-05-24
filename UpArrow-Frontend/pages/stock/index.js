@@ -142,6 +142,12 @@ const StockBlock = styled.div`
   }
   ${commonTableCss};
 
+  .image-wrapper {
+    img {
+      border-radius: 999px;
+    }
+  }
+
   table {
     thead {
       th {

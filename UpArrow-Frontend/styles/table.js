@@ -1,6 +1,6 @@
-import { css } from '@emotion/react';
-import color from './color';
-import { Body14Medium, HeadH1Bold } from './typography';
+import { css } from "@emotion/react";
+import color from "./color";
+import { Body14Medium, HeadH1Bold, HeadH6Bold } from "./typography";
 
 export const commonListCss = css`
   padding-top: 3.2rem;
@@ -25,6 +25,8 @@ export const commonListCss = css`
   }
   .view-more {
     width: 24rem;
+    height: 4.2rem;
+    ${HeadH6Bold}
   }
 `;
 
@@ -38,7 +40,7 @@ export const commonTableCss = css`
   }
 
   .image-container {
-    padding: 1.2rem 0.8rem;
+    padding: 1.6rem 0.8rem;
   }
 
   .image-wrapper {
@@ -62,7 +64,7 @@ export const commonTableCss = css`
 
     tbody {
       &:before {
-        content: '-';
+        content: "-";
         display: block;
         line-height: 0.8rem;
         color: transparent;

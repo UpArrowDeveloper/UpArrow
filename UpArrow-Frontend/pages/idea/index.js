@@ -1,30 +1,30 @@
-import styled from '@emotion/styled';
-import TimeAgo from 'javascript-time-ago';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import api from '../../apis';
-import Viewmore from '../../components/common/Viewmore';
-import IdeaVote from '../../components/IdeaVote';
-import OrderChip from '../../components/OrderChip';
-import { commonListCss, commonTableCss } from '../../styles/table';
-import en from 'javascript-time-ago/locale/en';
-import Image from 'next/image';
-import { TagGroup } from '../../components/Tag';
-import { Body14Regular, HeadH5Bold } from '../../styles/typography';
-import color from '../../styles/color';
-import { MainLayout } from '../../Layouts';
+import styled from "@emotion/styled";
+import TimeAgo from "javascript-time-ago";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import api from "../../apis";
+import Viewmore from "../../components/common/Viewmore";
+import IdeaVote from "../../components/IdeaVote";
+import OrderChip from "../../components/OrderChip";
+import { commonListCss, commonTableCss } from "../../styles/table";
+import en from "javascript-time-ago/locale/en";
+import Image from "next/image";
+import { TagGroup } from "../../components/Tag";
+import { Body14Regular, HeadH5Bold } from "../../styles/typography";
+import color from "../../styles/color";
+import { MainLayout } from "../../Layouts";
 TimeAgo.addDefaultLocale(en);
-const timeAgo = new TimeAgo('en-US');
+const timeAgo = new TimeAgo("en-US");
 
-const orderOptions = ['Popular', 'Trending', 'Latest'];
+const orderOptions = ["Popular", "Trending", "Latest"];
 
 const getSortAlgorithmByOrderOption = (orderOption) => {
   switch (orderOption) {
-    case 'Popular':
+    case "Popular":
       return (a, b) => b.commentIds.length - a.commentIds.length;
-    case 'Trending':
+    case "Trending":
       return (a, b) => b.votes.agreeCount - a.votes.agreeCount;
-    case 'Latest':
+    case "Latest":
       return (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     default:
@@ -41,7 +41,7 @@ function Ideas({ ideas }) {
       <header>
         <h1>Ideas</h1>
       </header>
-      <nav className='order-option-wrapper'>
+      <nav className="order-option-wrapper">
         {orderOptions.map((order) => (
           <OrderChip
             key={order}
@@ -51,7 +51,7 @@ function Ideas({ ideas }) {
           />
         ))}
       </nav>
-      <div className='table-wrapper'>
+      <div className="table-wrapper">
         <table>
           <thead>
             <tr>
@@ -70,39 +70,39 @@ function Ideas({ ideas }) {
                   onClick={() => router.push(`/idea/${idea._id}`)}
                 >
                   <td>
-                    <div className='title wrapper'>
-                      <div className='image-container'>
-                        <div className='image-wrapper'>
-                          {/* <Image
-                          src={idea.thumbnailImageUrl}
-                          layout='fill'
-                          alt={idea.title}
-                        /> */}
+                    <div className="title wrapper">
+                      <div className="image-container">
+                        <div className="image-wrapper">
+                          <Image
+                            src={idea.thumbnailImageUrl}
+                            layout="fill"
+                            alt={idea.title}
+                          />
                         </div>
                       </div>
-                      <div className='title-author'>
+                      <div className="title-author">
                         <h5>{idea.title}</h5>
-                        <div className='author'>
-                          by {idea.user.username} ·{' '}
+                        <div className="author">
+                          by {idea.user.username} ·{" "}
                           {timeAgo.format(new Date(idea.updatedAt))}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td>
-                    <div className='wrapper'>
+                    <div className="wrapper">
                       <TagGroup
                         tags={idea.stocks.map(({ name }) => ({ name }))}
                       />
                     </div>
                   </td>
                   <td>
-                    <div className='comments wrapper'>
+                    <div className="comments wrapper">
                       {idea.commentIds.length}
                     </div>
                   </td>
                   <td>
-                    <div className='idea-vote wrapper'>
+                    <div className="idea-vote wrapper">
                       <IdeaVote
                         agreeCount={idea.votes.agreeCount}
                         disagreeCount={idea.votes.disagreeCount}
@@ -114,8 +114,8 @@ function Ideas({ ideas }) {
           </tbody>
         </table>
       </div>
-      <div className='view-more-wrapper'>
-        <Viewmore className='view-more' />
+      <div className="view-more-wrapper">
+        <Viewmore className="view-more" />
       </div>
     </IdeasBlock>
   );
@@ -207,6 +207,14 @@ const IdeasBlock = styled.div`
       width: 23.2rem;
       & > div {
         width: 100%;
+      }
+    }
+
+    .image-wrapper {
+      width: 8rem;
+      height: 8rem;
+      img {
+        border-radius: 0.8rem;
       }
     }
 
