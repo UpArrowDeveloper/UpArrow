@@ -1,11 +1,14 @@
-import React from 'react';
-import styled from '@emotion/styled';
-import useModal from '../../hooks/useModal';
+import React from "react";
+import styled from "@emotion/styled";
+import useModal from "../../hooks/useModal";
 
 export const Popup = () => {
-  const { modal } = useModal();
+  const { modal, closeModal } = useModal();
   return (
-    <PopupBlock className={!modal.visible ? 'hidden' : ''}>
+    <PopupBlock
+      className={!modal.visible ? "hidden" : ""}
+      onClick={() => closeModal}
+    >
       {modal.children && <modal.children onConfirm={modal.onConfirm} />}
     </PopupBlock>
   );
