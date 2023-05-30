@@ -1,11 +1,19 @@
-import { useConfig } from '../../hooks/useConfig';
-import styled from '@emotion/styled';
-import { HeadH1Bold, HeadH4Medium } from '../../styles/typography';
-import { NextIcon } from '../icons';
-import { numberComma } from '../../utils/number';
-import { useEffect, useRef } from 'react';
-import Image from 'next/image';
-import { getBannerYMD, getYMD } from '../../utils/date';
+import { useConfig } from "../../hooks/useConfig";
+import styled from "@emotion/styled";
+import {
+  HeadH1Bold,
+  HeadH4Bold,
+  HeadH4Medium,
+  HeadH6Bold,
+} from "../../styles/typography";
+import { ChevronRightMobileIcon, NextIcon } from "../icons";
+import { numberComma } from "../../utils/number";
+import { useEffect, useRef } from "react";
+import Image from "next/image";
+import { getBannerYMD, getYMD } from "../../utils/date";
+import { useMobile } from "../../hooks/useMobile";
+import { mobileWidth } from "../../styles/responsive";
+import color from "../../styles/color";
 
 const Banner = ({ config: initConfig }) => {
   const { config, getConfig } = useConfig(initConfig);
@@ -13,6 +21,8 @@ const Banner = ({ config: initConfig }) => {
   const stock = config?.board;
   const timerRef = useRef();
   const dotLocation = stock?.dotLocation;
+
+  const { isMobile } = useMobile();
 
   useEffect(() => {
     timerRef.current = setInterval(() => {
@@ -24,34 +34,69 @@ const Banner = ({ config: initConfig }) => {
   if (!stock) return null;
 
   return (
-    <BannerBlock stockColor={stock.color} dotLocation={dotLocation}>
-      <div className='image-wrapper'>
-        <Image layout='fill' objectFit='cover' src={bannerImageUrl} />
+    <BannerBlock>
+      <div stockColor={stock.color} dotLocation={dotLocation}>
+        <div className="image-wrapper">
+          <Image layout="fill" objectFit="cover" src={bannerImageUrl} />
+        </div>
+        {!isMobile && (
+          <div className="board">
+            <img className="stock-icon" src={stock.imageUrl} />
+            <div className="text">
+              If You Invested $10,000 in{" "}
+              <span className="stock-name">{stock.name}</span> on{" "}
+              {getBannerYMD(new Date(stock.importantDateString))}, you have $
+              {numberComma(
+                (
+                  (10000 / stock.importantDatePrice) *
+                  (config.prices?.[stock.ticker] || 1)
+                ).toFixed(2)
+              )}
+            </div>
+            <div className="chart">
+              {stock.chartImageUrl ? (
+                <Image layout="fill" src={stock.chartImageUrl} />
+              ) : null}
+              <div className="dot" />
+            </div>
+            <div className="more">
+              <span>Let's find the next Tesla</span>
+              <NextIcon />
+            </div>
+          </div>
+        )}
       </div>
-      <div className='board'>
-        <img className='stock-icon' src={stock.imageUrl} />
-        <div className='text'>
-          If You Invested $10,000 in{' '}
-          <span className='stock-name'>{stock.name}</span> on{' '}
-          {getBannerYMD(new Date(stock.importantDateString))}, you have $
-          {numberComma(
-            (
-              (10000 / stock.importantDatePrice) *
-              (config.prices?.[stock.ticker] || 1)
-            ).toFixed(2)
-          )}
+      {isMobile && (
+        <div className="board">
+          <img className="stock-icon" src={stock.imageUrl} />
+          <div className="text">
+            If You Invested $10,000 in{" "}
+            <span className="stock-name">{stock.name}</span> on{" "}
+            {getBannerYMD(new Date(stock.importantDateString))}, you have $
+            {numberComma(
+              (
+                (10000 / stock.importantDatePrice) *
+                (config.prices?.[stock.ticker] || 1)
+              ).toFixed(2)
+            )}
+          </div>
+          <div className="chart">
+            {stock.chartImageUrl ? (
+              <Image layout="fill" src={stock.chartImageUrl} />
+            ) : null}
+            <div className="dot" />
+          </div>
+          <div className="more">
+            {isMobile && <div></div>}
+            <span>Let's find the next Tesla</span>
+            {isMobile ? (
+              <ChevronRightMobileIcon style={{ fill: color.B67 }} />
+            ) : (
+              <NextIcon />
+            )}
+          </div>
         </div>
-        <div className='chart'>
-          {stock.chartImageUrl ? (
-            <Image layout='fill' src={stock.chartImageUrl} />
-          ) : null}
-          <div className='dot' />
-        </div>
-        <div className='more'>
-          <span>Let's find the next Tesla</span>
-          <NextIcon />
-        </div>
-      </div>
+      )}
     </BannerBlock>
   );
 };
@@ -59,8 +104,10 @@ const Banner = ({ config: initConfig }) => {
 export default Banner;
 
 const BannerBlock = styled.div`
-  background-color: gray;
-  position: relative;
+  & > div {
+    background-color: gray;
+    position: relative;
+  }
 
   .image-wrapper {
     position: relative;
@@ -90,6 +137,10 @@ const BannerBlock = styled.div`
         color: ${({ stockColor }) => stockColor};
       }
       margin-bottom: 1.531rem;
+    }
+
+    .stock-name {
+      color: #e82127;
     }
 
     .chart {
@@ -131,6 +182,38 @@ const BannerBlock = styled.div`
       justify-content: space-between;
       align-items: center;
       ${HeadH4Medium};
+    }
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    .image-wrapper {
+      height: 28rem;
+    }
+    .board {
+      position: static;
+      width: 100%;
+      padding: 2rem;
+
+      .chart {
+        position: relative;
+        width: 100%;
+        height: 12.8rem;
+      }
+
+      .stock-icon {
+        width: 4.8rem;
+        height: 4.8rem;
+        margin-bottom: 1.531rem;
+      }
+
+      .text {
+        ${HeadH4Bold};
+        text-align: center;
+      }
+
+      .more {
+        ${HeadH6Bold}
+      }
     }
   }
 `;

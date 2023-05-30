@@ -4,11 +4,13 @@ import InvestorCard from "../components/InvestorCard";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import { MainLayout } from "../Layouts";
-import { HeadH2Bold } from "../styles/typography";
+import { HeadH2Bold, HeadH5Bold } from "../styles/typography";
 import Banner from "../components/common/Banner";
 import api from "../apis";
 import { getInvestorInvestInfo } from "../utils/investor";
-import { NextIcon } from "../components/icons";
+import { ChevronRightMobileIcon, NextIcon } from "../components/icons";
+import { mobileWidth } from "../styles/responsive";
+import { useMobile } from "../hooks/useMobile";
 
 function Home({
   stockList,
@@ -19,6 +21,7 @@ function Home({
   investorRef,
 }) {
   const router = useRouter();
+  const { isMobile } = useMobile();
 
   return (
     <IndexWrapper postLength={topSixIdea.length}>
@@ -31,7 +34,11 @@ function Home({
           >
             Stocks
           </div>
-          <NextIcon onClick={() => router.push("/stock")} />
+          {isMobile ? (
+            <ChevronRightMobileIcon onClick={() => router.push("/stock")} />
+          ) : (
+            <NextIcon onClick={() => router.push("/stock")} />
+          )}
         </div>
         <div className="stockList">
           {stockList.slice(0, 100).map((data) => {
@@ -50,7 +57,11 @@ function Home({
           <div className="text" ref={ideaRef}>
             Ideas
           </div>
-          <NextIcon onClick={() => router.push("/idea")} />
+          {isMobile ? (
+            <ChevronRightMobileIcon onClick={() => router.push("/idea")} />
+          ) : (
+            <NextIcon onClick={() => router.push("/idea")} />
+          )}
         </div>
 
         <div className="ideaList">
@@ -75,7 +86,11 @@ function Home({
           <div className="text" ref={investorRef}>
             Investors
           </div>
-          <NextIcon onClick={() => router.push("/investor")} />
+          {isMobile ? (
+            <ChevronRightMobileIcon onClick={() => router.push("/investor")} />
+          ) : (
+            <NextIcon onClick={() => router.push("/investor")} />
+          )}
         </div>
 
         <div className="investorList">
@@ -214,5 +229,24 @@ const IndexWrapper = styled.div`
   .header-wrapper {
     display: flex;
     justify-content: space-between;
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    .main-items {
+      padding: 2rem;
+
+      .text {
+        ${HeadH5Bold}
+      }
+
+      .stockList {
+        gap: 1.6rem;
+
+        & > img {
+          width: 7.2rem;
+          height: 7.2rem;
+        }
+      }
+    }
   }
 `;
