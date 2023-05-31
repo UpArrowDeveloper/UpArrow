@@ -1,13 +1,14 @@
-import styled from '@emotion/styled';
-import color from '../../styles/color';
-import { Body12Regular } from '../../styles/typography';
+import styled from "@emotion/styled";
+import color from "../../styles/color";
+import { Body12Medium } from "../../styles/typography";
 
 const TagBlock = styled.div`
   display: inline-block;
   padding: 0.1rem 0.8rem;
   border: 1px solid ${color.B80};
   border-radius: 999rem;
-  ${Body12Regular}
+  color: ${color.B40};
+  ${Body12Medium};
 `;
 
 const Tag = ({ children }) => {

@@ -1,37 +1,37 @@
-import styled from '@emotion/styled';
-import TimeAgo from 'javascript-time-ago';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import api from '../../apis';
-import Viewmore from '../../components/common/Viewmore';
-import OrderChip from '../../components/OrderChip';
-import { commonListCss, commonTableCss } from '../../styles/table';
-import en from 'javascript-time-ago/locale/en';
-import Image from 'next/image';
-import { TagGroup } from '../../components/Tag';
-import { Body14Regular, HeadH5Bold } from '../../styles/typography';
-import color from '../../styles/color';
-import { MainLayout } from '../../Layouts';
-import { getInvestorInvestInfo } from '../../utils/investor';
+import styled from "@emotion/styled";
+import TimeAgo from "javascript-time-ago";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import api from "../../apis";
+import Viewmore from "../../components/common/Viewmore";
+import OrderChip from "../../components/OrderChip";
+import { commonListCss, commonTableCss } from "../../styles/table";
+import en from "javascript-time-ago/locale/en";
+import Image from "next/image";
+import { TagGroup } from "../../components/Tag";
+import { Body14Regular, HeadH5Bold } from "../../styles/typography";
+import color from "../../styles/color";
+import { MainLayout } from "../../Layouts";
+import { getInvestorInvestInfo } from "../../utils/investor";
 TimeAgo.addDefaultLocale(en);
 
 const orderOptions = [
-  'Most Profitable',
-  'Most Assests',
-  'Most Ideas',
-  'Newest',
+  "Most Profitable",
+  "Most Assests",
+  "Most Ideas",
+  "Newest",
 ];
 
 const getSortAlgorithmByOrderOption = (orderOption) => {
   switch (orderOption) {
-    case 'Most Profitable':
+    case "Most Profitable":
       return (a, b) => b.totalProfits - a.totalProfits;
-    case 'Most Assests':
+    case "Most Assests":
       return (a, b) =>
         b.totalInvestment + b.cash - (a.totalInvestment + a.cash);
-    case 'Most Ideas':
+    case "Most Ideas":
       return (a, b) => b.ideas?.length - a.ideas?.length;
-    case 'Newest':
+    case "Newest":
       return (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     default:
@@ -40,7 +40,7 @@ const getSortAlgorithmByOrderOption = (orderOption) => {
 };
 
 function Investors({ investors, top3Stocks }) {
-  console.log('investors: ', investors);
+  console.log("investors: ", investors);
   const [orderOption, setOrderOption] = useState();
   const router = useRouter();
 
@@ -49,7 +49,7 @@ function Investors({ investors, top3Stocks }) {
       <header>
         <h1>Investors</h1>
       </header>
-      <nav className='order-option-wrapper'>
+      <nav className="order-option-wrapper">
         {orderOptions.map((order) => (
           <OrderChip
             key={order}
@@ -59,12 +59,12 @@ function Investors({ investors, top3Stocks }) {
           />
         ))}
       </nav>
-      <div className='table-wrapper'>
+      <div className="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th style={{ paddingLeft: '1rem' }}>Ranks</th>
-              <th style={{ paddingLeft: '0.8rem' }}>Investors</th>
+              <th style={{ paddingLeft: "1rem" }}>Ranks</th>
+              <th style={{ paddingLeft: "0.8rem" }}>Investors</th>
               <th>Top3 Stocks</th>
               <th>Ideas</th>
               <th>Total Profits</th>
@@ -79,57 +79,57 @@ function Investors({ investors, top3Stocks }) {
                   key={investor._id}
                   onClick={() => router.push(`/investor/${investor._id}`)}
                 >
-                  <td className='comments wrapper index'>{index + 1}</td>
+                  <td className="comments wrapper index">{index + 1}</td>
                   <td>
-                    <div className='title wrapper investors'>
-                      <div className='image-container'>
-                        <div className='image-wrapper rounded'>
+                    <div className="title wrapper investors">
+                      <div className="image-container">
+                        <div className="image-wrapper rounded">
                           {!!investor.profileImageUrl && (
                             <Image
-                              objectFit='cover'
+                              objectFit="cover"
                               src={investor.profileImageUrl}
-                              layout='fill'
+                              layout="fill"
                               alt={investor.name}
                             />
                           )}
                         </div>
                       </div>
-                      <div className='title-author'>
+                      <div className="title-author">
                         <h5>{investor.name}</h5>
                       </div>
                     </div>
                   </td>
                   <td>
-                    <div className='wrapper'>
+                    <div className="wrapper">
                       <TagGroup
                         tags={top3Stocks[index]?.map(({ name, profit }) => ({
-                          name: `${name} ${profit?.toLocaleString('en-US')}%`,
+                          name: `${name} ${profit?.toLocaleString("en-US")}%`,
                           type:
                             profit > 0
-                              ? 'plus'
+                              ? "plus"
                               : profit === 0
-                              ? 'outline'
-                              : 'minus',
+                              ? "outline"
+                              : "minus",
                         }))}
                       />
                     </div>
                   </td>
                   <td>
-                    <div className='comments wrapper numbers'>
-                      {investor.ideas.length?.toLocaleString('en-US')}
+                    <div className="comments wrapper numbers">
+                      {investor.ideas.length?.toLocaleString("en-US")}
                     </div>
                   </td>
                   <td>
-                    <div className='comments wrapper numbers'>
-                      ${investor.totalProfits?.toLocaleString('en-US')}
+                    <div className="comments wrapper numbers">
+                      ${investor.totalProfits?.toLocaleString("en-US")}
                     </div>
                   </td>
                   <td>
-                    <div className='comments wrapper numbers'>
+                    <div className="comments wrapper numbers">
                       $
                       {(
                         investor.totalInvestment + investor.cash
-                      )?.toLocaleString('en-US')}
+                      )?.toLocaleString("en-US")}
                     </div>
                   </td>
                 </tr>
@@ -137,8 +137,8 @@ function Investors({ investors, top3Stocks }) {
           </tbody>
         </table>
       </div>
-      <div className='view-more-wrapper'>
-        <Viewmore className='view-more' />
+      <div className="view-more-wrapper">
+        <Viewmore className="view-more" />
       </div>
     </IdeasBlock>
   );
@@ -179,10 +179,6 @@ export async function getStaticProps() {
         ideas,
       };
     })
-  );
-  console.log(
-    '**********\n\n\n\n\n\n\n\n\n\n\n\n\ninvestDataIncludedUsers',
-    investDataIncludedUsers
   );
 
   return {

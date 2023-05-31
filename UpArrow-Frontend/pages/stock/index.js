@@ -9,6 +9,8 @@ import api from "../../apis";
 import { getNumberUnit } from "../../utils/number";
 import { useRouter } from "next/router";
 import { commonListCss, commonTableCss } from "../../styles/table";
+import { mobileWidth } from "../../styles/responsive";
+import { useMobile } from "../../hooks/useMobile";
 
 const orderOptions = ["Popular", "Trending", "Market Cap"];
 
@@ -28,6 +30,7 @@ function Home({ stocks }) {
   const [orderOption, setOrderOption] = useState();
 
   const router = useRouter();
+  const { isMobile } = useMobile();
   return (
     <StockBlock>
       <header>
@@ -49,13 +52,17 @@ function Home({ stocks }) {
             <tr>
               <th>Name/Ticker</th>
               <th>Price</th>
-              <th>Market Cap</th>
-              <th></th>
-              <th>Buyer</th>
-              <th>Seller</th>
-              <th></th>
+              {!isMobile && (
+                <>
+                  <th>Market Cap</th>
+                  <th></th>
+                  <th>Buyer</th>
+                  <th>Seller</th>
+                  <th></th>
+                </>
+              )}
               <th>Ideas</th>
-              <th>Comments</th>
+              {!isMobile && <th>Comments</th>}
             </tr>
           </thead>
           <tbody>
@@ -87,37 +94,47 @@ function Home({ stocks }) {
                   <td className="number">
                     <span>${stock.currentPrice.toLocaleString()}</span>
                   </td>
-                  <td className="number">
-                    <span>${getNumberUnit(stock.marketCap)}</span>
-                  </td>
-                  <td className="divider-wrapper">
-                    <span className="divider"></span>
-                  </td>
-                  <td className="number">
-                    <span>{stock.buyerCount.toLocaleString()}</span>
-                  </td>
-                  <td className="number">
-                    <span className="divider">
-                      {stock.sellerCount.toLocaleString()}
-                    </span>
-                  </td>
-                  <td className="divider-wrapper">
-                    <span className="divider"></span>
-                  </td>
+                  {!isMobile && (
+                    <>
+                      <td className="number">
+                        <span>${getNumberUnit(stock.marketCap)}</span>
+                      </td>
+                      <td className="divider-wrapper">
+                        <span className="divider"></span>
+                      </td>
+                      <td className="number">
+                        <span>{stock.buyerCount.toLocaleString()}</span>
+                      </td>
+                      <td className="number">
+                        <span className="divider">
+                          {stock.sellerCount.toLocaleString()}
+                        </span>
+                      </td>
+                      <td className="divider-wrapper">
+                        <span className="divider"></span>
+                      </td>
+                    </>
+                  )}
                   <td className="number">
                     <span>{stock.ideaIds?.length.toLocaleString() || 0}</span>
                   </td>
-                  <td className="number">
-                    <span>{stock.commentIds.length.toLocaleString() || 0}</span>
-                  </td>
+                  {!isMobile && (
+                    <td className="number">
+                      <span>
+                        {stock.commentIds.length.toLocaleString() || 0}
+                      </span>
+                    </td>
+                  )}
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
-      <div className="view-more-wrapper">
-        <Viewmore className="view-more" />
-      </div>
+      {!isMobile && (
+        <div className="view-more-wrapper">
+          <Viewmore className="view-more" />
+        </div>
+      )}
     </StockBlock>
   );
 }
@@ -180,6 +197,9 @@ const StockBlock = styled.div`
           padding-left: 2.5rem;
         }
       }
+    }
+
+    @media screen and (max-width: ${mobileWidth}) {
     }
   }
 `;

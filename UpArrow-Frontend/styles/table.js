@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import color from "./color";
-import { Body14Medium, HeadH1Bold, HeadH6Bold } from "./typography";
+import { Body14Medium, HeadH1Bold, HeadH3Bold, HeadH6Bold } from "./typography";
+import { mobileWidth } from "./responsive";
 
 export const commonListCss = css`
   padding-top: 3.2rem;
@@ -16,6 +17,10 @@ export const commonListCss = css`
     display: flex;
     gap: 0.8rem;
     margin-bottom: 4rem;
+
+    & > div {
+      white-space: nowrap;
+    }
   }
 
   .view-more-wrapper {
@@ -27,6 +32,16 @@ export const commonListCss = css`
     width: 24rem;
     height: 4.2rem;
     ${HeadH6Bold}
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    h1 {
+      ${HeadH3Bold}
+    }
+
+    .order-option-wrapper {
+      margin-bottom: 1.6rem;
+    }
   }
 `;
 

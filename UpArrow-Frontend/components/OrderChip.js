@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
-import { Body16Regular } from "../styles/typography";
+import { Body12Medium, Body16Regular } from "../styles/typography";
+import { mobileWidth } from "../styles/responsive";
 
 const OrderChip = ({ order, selected, onClick }) => {
   return (
@@ -25,6 +26,10 @@ const OrderChipBlock = styled.div`
   &.selected {
     background: black;
     color: white;
+  }
+  @media screen and (max-width: ${mobileWidth}) {
+    padding: 0.8rem 1.4rem;
+    ${Body12Medium}
   }
 `;
 

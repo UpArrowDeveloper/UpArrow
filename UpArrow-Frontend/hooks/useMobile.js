@@ -4,9 +4,6 @@ import { mobileWidth } from "../styles/responsive";
 export const useMobile = () => {
   const [isMobile, setIsMobile] = useState(false);
 
-  if (typeof window !== "undefined") {
-    console.log("window innerwidth : ", window.innerWidth);
-  }
   const f = () => {
     const mobileWidthNum = Number(mobileWidth.replace("px", ""));
     setIsMobile(mobileWidthNum > window.innerWidth);

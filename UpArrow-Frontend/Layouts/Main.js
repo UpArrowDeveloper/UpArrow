@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import Navbar, { navbarHeight } from "../components/Navbar";
+import { mobileWidth } from "../styles/responsive";
 
 const MainLayoutBlock = styled.main`
   margin-top: ${({ isMain }) => (isMain ? "3.2rem" : navbarHeight)};
@@ -8,6 +9,12 @@ const MainLayoutBlock = styled.main`
 
   .content {
     width: 128rem;
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    .content {
+      width: 100%;
+    }
   }
 `;
 

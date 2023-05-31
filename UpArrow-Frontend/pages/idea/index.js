@@ -13,6 +13,9 @@ import { TagGroup } from "../../components/Tag";
 import { Body14Regular, HeadH5Bold } from "../../styles/typography";
 import color from "../../styles/color";
 import { MainLayout } from "../../Layouts";
+import { useMobile } from "../../hooks/useMobile";
+import IdeaCard from "../../components/IdeaCard";
+import { mobileWidth } from "../../styles/responsive";
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
 
@@ -35,6 +38,7 @@ const getSortAlgorithmByOrderOption = (orderOption) => {
 function Ideas({ ideas }) {
   const [orderOption, setOrderOption] = useState();
   const router = useRouter();
+  const { isMobile } = useMobile();
 
   return (
     <IdeasBlock>
@@ -51,72 +55,94 @@ function Ideas({ ideas }) {
           />
         ))}
       </nav>
-      <div className="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Idea Title</th>
-              <th>Stocks</th>
-              <th>Comments</th>
-              <th>Votes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ideas
-              ?.sort(getSortAlgorithmByOrderOption(orderOption))
-              ?.map((idea) => (
-                <tr
-                  key={idea._id}
-                  onClick={() => router.push(`/idea/${idea._id}`)}
-                >
-                  <td>
-                    <div className="title wrapper">
-                      <div className="image-container">
-                        <div className="image-wrapper">
-                          <Image
-                            src={idea.thumbnailImageUrl}
-                            layout="fill"
-                            alt={idea.title}
-                          />
+      {!isMobile && (
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Idea Title</th>
+                <th>Stocks</th>
+                <th>Comments</th>
+                <th>Votes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ideas
+                ?.sort(getSortAlgorithmByOrderOption(orderOption))
+                ?.map((idea) => (
+                  <tr
+                    key={idea._id}
+                    onClick={() => router.push(`/idea/${idea._id}`)}
+                  >
+                    <td>
+                      <div className="title wrapper">
+                        <div className="image-container">
+                          <div className="image-wrapper">
+                            <Image
+                              src={idea.thumbnailImageUrl}
+                              layout="fill"
+                              alt={idea.title}
+                            />
+                          </div>
+                        </div>
+                        <div className="title-author">
+                          <h5>{idea.title}</h5>
+                          <div className="author">
+                            by {idea.user.username} ·{" "}
+                            {timeAgo.format(new Date(idea.updatedAt))}
+                          </div>
                         </div>
                       </div>
-                      <div className="title-author">
-                        <h5>{idea.title}</h5>
-                        <div className="author">
-                          by {idea.user.username} ·{" "}
-                          {timeAgo.format(new Date(idea.updatedAt))}
-                        </div>
+                    </td>
+                    <td>
+                      <div className="wrapper">
+                        <TagGroup
+                          tags={idea.stocks.map(({ name }) => ({ name }))}
+                        />
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="wrapper">
-                      <TagGroup
-                        tags={idea.stocks.map(({ name }) => ({ name }))}
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div className="comments wrapper">
-                      {idea.commentIds.length}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="idea-vote wrapper">
-                      <IdeaVote
-                        agreeCount={idea.votes.agreeCount}
-                        disagreeCount={idea.votes.disagreeCount}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="view-more-wrapper">
-        <Viewmore className="view-more" />
-      </div>
+                    </td>
+                    <td>
+                      <div className="comments wrapper">
+                        {idea.commentIds.length}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="idea-vote wrapper">
+                        <IdeaVote
+                          agreeCount={idea.votes.agreeCount}
+                          disagreeCount={idea.votes.disagreeCount}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {isMobile && (
+        <div className="mobile-idea-wrapper">
+          {ideas
+            ?.sort(getSortAlgorithmByOrderOption(orderOption))
+            ?.map((idea) => (
+              <IdeaCard
+                key={idea._id}
+                ideaId={idea._id}
+                ideaImage={idea.thumbnailImageUrl}
+                ideaTitle={idea.title}
+                ideaAuthor={idea.username}
+                ideaDate={idea.date}
+                ideaLikes={idea.likes?.length || 0}
+                ideaStockIds={idea.stockIds}
+              />
+            ))}
+        </div>
+      )}
+      {!isMobile && (
+        <div className="view-more-wrapper">
+          <Viewmore className="view-more" />
+        </div>
+      )}
     </IdeasBlock>
   );
 }
@@ -223,6 +249,16 @@ const IdeasBlock = styled.div`
       font-weight: 500;
       font-size: 1.6rem;
       line-height: 2.2rem;
+    }
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    .mobile-idea-wrapper {
+      display: flex;
+      flex-direction: column;
+      margin: 0 1.6rem;
+      gap: 1.6rem;
+      margin-bottom: 4rem;
     }
   }
 `;
