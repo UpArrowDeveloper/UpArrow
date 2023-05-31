@@ -1,7 +1,37 @@
-import styled from '@emotion/styled';
-import { ThumbUpIcon, ThumbDownIcon } from './icons';
-import color from '../styles/color';
-import { Body12Medium } from '../styles/typography';
+import styled from "@emotion/styled";
+import { ThumbUpIcon, ThumbDownIcon } from "./icons";
+import color from "../styles/color";
+import { Body12Medium } from "../styles/typography";
+import { mobileWidth } from "../styles/responsive";
+
+const IdeaVote = ({ agreeCount, disagreeCount }) => {
+  const totalCount = agreeCount + disagreeCount;
+  const agreePercent =
+    disagreeCount === 0 ? "100%" : (agreeCount / totalCount) * 100 + "%";
+  const disagreePercent =
+    agreeCount === 0 ? "100%" : (disagreeCount / totalCount) * 100 + "%";
+  return (
+    <IdeaVoteBlock
+      agreePercent={agreePercent}
+      disagreePercent={disagreePercent}
+    >
+      <div className="indicator-wrapper">
+        <div className="indicator">
+          <ThumbUpIcon className="indicator-icon" width={16} height={16} />
+          Agree
+        </div>
+        <div className="indicator">
+          <ThumbDownIcon className="indicator-icon" width={16} height={16} />
+          Disagree
+        </div>
+      </div>
+      <div className="vote-bar">
+        <div className="agree-bar"></div>
+        <div className="disagree-bar"></div>
+      </div>
+    </IdeaVoteBlock>
+  );
+};
 
 const IdeaVoteBlock = styled.div`
   display: flex;
@@ -41,35 +71,12 @@ const IdeaVoteBlock = styled.div`
       background-color: ${color.DISAGREE_RED};
     }
   }
-`;
 
-const IdeaVote = ({ agreeCount, disagreeCount }) => {
-  const totalCount = agreeCount + disagreeCount;
-  const agreePercent =
-    disagreeCount === 0 ? '100%' : (agreeCount / totalCount) * 100 + '%';
-  const disagreePercent =
-    agreeCount === 0 ? '100%' : (disagreeCount / totalCount) * 100 + '%';
-  return (
-    <IdeaVoteBlock
-      agreePercent={agreePercent}
-      disagreePercent={disagreePercent}
-    >
-      <div className='indicator-wrapper'>
-        <div className='indicator'>
-          <ThumbUpIcon className='indicator-icon' width={16} height={16} />
-          Agree
-        </div>
-        <div className='indicator'>
-          <ThumbDownIcon className='indicator-icon' width={16} height={16} />
-          Disagree
-        </div>
-      </div>
-      <div className='vote-bar'>
-        <div className='agree-bar'></div>
-        <div className='disagree-bar'></div>
-      </div>
-    </IdeaVoteBlock>
-  );
-};
+  @media screen and (max-width: ${mobileWidth}) {
+    .vote-bar {
+      height: 0.4rem;
+    }
+  }
+`;
 
 export default IdeaVote;

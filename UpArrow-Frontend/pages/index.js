@@ -248,5 +248,8 @@ const IndexWrapper = styled.div`
         }
       }
     }
+
+    .investorList {
+    }
   }
 `;

@@ -86,8 +86,27 @@ const IdeaWrapper = styled.div`
 
   @media screen and (max-width: ${mobileWidth}) {
     .textBlock {
+      gap: 0;
+
       .title {
         ${HeadH6Bold}
+      }
+
+      .author {
+        margin-bottom: 0.8rem;
+      }
+    }
+
+    .tag-wrapper {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 0.8rem;
+      & > div {
+        width: auto;
+        height: 2.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   }

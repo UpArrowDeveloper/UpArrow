@@ -9,6 +9,8 @@ import {
 } from "../styles/typography";
 import Rank from "./common/Rank";
 import { useRouter } from "next/router";
+import { mobileWidth } from "../styles/responsive";
+import { useMobile } from "../hooks/useMobile";
 
 const InvestorCard = ({
   investorId,
@@ -21,27 +23,52 @@ const InvestorCard = ({
   rank,
 }) => {
   const router = useRouter();
+  const { isMobile } = useMobile();
   return (
     <InvestorCardWrapper
       onClick={() => router.push(`/investor/${investorId}`)}
       investorAvatar={investorAvatar}
     >
       <Rank rank={rank} />
-      <div className="investorImg">
-        {investorAvatar ? (
-          <img className="avatar" alt={investorName} src={investorAvatar} />
-        ) : (
-          <div className="empty">empty</div>
-        )}
-      </div>
+      {!isMobile ? (
+        <>
+          <div className="investorImg">
+            {investorAvatar ? (
+              <img className="avatar" alt={investorName} src={investorAvatar} />
+            ) : (
+              <div className="empty">empty</div>
+            )}
+          </div>
 
-      <div className="investorName">{investorName}</div>
-      <div className="totalProfits">
-        <div className="label">Total Profits</div>
-        <div className="amount">
-          ${new Intl.NumberFormat().format(totalProfits)}
+          <div className="investorName">{investorName}</div>
+          <div className="totalProfits">
+            <div className="label">Total Profits</div>
+            <div className="amount">
+              ${new Intl.NumberFormat().format(totalProfits)}
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="mobile-investor-wrapper">
+          <div className="investorImg">
+            {investorAvatar ? (
+              <img className="avatar" alt={investorName} src={investorAvatar} />
+            ) : (
+              <div className="empty">empty</div>
+            )}
+          </div>
+
+          <div className="mobile-investor-text-wrapper">
+            <div className="investorName">{investorName}</div>
+            <div className="totalProfits">
+              <div className="label">Total Profits</div>
+              <div className="amount">
+                ${new Intl.NumberFormat().format(totalProfits)}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
       <div className="stock-wrapper">
         {profitPercentageList
           .sort((a, b) => b.percent - a.percent)
@@ -137,6 +164,29 @@ const InvestorCardWrapper = styled.div`
 
   .totalAssets {
     color: ${({ totalAssetsTextColor }) => totalAssetsTextColor};
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    width: 100%;
+
+    .mobile-investor-wrapper {
+      display: flex;
+      width: 100%;
+
+      .investorImg,
+      .avatar {
+        width: 6rem;
+        height: 6rem;
+      }
+
+      .investorImg {
+        margin-right: 1.6rem;
+      }
+
+      .totalProfits {
+        align-items: flex-start;
+      }
+    }
   }
 `;
 

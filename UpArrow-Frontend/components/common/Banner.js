@@ -104,7 +104,7 @@ const Banner = ({ config: initConfig }) => {
 export default Banner;
 
 const BannerBlock = styled.div`
-  & > div {
+  & > div:first-child {
     background-color: gray;
     position: relative;
   }
@@ -115,7 +115,7 @@ const BannerBlock = styled.div`
     height: 70rem;
   }
 
-  & > .board {
+  & .board {
     padding: 3.2rem;
     border-radius: 3.42rem;
     width: 51.1rem;
