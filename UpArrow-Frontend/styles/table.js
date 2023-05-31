@@ -89,4 +89,10 @@ export const commonTableCss = css`
       }
     }
   }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    .table-wrapper {
+      padding: 0 1.6rem;
+    }
+  }
 `;

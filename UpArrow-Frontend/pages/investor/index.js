@@ -13,6 +13,8 @@ import { Body14Regular, HeadH5Bold } from "../../styles/typography";
 import color from "../../styles/color";
 import { MainLayout } from "../../Layouts";
 import { getInvestorInvestInfo } from "../../utils/investor";
+import { useMobile } from "../../hooks/useMobile";
+import { mobileWidth } from "../../styles/responsive";
 TimeAgo.addDefaultLocale(en);
 
 const orderOptions = [
@@ -40,9 +42,9 @@ const getSortAlgorithmByOrderOption = (orderOption) => {
 };
 
 function Investors({ investors, top3Stocks }) {
-  console.log("investors: ", investors);
   const [orderOption, setOrderOption] = useState();
   const router = useRouter();
+  const { isMobile } = useMobile();
 
   return (
     <IdeasBlock>
@@ -65,9 +67,9 @@ function Investors({ investors, top3Stocks }) {
             <tr>
               <th style={{ paddingLeft: "1rem" }}>Ranks</th>
               <th style={{ paddingLeft: "0.8rem" }}>Investors</th>
-              <th>Top3 Stocks</th>
+              {!isMobile && <th>Top3 Stocks</th>}
               <th>Ideas</th>
-              <th>Total Profits</th>
+              {!isMobile && <th>Total Profits</th>}
               <th>Total Assets</th>
             </tr>
           </thead>
@@ -99,31 +101,35 @@ function Investors({ investors, top3Stocks }) {
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <div className="wrapper">
-                      <TagGroup
-                        tags={top3Stocks[index]?.map(({ name, profit }) => ({
-                          name: `${name} ${profit?.toLocaleString("en-US")}%`,
-                          type:
-                            profit > 0
-                              ? "plus"
-                              : profit === 0
-                              ? "outline"
-                              : "minus",
-                        }))}
-                      />
-                    </div>
-                  </td>
+                  {!isMobile && (
+                    <td>
+                      <div className="wrapper">
+                        <TagGroup
+                          tags={top3Stocks[index]?.map(({ name, profit }) => ({
+                            name: `${name} ${profit?.toLocaleString("en-US")}%`,
+                            type:
+                              profit > 0
+                                ? "plus"
+                                : profit === 0
+                                ? "outline"
+                                : "minus",
+                          }))}
+                        />
+                      </div>
+                    </td>
+                  )}
                   <td>
                     <div className="comments wrapper numbers">
                       {investor.ideas.length?.toLocaleString("en-US")}
                     </div>
                   </td>
-                  <td>
-                    <div className="comments wrapper numbers">
-                      ${investor.totalProfits?.toLocaleString("en-US")}
-                    </div>
-                  </td>
+                  {!isMobile && (
+                    <td>
+                      <div className="comments wrapper numbers">
+                        ${investor.totalProfits?.toLocaleString("en-US")}
+                      </div>
+                    </td>
+                  )}
                   <td>
                     <div className="comments wrapper numbers">
                       $
@@ -137,9 +143,11 @@ function Investors({ investors, top3Stocks }) {
           </tbody>
         </table>
       </div>
-      <div className="view-more-wrapper">
-        <Viewmore className="view-more" />
-      </div>
+      {!isMobile && (
+        <div className="view-more-wrapper">
+          <Viewmore className="view-more" />
+        </div>
+      )}
     </IdeasBlock>
   );
 }
@@ -151,14 +159,6 @@ export default function IdeasPage(props) {
     </MainLayout>
   );
 }
-
-// 항상 실시간 <=
-// 장점 : 항상 실시간
-// 단점 : 사람이 많아질수록 서버 부하가 커짐.
-
-// 꼭 실시간은 아니고 (10분에 한번 || 우현님 원하실때) 씩 실시간 <=
-// 장점 : 서버 부하가 줄어듬. & 훨씬 빠름
-// 단점 : 실시간이 아니다.
 
 export async function getStaticProps() {
   const users = await api.user.get();
@@ -262,5 +262,17 @@ const IdeasBlock = styled.div`
 
   .investors {
     width: 32rem;
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    .investors {
+      width: auto;
+    }
+    .numbers {
+      width: auto;
+    }
+    table h5 {
+      width: auto;
+    }
   }
 `;
