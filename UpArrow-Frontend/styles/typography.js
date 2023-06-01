@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
 export const HeadH1Bold = css`
   line-height: 3.6rem;
@@ -59,6 +59,12 @@ export const Body14Medium = css`
   line-height: 1.68rem;
   font-size: 1.4rem;
   font-weight: 500;
+`;
+
+export const Body14Bold = css`
+  line-height: 1.7;
+  font-size: 1.4rem;
+  font-weight: 700;
 `;
 
 export const Body12Regular = css`

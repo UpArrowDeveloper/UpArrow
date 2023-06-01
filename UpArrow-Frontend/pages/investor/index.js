@@ -274,5 +274,18 @@ const IdeasBlock = styled.div`
     table h5 {
       width: auto;
     }
+
+    table .wrapper {
+      height: auto;
+    }
+
+    .index {
+      padding: 0 0.9rem;
+      text-align: center;
+    }
+
+    table td {
+      vertical-align: middle;
+    }
   }
 `;

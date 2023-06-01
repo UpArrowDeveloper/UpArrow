@@ -194,11 +194,11 @@ const NavBlock = styled.div`
     }
 
     .nav-wrapper {
-      padding: 1rem 1.6rem;
+      padding: 1.2rem 1.6rem;
       height: auto;
     }
 
-    & .profile-icon {
+    & .right-items .profile-icon {
       width: 2.8rem;
       height: 2.8rem;
     }

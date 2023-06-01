@@ -1,6 +1,12 @@
 import { css } from "@emotion/react";
 import color from "./color";
-import { Body14Medium, HeadH1Bold, HeadH3Bold, HeadH6Bold } from "./typography";
+import {
+  Body14Bold,
+  Body14Medium,
+  HeadH1Bold,
+  HeadH3Bold,
+  HeadH6Bold,
+} from "./typography";
 import { mobileWidth } from "./responsive";
 
 export const commonListCss = css`
@@ -41,6 +47,7 @@ export const commonListCss = css`
 
     .order-option-wrapper {
       margin-bottom: 1.6rem;
+      overflow-x: scroll;
     }
   }
 `;
@@ -93,6 +100,17 @@ export const commonTableCss = css`
   @media screen and (max-width: ${mobileWidth}) {
     .table-wrapper {
       padding: 0 1.6rem;
+    }
+
+    .title-author {
+      h5 {
+        ${Body14Bold}
+      }
+    }
+
+    .image-wrapper {
+      width: 3.6rem;
+      height: 3.6rem;
     }
   }
 `;
