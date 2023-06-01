@@ -1,4 +1,6 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
+import { mobileWidth } from "../styles/responsive";
+import { HeadH3Bold } from "../styles/typography";
 
 const StockCoverWrapper = styled.div`
   position: relative;
@@ -31,24 +33,40 @@ const StockCoverWrapper = styled.div`
       font-size: 4rem;
     }
   }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    margin-bottom: 0;
+    .stock-info {
+      bottom: 3.2rem;
+
+      .stock-img {
+        width: 7.2rem;
+        height: 7.2rem;
+      }
+
+      .stock-name {
+        ${HeadH3Bold}
+      }
+    }
+  }
 `;
 
 const StockCover = ({ stockImageUrl, stockCoverImageUrl, stockName }) => {
   return (
     <StockCoverWrapper>
       {stockCoverImageUrl ? (
-        <img className='cover-img' src={stockCoverImageUrl} />
+        <img className="cover-img" src={stockCoverImageUrl} />
       ) : (
-        <div className='empty-cover-img'></div>
+        <div className="empty-cover-img"></div>
       )}
-      <div className='stock-info'>
+      <div className="stock-info">
         <img
-          className='stock-img'
+          className="stock-img"
           src={stockImageUrl}
-          width='230'
-          height='230'
+          width="230"
+          height="230"
         />
-        <h1 className='stock-name'>{stockName}</h1>
+        <h1 className="stock-name">{stockName}</h1>
       </div>
     </StockCoverWrapper>
   );

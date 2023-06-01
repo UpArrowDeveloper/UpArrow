@@ -11,6 +11,7 @@ import {
 } from "../../styles/typography";
 import Viewmore from "../common/Viewmore";
 import { GrowthIcon, RiskIcon } from "../icons";
+import { mobileWidth } from "../../styles/responsive";
 
 const Layer1 = ({ analysis, ideaList }) => {
   return (
@@ -252,6 +253,12 @@ const OverviewBlock = styled.div`
   .youtube-date {
     ${Body12Medium}
     color: ${color.B40};
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    .layer-1 {
+      flex-direction: column;
+    }
   }
 `;
 

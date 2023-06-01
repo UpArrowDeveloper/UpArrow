@@ -12,6 +12,7 @@ import api from "../../apis";
 import { MainLayout } from "../../Layouts";
 import useModal from "../../hooks/useModal";
 import { PurchaseModal } from "../../components/Popup/PurchaseModal";
+import { mobileWidth } from "../../styles/responsive";
 
 export default function StockPage(props) {
   return (
@@ -231,5 +232,19 @@ const StockWrapper = styled.div`
     justify-content: center;
     gap: 5rem;
     margin-bottom: 10rem;
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    .section {
+      & > div {
+        width: 100%;
+      }
+    }
+
+    .stock-content {
+      & > :not(:first-child) {
+        margin: 0 2rem;
+      }
+    }
   }
 `;

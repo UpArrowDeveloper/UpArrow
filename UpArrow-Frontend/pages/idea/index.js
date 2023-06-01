@@ -74,7 +74,7 @@ function Ideas({ ideas }) {
                     key={idea._id}
                     onClick={() => router.push(`/idea/${idea._id}`)}
                   >
-                    <td>
+                    <td className="title-wrapper-fill">
                       <div className="title wrapper">
                         <div className="image-container">
                           <div className="image-wrapper">
@@ -95,7 +95,7 @@ function Ideas({ ideas }) {
                       </div>
                     </td>
                     <td>
-                      <div className="wrapper">
+                      <div className="wrapper tagwrapper">
                         <TagGroup
                           tags={idea.stocks.map(({ name }) => ({ name }))}
                         />
@@ -210,7 +210,6 @@ const IdeasBlock = styled.div`
 
     h5 {
       ${HeadH5Bold}
-      width: 40rem;
     }
 
     .wrapper {
@@ -218,6 +217,13 @@ const IdeasBlock = styled.div`
       vertical-align: middle;
     }
 
+    .tagwrapper {
+      padding: 0 2rem 0 0;
+    }
+
+    .image-container {
+      padding-right: 1.6rem;
+    }
     .title-author {
       display: flex;
       flex-direction: column;
@@ -249,6 +255,10 @@ const IdeasBlock = styled.div`
       font-weight: 500;
       font-size: 1.6rem;
       line-height: 2.2rem;
+    }
+
+    .title-wrapper-fill {
+      width: 100%;
     }
   }
 
