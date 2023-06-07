@@ -85,6 +85,8 @@ const IdeaWrapper = styled.div`
   }
 
   @media screen and (max-width: ${mobileWidth}) {
+    align-items: flex-start;
+
     .textBlock {
       gap: 0;
 

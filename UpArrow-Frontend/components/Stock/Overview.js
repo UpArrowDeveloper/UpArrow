@@ -3,10 +3,13 @@ import styled from "@emotion/styled";
 import color from "../../styles/color";
 import {
   Body12Medium,
+  Body14Bold,
+  Body14Medium,
   Body14Regular,
   Body16Regular,
   HeadH3Bold,
   HeadH4Bold,
+  HeadH5Bold,
   HeadH6Bold,
 } from "../../styles/typography";
 import Viewmore from "../common/Viewmore";
@@ -21,9 +24,12 @@ const Layer1 = ({ analysis, ideaList }) => {
         <Card>
           <div className="image-wrapper">
             <iframe
-              style={{ borderRadius: "0.8rem", marginBottom: "1.6rem" }}
-              width={320}
-              height={180}
+              style={{
+                borderRadius: "0.8rem",
+                marginBottom: "1.6rem",
+                width: "100%",
+                height: "100%",
+              }}
               src={`https://www.youtube.com/embed/${analysis.youtubeUrl}`}
               title="YouTube video player"
               frameborder="0"
@@ -256,8 +262,60 @@ const OverviewBlock = styled.div`
   }
 
   @media screen and (max-width: ${mobileWidth}) {
+    padding: 0;
+    border: none;
+
+    h3 {
+      ${HeadH5Bold}
+    }
+
+    h4.bold {
+      ${Body14Medium}
+    }
+
+    h6 {
+      ${Body14Bold}
+    }
+
     .layer-1 {
       flex-direction: column;
+
+      .youtube-title {
+        ${Body14Medium}
+        margin-bottom: 0.8rem;
+      }
+
+      gap: 1.6rem;
+
+      a.item {
+        gap: 2.4rem;
+      }
+      .item-date {
+        white-space: nowrap;
+      }
+    }
+
+    .layer-2 {
+      gap: 1.6rem;
+
+      .top-message {
+        flex-direction: column;
+      }
+
+      pre {
+        ${Body14Regular}
+      }
+    }
+
+    .layer-3 {
+      flex-direction: column;
+      padding-bottom: 2rem;
+      border-bottom: 0.05rem solid rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+
+      p {
+        ${Body14Regular}
+      }
     }
   }
 `;
@@ -273,6 +331,10 @@ const Card = styled.div`
       ${Body12Medium};
       color: ${color.B40};
     }
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    width: 100%;
   }
 `;
 

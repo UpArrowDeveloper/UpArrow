@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { ThumbUpIcon } from '../components/icons';
-import './Comment.module.css';
-import axios from 'axios';
-import styled from '@emotion/styled';
-import UserIcon from './UserIcon';
-import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en';
-import { Body14Medium, Body16Regular, HeadH6Bold } from '../styles/typography';
-import color from '../styles/color';
-import api from '../apis';
-import { useAppUser } from '../hooks/useAppUser';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from "react";
+import { ThumbUpIcon } from "../components/icons";
+import "./Comment.module.css";
+import axios from "axios";
+import styled from "@emotion/styled";
+import UserIcon from "./UserIcon";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+import { Body14Medium, Body16Regular, HeadH6Bold } from "../styles/typography";
+import color from "../styles/color";
+import api from "../apis";
+import { useAppUser } from "../hooks/useAppUser";
+import { useRouter } from "next/router";
+import { mobileWidth } from "../styles/responsive";
+import { useMobile } from "../hooks/useMobile";
 
 TimeAgo.addDefaultLocale(en);
-const timeAgo = new TimeAgo('en-US');
+const timeAgo = new TimeAgo("en-US");
 
 const CommentView = ({
   imageUrl,
@@ -24,30 +26,43 @@ const CommentView = ({
   checked,
   onHeartClick,
 }) => {
+  const { isMobile } = useMobile();
   return (
     <CommentBlock>
-      <div className='profile'>
-        <div className='picture-wrapper'>
-          <UserIcon className='picture' src={imageUrl} />
+      <div className="profile">
+        <div className="picture-wrapper">
+          <UserIcon className="picture" src={imageUrl} />
         </div>
-        <div className='comment-content-wrapper'>
-          <div className='user-info'>
-            <div className='comment-name'>{username}</div>
-            <div className='comment-time'>
+        <div className="comment-content-wrapper">
+          <div className="user-info">
+            <div className="comment-name">{username}</div>
+            <div className="comment-time">
               {timeAgo.format(new Date(createdAt))} · {likeCount} Likes
             </div>
           </div>
-          <div className='comment-content'>{content}</div>
+          <div className="comment-content">{content}</div>
+          {isMobile && (
+            <div className="thumb-up" onClick={onHeartClick}>
+              {checked ? (
+                <ThumbUpIcon />
+              ) : (
+                <ThumbUpIcon style={{ fill: color.B40 }} />
+              )}
+              like
+            </div>
+          )}
         </div>
       </div>
 
-      <div className='thumb-up' onClick={onHeartClick}>
-        {checked ? (
-          <ThumbUpIcon />
-        ) : (
-          <ThumbUpIcon style={{ fill: color.B40 }} />
-        )}
-      </div>
+      {!isMobile && (
+        <div className="thumb-up" onClick={onHeartClick}>
+          {checked ? (
+            <ThumbUpIcon />
+          ) : (
+            <ThumbUpIcon style={{ fill: color.B40 }} />
+          )}
+        </div>
+      )}
     </CommentBlock>
   );
 };
@@ -55,8 +70,8 @@ const CommentView = ({
 const Comment = ({ comment }) => {
   const router = useRouter();
   const ticker = router.query.ticker;
-  const [username, setUsername] = useState('');
-  const [investorProfilePicture, setInvestorProfilePicture] = useState('');
+  const [username, setUsername] = useState("");
+  const [investorProfilePicture, setInvestorProfilePicture] = useState("");
   const [likes, setLikes] = useState(0);
   const { user } = useAppUser();
 
@@ -172,6 +187,37 @@ const CommentBlock = styled.div`
     svg {
       width: 2rem;
       height: 2rem;
+    }
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    .comment-content-wrapper {
+      .user-info {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    .picture-wrapper {
+      img {
+        width: 4rem;
+        height: 4rem;
+      }
+    }
+
+    .thumb-up {
+      margin-top: 1.4rem;
+      padding: 0;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 19px;
+      color: ${color.B40};
+      gap: 0.4rem;
+      svg {
+        width: 1.6rem;
+        height: 1.6rem;
+      }
     }
   }
 `;

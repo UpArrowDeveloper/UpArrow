@@ -2,10 +2,16 @@ import styled from "@emotion/styled";
 import Image from "next/image";
 import { useState } from "react";
 import color from "../../styles/color";
-import { HeadH3Bold, HeadH6Bold } from "../../styles/typography";
+import {
+  Body14Medium,
+  HeadH3Bold,
+  HeadH5Bold,
+  HeadH6Bold,
+} from "../../styles/typography";
 import CommentInput from "../CommentInput";
 import { ChevronLeftIcon, ChevronRightIcon } from "../icons";
 import CommentList from "../CommentList";
+import { mobileWidth } from "../../styles/responsive";
 
 const OpinionCard = ({ authorImageUrl, author, message }) => {
   return (
@@ -165,6 +171,15 @@ const OpinionsBlock = styled.div`
   .comment-list {
     margin-bottom: 3.2rem;
   }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    padding: 0;
+    border: 0;
+
+    h3 {
+      ${HeadH5Bold}
+    }
+  }
 `;
 
 const OpinionCardBlock = styled.div`
@@ -197,5 +212,18 @@ const OpinionCardBlock = styled.div`
     border-radius: 999rem;
     object-fit: cover;
   }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    width: 100%;
+
+    .author {
+      ${Body14Medium}
+    }
+
+    .message {
+      ${HeadH5Bold}
+    }
+  }
 `;
+
 export default Opinions;

@@ -116,11 +116,11 @@ const InvestSimulatorIdeas = ({
           </div>
           <div className="cash-info">
             <div>
-              <h4>My Current Simulation Cash</h4>
+              <h4>My UpArrow Cash</h4>
               <div className="cash">${user?.cash.toLocaleString()}</div>
             </div>
             <div>
-              <h4>My Current Stock Valuation</h4>
+              <h4>Owned {stock.name} shares </h4>
               <div className="cash">
                 ${currentStockValuation?.toLocaleString()}
               </div>
@@ -250,6 +250,7 @@ const InvestSimulatorIdeasBlock = styled.div`
         color: ${color.B53};
 
         & > input {
+          min-width: 0;
           border: none;
           text-align: right;
           ${HeadH4Bold};
@@ -332,6 +333,16 @@ const InvestSimulatorIdeasBlock = styled.div`
     .cell {
       border: none;
       padding: 0;
+
+      &.post-cell {
+        padding: 0;
+      }
+    }
+
+    .ideas {
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 0.05rem solid rgba(0, 0, 0, 0.1);
     }
 
     .invest-simulator {

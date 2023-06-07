@@ -1,6 +1,7 @@
-import styled from '@emotion/styled';
-import color from '../../styles/color';
-import { Bar } from 'react-chartjs-2';
+import styled from "@emotion/styled";
+import color from "../../styles/color";
+import { mobileWidth } from "../../styles/responsive";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,8 +10,13 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
-import { HeadH3Bold, HeadH6Bold } from '../../styles/typography';
+} from "chart.js";
+import {
+  Body14Bold,
+  HeadH3Bold,
+  HeadH5Bold,
+  HeadH6Bold,
+} from "../../styles/typography";
 
 ChartJS.register(
   CategoryScale,
@@ -37,12 +43,32 @@ const getData = (values) => {
     labels,
     datasets: [
       {
-        label: 'label',
+        label: "label",
         data,
         backgroundColor: color.UpArrow_Blue,
       },
     ],
   };
+};
+
+const Financials = ({ analysis, ...restProps }) => {
+  return (
+    <FinancialsBlock {...restProps}>
+      <h3>Financials</h3>
+      <div className="chart-wrapper">
+        {analysis.financials?.map(({ name, chartValues }) => {
+          return (
+            <div className="chart">
+              <h6>{name}</h6>
+              <div className="bar-wrapper">
+                <Bar options={options} data={getData([...chartValues])} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </FinancialsBlock>
+  );
 };
 
 const FinancialsBlock = styled.div`
@@ -56,6 +82,7 @@ const FinancialsBlock = styled.div`
     ${HeadH3Bold}
     margin-bottom: 2.3rem;
   }
+
   h6 {
     ${HeadH6Bold}
     margin-bottom: 0.8rem;
@@ -74,26 +101,31 @@ const FinancialsBlock = styled.div`
     width: 28.2rem;
     height: 14.6rem;
   }
-`;
 
-const Financials = ({ analysis, ...restProps }) => {
-  return (
-    <FinancialsBlock {...restProps}>
-      <h3>Financials</h3>
-      <div className='chart-wrapper'>
-        {analysis.financials?.map(({ name, chartValues }) => {
-          return (
-            <div className='chart'>
-              <h6>{name}</h6>
-              <div className='bar-wrapper'>
-                <Bar options={options} data={getData([...chartValues])} />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </FinancialsBlock>
-  );
-};
+  @media screen and (max-width: ${mobileWidth}) {
+    padding: 0;
+    border: none;
+
+    h3 {
+      ${HeadH5Bold}
+      margin-bottom: 0.8rem;
+    }
+
+    h6 {
+      ${Body14Bold}
+    }
+
+    .chart-wrapper {
+      grid-template-columns: 100%;
+      border-bottom: 0.05rem solid rgba(0 0 0 / 10%);
+      margin-bottom: 2rem;
+    }
+
+    .bar-wrapper {
+      width: 100%;
+      height: 17rem;
+    }
+  }
+`;
 
 export default Financials;
