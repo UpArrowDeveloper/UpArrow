@@ -7,6 +7,7 @@ import api from "../../apis";
 import { env } from "../../config";
 import Youtube from "../../components/Youtube";
 import InvestorProfile from "../../components/common/InvestorProfile";
+import Link from "next/link";
 import {
   getInvestorInvestInfo,
   getInvestorProfileInfo,
@@ -28,9 +29,263 @@ import {
 } from "../../components/icons";
 import { useAppUser } from "../../hooks/useAppUser";
 import { MainLayout } from "../../Layouts";
+import { useMobile } from "../../hooks/useMobile";
+import { mobileWidth } from "../../styles/responsive";
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
+
+export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
+  const {
+    _id: investorId,
+    description,
+    followers,
+    followings,
+    profileImageUrl,
+    totalInvestment,
+    totalProfits,
+    username,
+    websiteUrl,
+    cash,
+  } = investor;
+  const router = useRouter();
+  const { id } = router.query;
+  const { user } = useAppUser();
+
+  const { data, isLoading } = useQuery(
+    ["user", user?.email],
+    api.user.getByEmail(user?.email),
+    {
+      enabled: !!user?.email,
+    }
+  );
+  const commentInputRef = useRef();
+  const { idea, refetch: refetchIdea } = useIdea(id);
+  const commentIds = idea?.commentIds || [];
+  const {
+    data: voteData,
+    isLoading: isVoteDataLoading,
+    refetch,
+  } = useQuery(["voteByIdeaId", id], api.vote.getByIdeaId(id));
+  const { isMobile } = useMobile();
+  const [comment, setComment] = useState("");
+  const { data: comments } = useQuery(
+    ["comment", commentIds],
+    commentIds.length > 0 ? api.comment.getByIds(commentIds) : []
+  );
+  const createVote = useMutation(api.vote.post, { onSuccess: () => refetch() });
+
+  const onCommentIconClick = () => {
+    commentInputRef.current.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      commentInputRef.current.focus();
+    }, 800);
+  };
+
+  const onCommentButtonClick = async () => {
+    await axios.post(`${env.serverUrl}/comment`, {
+      postId: id,
+      userId: data._id,
+      content: comment,
+      likes: [],
+    });
+    refetchIdea();
+  };
+
+  const [scrollTop, setScrollTop] = useState(0);
+  useLayoutEffect(() => {
+    const event = window.addEventListener("scroll", () => {
+      setScrollTop(document.documentElement.scrollTop);
+    });
+    return () => window.removeEventListener("scroll", event);
+  }, []);
+
+  if (isLoading || isVoteDataLoading) {
+    return null;
+  }
+
+  const { agreeCount, disagreeCount } = voteData.data.reduce(
+    (acc, vote) => {
+      if (vote.isAgree) {
+        return {
+          ...acc,
+          agreeCount: acc.agreeCount + 1,
+        };
+      }
+      return {
+        ...acc,
+        disagreeCount: acc.disagreeCount + 1,
+      };
+    },
+    { agreeCount: 0, disagreeCount: 0 }
+  );
+
+  return (
+    <IdeasBlock>
+      {!isMobile && (
+        <div>
+          <InvestorProfile
+            profileImageUrl={profileImageUrl}
+            username={username}
+            investedCompanies={stocksWithPrices}
+            followers={followers}
+            followings={followings}
+            description={description}
+            websiteUrl={websiteUrl}
+            cash={cash}
+            totalInvestment={totalInvestment}
+            totalProfits={totalProfits}
+            totalAssets={totalInvestment + cash}
+            rank={rank}
+          />
+        </div>
+      )}
+      <PostBlock>
+        <h1 className="idea-title">{serverIdea.title}</h1>
+        <div className="idea-info">
+          <span
+            style={{ textDecorationLine: "underline" }}
+            onClick={() => router.push(`/investor/${investorId}`)}
+          >
+            by {username}
+          </span>{" "}
+          · {timeAgo.format(new Date(serverIdea.date))}
+        </div>
+        <div className="tag-pill-wrapper">
+          {stocksWithPrices.map((stock) => (
+            <TagPill
+              key={stock._id}
+              stockImageUrl={stock.logoUrl}
+              label={stock.name}
+            />
+          ))}
+        </div>
+        <div className="vote-wrapper">
+          <IdeaVote agreeCount={agreeCount} disagreeCount={disagreeCount} />
+        </div>
+        <div className="thumbnail-wrapper">
+          <img src={serverIdea.thumbnailImageUrl} />
+        </div>
+
+        {serverIdea.youtubeCode && (
+          <Youtube youtubeCode={serverIdea.youtubeCode} />
+        )}
+
+        <IdeaContent dangerouslySetInnerHTML={{ __html: serverIdea.content }} />
+
+        <h2 className="sub-header">Comments</h2>
+        {comments && (
+          <CommentList className="comment-list" comments={comments} />
+        )}
+
+        <CommentInput
+          className="comment-input-wrapper"
+          value={comment}
+          setValue={setComment}
+          commentInputRef={commentInputRef}
+        />
+        <Button
+          className="comment-submit-button"
+          onClick={onCommentButtonClick}
+        >
+          Comment
+        </Button>
+        {!isMobile && (
+          <FloattingMenu scrollTop={scrollTop}>
+            <div className="menu-wrapper">
+              <div
+                className="menu"
+                onClick={() => {
+                  createVote.mutate({
+                    postId: id,
+                    userId: data._id,
+                    isAgree: true,
+                  });
+                }}
+              >
+                <div className="thumb">
+                  <ThumbUpIcon />
+                </div>
+                <span>{agreeCount}</span>
+              </div>
+              <div className="line" />
+              <div
+                className="menu"
+                onClick={() => {
+                  createVote.mutate({
+                    postId: id,
+                    userId: data._id,
+                    isAgree: false,
+                  });
+                }}
+              >
+                <div className="thumb">
+                  <ThumbDownIcon />
+                </div>
+                <span>{disagreeCount}</span>
+              </div>
+            </div>
+            <div className="menu-wrapper">
+              <div className="menu" onClick={onCommentIconClick}>
+                <CommentIcon />
+                <span>{commentIds.length}</span>
+              </div>
+            </div>
+          </FloattingMenu>
+        )}
+      </PostBlock>
+    </IdeasBlock>
+  );
+}
+
+export default function Page(props) {
+  return (
+    <MainLayout>
+      <Idea {...props} />
+    </MainLayout>
+  );
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: "blocking", // can also be true or 'blocking'
+  };
+}
+
+export const getStaticProps = async (context) => {
+  const { id } = context.params;
+  const idea = await api.idea.getById(id)();
+
+  const { investor, stockPurchaseInfos, userIdeas, userRank } =
+    await getInvestorProfileInfo(idea.userId);
+
+  const stocks = await api.stock.getByIds(idea.stockIds.join(","))();
+
+  const stocksWithPrices = stocks.map((stock) => {
+    return {
+      ...stock,
+      ...stockPurchaseInfos[stock._id],
+      totalValue: stockPurchaseInfos[stock._id]?.quantity * stock.currentPrice,
+    };
+  });
+  const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
+    idea.userId
+  );
+
+  return {
+    props: {
+      idea,
+      investor: { ...investor, totalInvestment, totalProfits },
+      stockPurchaseInfos,
+      stocksWithPrices,
+      userPosts: userIdeas,
+      userRank,
+      rank: userRank,
+    },
+    revalidate: 6000,
+  };
+};
 
 const IdeasBlock = styled.div`
   display: flex;
@@ -71,6 +326,14 @@ const IdeasBlock = styled.div`
     border-top: 0.1rem solid rgba(0, 0, 0, 0.04);
     padding-top: 3.2rem;
     margin-bottom: 3.2rem;
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    flex-direction: column;
+
+    & > div {
+      width: 100%;
+    }
   }
 `;
 
@@ -155,243 +418,3 @@ const IdeaContent = styled.div`
     line-height: 24px;
   }
 `;
-
-export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
-  const {
-    description,
-    followers,
-    followings,
-    profileImageUrl,
-    totalInvestment,
-    totalProfits,
-    username,
-    websiteUrl,
-    cash,
-  } = investor;
-  const router = useRouter();
-  const { id } = router.query;
-  const { user } = useAppUser();
-
-  const { data, isLoading } = useQuery(
-    ["user", user?.email],
-    api.user.getByEmail(user?.email),
-    {
-      enabled: !!user?.email,
-    }
-  );
-  const commentInputRef = useRef();
-  const { idea, refetch: refetchIdea } = useIdea(id);
-  const commentIds = idea?.commentIds || [];
-  const {
-    data: voteData,
-    isLoading: isVoteDataLoading,
-    refetch,
-  } = useQuery(["voteByIdeaId", id], api.vote.getByIdeaId(id));
-  const [comment, setComment] = useState("");
-  const { data: comments } = useQuery(
-    ["comment", commentIds],
-    commentIds.length > 0 ? api.comment.getByIds(commentIds) : []
-  );
-  const createVote = useMutation(api.vote.post, { onSuccess: () => refetch() });
-
-  const onCommentIconClick = () => {
-    commentInputRef.current.scrollIntoView({ behavior: "smooth" });
-    setTimeout(() => {
-      commentInputRef.current.focus();
-    }, 800);
-  };
-
-  const onCommentButtonClick = async () => {
-    await axios.post(`${env.serverUrl}/comment`, {
-      postId: id,
-      userId: data._id,
-      content: comment,
-      likes: [],
-    });
-    refetchIdea();
-  };
-
-  const [scrollTop, setScrollTop] = useState(0);
-  useLayoutEffect(() => {
-    const event = window.addEventListener("scroll", () => {
-      setScrollTop(document.documentElement.scrollTop);
-    });
-    return () => window.removeEventListener("scroll", event);
-  }, []);
-
-  if (isLoading || isVoteDataLoading) {
-    return null;
-  }
-
-  const { agreeCount, disagreeCount } = voteData.data.reduce(
-    (acc, vote) => {
-      if (vote.isAgree) {
-        return {
-          ...acc,
-          agreeCount: acc.agreeCount + 1,
-        };
-      }
-      return {
-        ...acc,
-        disagreeCount: acc.disagreeCount + 1,
-      };
-    },
-    { agreeCount: 0, disagreeCount: 0 }
-  );
-
-  return (
-    <IdeasBlock>
-      <div>
-        <InvestorProfile
-          profileImageUrl={profileImageUrl}
-          username={username}
-          investedCompanies={stocksWithPrices}
-          followers={followers}
-          followings={followings}
-          description={description}
-          websiteUrl={websiteUrl}
-          cash={cash}
-          totalInvestment={totalInvestment}
-          totalProfits={totalProfits}
-          totalAssets={totalInvestment + cash}
-          rank={rank}
-        />
-      </div>
-      <PostBlock>
-        <h1 className="idea-title">{serverIdea.title}</h1>
-        <div className="idea-info">
-          by {username} · {timeAgo.format(new Date(serverIdea.date))}
-        </div>
-        <div className="tag-pill-wrapper">
-          {stocksWithPrices.map((stock) => (
-            <TagPill
-              key={stock._id}
-              stockImageUrl={stock.logoUrl}
-              label={stock.name}
-            />
-          ))}
-        </div>
-        <div className="vote-wrapper">
-          <IdeaVote agreeCount={agreeCount} disagreeCount={disagreeCount} />
-        </div>
-        <div className="thumbnail-wrapper">
-          <img src={serverIdea.thumbnailImageUrl} />
-        </div>
-
-        {serverIdea.youtubeCode && (
-          <Youtube youtubeCode={serverIdea.youtubeCode} />
-        )}
-
-        <IdeaContent dangerouslySetInnerHTML={{ __html: serverIdea.content }} />
-
-        <h2 className="sub-header">Comments</h2>
-        {comments && (
-          <CommentList className="comment-list" comments={comments} />
-        )}
-
-        <CommentInput
-          className="comment-input-wrapper"
-          value={comment}
-          setValue={setComment}
-          commentInputRef={commentInputRef}
-        />
-        <Button
-          className="comment-submit-button"
-          onClick={onCommentButtonClick}
-        >
-          Comment
-        </Button>
-        <FloattingMenu scrollTop={scrollTop}>
-          <div className="menu-wrapper">
-            <div
-              className="menu"
-              onClick={() => {
-                createVote.mutate({
-                  postId: id,
-                  userId: data._id,
-                  isAgree: true,
-                });
-              }}
-            >
-              <div className="thumb">
-                <ThumbUpIcon />
-              </div>
-              <span>{agreeCount}</span>
-            </div>
-            <div className="line" />
-            <div
-              className="menu"
-              onClick={() => {
-                createVote.mutate({
-                  postId: id,
-                  userId: data._id,
-                  isAgree: false,
-                });
-              }}
-            >
-              <div className="thumb">
-                <ThumbDownIcon />
-              </div>
-              <span>{disagreeCount}</span>
-            </div>
-          </div>
-          <div className="menu-wrapper">
-            <div className="menu" onClick={onCommentIconClick}>
-              <CommentIcon />
-              <span>{commentIds.length}</span>
-            </div>
-          </div>
-        </FloattingMenu>
-      </PostBlock>
-    </IdeasBlock>
-  );
-}
-
-export default function Page(props) {
-  return (
-    <MainLayout>
-      <Idea {...props} />
-    </MainLayout>
-  );
-}
-
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: "blocking", // can also be true or 'blocking'
-  };
-}
-
-export const getStaticProps = async (context) => {
-  const { id } = context.params;
-  const idea = await api.idea.getById(id)();
-
-  const { investor, stockPurchaseInfos, userIdeas, userRank } =
-    await getInvestorProfileInfo(idea.userId);
-
-  const stocks = await api.stock.getByIds(idea.stockIds.join(","))();
-
-  const stocksWithPrices = stocks.map((stock) => {
-    return {
-      ...stock,
-      ...stockPurchaseInfos[stock._id],
-      totalValue: stockPurchaseInfos[stock._id]?.quantity * stock.currentPrice,
-    };
-  });
-  const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
-    idea.userId
-  );
-
-  return {
-    props: {
-      idea,
-      investor: { ...investor, totalInvestment, totalProfits },
-      stockPurchaseInfos,
-      stocksWithPrices,
-      userPosts: userIdeas,
-      userRank,
-      rank: userRank,
-    },
-    revalidate: 6000,
-  };
-};

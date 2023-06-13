@@ -1,14 +1,73 @@
-import styled from '@emotion/styled';
-import { numberComma } from '../../utils/number';
-import Rank from './Rank';
-import Avatar from './Avatar';
+import styled from "@emotion/styled";
+import { numberComma } from "../../utils/number";
+import Rank from "./Rank";
+import Avatar from "./Avatar";
 import {
+  Body10Medium,
   Body14Regular,
   FollowBtn,
   HeadH4Bold,
   HeadH6Bold,
-} from '../../styles/typography';
-import color from '../../styles/color';
+} from "../../styles/typography";
+import color from "../../styles/color";
+import { mobileWidth } from "../../styles/responsive";
+
+const InvestorProfileView = ({
+  profileImageUrl,
+  username,
+  investedCompanies,
+  followers,
+  followings,
+  description,
+  websiteUrl,
+  cash,
+  totalInvestment,
+  totalAssets,
+  totalProfits,
+  rank,
+}) => {
+  return (
+    <InvestorProfileBlock>
+      <Rank rank={rank} />
+      <Avatar className="avatar" src={profileImageUrl} />
+      <div className="name">{username}</div>
+      <button className="follow-btn">Follow</button>
+      <div className="invest-info">
+        <div>
+          <span>{investedCompanies.length}</span> Invested
+        </div>
+        <div>
+          <span>{followers.length}</span> Followers
+        </div>
+        <div>
+          <span>{followings.length}</span> Following
+        </div>
+      </div>
+      <hr />
+      <div className="description">{description}</div>
+      <div className="website-url">{websiteUrl}</div>
+      <h4 className="financials">Financials</h4>
+      <div className="cash-block">
+        <div>
+          <div className="label">Available Cash</div>
+          <div className="cash">${numberComma(cash)}</div>
+        </div>
+        <div>
+          <div className="label">Total Investment</div>
+          <div className="cash">${numberComma(totalInvestment)}</div>
+        </div>
+        <div className={totalProfits >= 0 ? "earned" : "lost"}>
+          <div className="label">Total Profits</div>
+          <div className="cash">${numberComma(totalProfits)}</div>
+        </div>
+        <div className={totalAssets >= 0 ? "earned" : "lost"}>
+          <div className="label">Total Assets</div>
+          <div className="cash">${numberComma(totalAssets)}</div>
+        </div>
+      </div>
+    </InvestorProfileBlock>
+  );
+};
 
 const InvestorProfileBlock = styled.div`
   position: relative;
@@ -17,6 +76,7 @@ const InvestorProfileBlock = styled.div`
   align-items: center;
   border: 0.1rem solid rgba(0 0 0 / 10%);
   margin: 2rem;
+  margin-top: 3.8rem;
   padding: 2rem;
   border-radius: 0.6rem;
 
@@ -104,63 +164,27 @@ const InvestorProfileBlock = styled.div`
       font-size: 2.4rem;
     }
   }
-`;
 
-const InvestorProfileView = ({
-  profileImageUrl,
-  username,
-  investedCompanies,
-  followers,
-  followings,
-  description,
-  websiteUrl,
-  cash,
-  totalInvestment,
-  totalAssets,
-  totalProfits,
-  rank,
-}) => {
-  return (
-    <InvestorProfileBlock>
-      <Rank rank={rank} />
-      <Avatar className='avatar' src={profileImageUrl} />
-      <div className='name'>{username}</div>
-      <button className='follow-btn'>Follow</button>
-      <div className='invest-info'>
-        <div>
-          <span>{investedCompanies.length}</span> Invested
-        </div>
-        <div>
-          <span>{followers.length}</span> Followers
-        </div>
-        <div>
-          <span>{followings.length}</span> Following
-        </div>
-      </div>
-      <hr />
-      <div className='description'>{description}</div>
-      <div className='website-url'>{websiteUrl}</div>
-      <h4 className='financials'>Financials</h4>
-      <div className='cash-block'>
-        <div>
-          <div className='label'>Available Cash</div>
-          <div className='cash'>${numberComma(cash)}</div>
-        </div>
-        <div>
-          <div className='label'>Total Investment</div>
-          <div className='cash'>${numberComma(totalInvestment)}</div>
-        </div>
-        <div className={totalProfits >= 0 ? 'earned' : 'lost'}>
-          <div className='label'>Total Profits</div>
-          <div className='cash'>${numberComma(totalProfits)}</div>
-        </div>
-        <div className={totalAssets >= 0 ? 'earned' : 'lost'}>
-          <div className='label'>Total Assets</div>
-          <div className='cash'>${numberComma(totalAssets)}</div>
-        </div>
-      </div>
-    </InvestorProfileBlock>
-  );
-};
+  @media screen and (max-width: ${mobileWidth}) {
+    .invest-info {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .website-url {
+      margin-bottom: 2.4rem;
+    }
+
+    .cash-block {
+      width: 100%;
+      .label {
+        ${Body10Medium}
+      }
+      .cash {
+        ${HeadH6Bold}
+      }
+    }
+  }
+`;
 
 export default InvestorProfileView;

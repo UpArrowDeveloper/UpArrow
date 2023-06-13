@@ -18,6 +18,7 @@ import {
 import color from "../../styles/color";
 import api from "../../apis";
 import { MainLayout } from "../../Layouts";
+import { mobileWidth } from "../../styles/responsive";
 
 export function Investor({ investor, stocksWithPrices, rank }) {
   const {
@@ -155,6 +156,10 @@ export async function getStaticProps(context) {
 
 const InvestorBlock = styled.div`
   display: flex;
+
+  @media screen and (max-width: ${mobileWidth}) {
+    flex-direction: column;
+  }
 `;
 
 const InvestorDataBlock = styled.div`
@@ -175,6 +180,7 @@ const InvestorDataBlock = styled.div`
     margin-bottom: 2rem;
     border-bottom: 0.1rem solid ${color.B93};
     padding: 3.2rem;
+
     .stocks {
       display: flex;
       flex-wrap: wrap;
@@ -217,6 +223,7 @@ const InvestorDataBlock = styled.div`
       }
     }
   }
+
   .rank {
     font-size: 2rema;
   }
@@ -244,6 +251,26 @@ const InvestorDataBlock = styled.div`
         flex-wrap: wrap;
 
         gap: 2rem;
+      }
+    }
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    .portfolio-wrapper {
+      padding-top: 0;
+
+      & .stocks .stock {
+        width: 100%;
+
+        .stock-logo {
+          width: 5.6rem;
+          height: 5.6rem;
+          border-radius: 999rem;
+          border: 0.1rem solid rgba(0 0 0 / 20%);
+        }
+      }
+      .view-all {
+        height: 3.6rem;
       }
     }
   }

@@ -1,7 +1,8 @@
-import styled from '@emotion/styled';
-import React from 'react';
-import { HeadH6Bold } from '../../styles/typography';
-import { Flag } from '../icons';
+import styled from "@emotion/styled";
+import React from "react";
+import { HeadH6Bold } from "../../styles/typography";
+import { Flag } from "../icons";
+import { mobileWidth } from "../../styles/responsive";
 
 const RankBlock = styled.div`
   position: absolute;
@@ -30,13 +31,17 @@ const RankBlock = styled.div`
       fill: #dedede;
     }
   }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    right: 3.6rem;
+  }
 `;
 
 const Rank = ({ rank }) => {
   return (
-    <RankBlock className={rank > 3 ? 'secondary' : ''}>
-      <Flag className='flag' width={36} height={43} />
-      <div className='rank'>{rank}</div>
+    <RankBlock className={rank > 3 ? "secondary" : ""}>
+      <Flag className="flag" width={36} height={43} />
+      <div className="rank">{rank}</div>
     </RankBlock>
   );
 };

@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import { mobileWidth } from "./responsive";
 
 export const HeadH1Bold = css`
   line-height: 3.6rem;
@@ -76,6 +77,12 @@ export const Body12Regular = css`
 export const Body12Medium = css`
   line-height: 1.8rem;
   font-size: 1.2rem;
+  font-weight: 500;
+`;
+
+export const Body10Medium = css`
+  line-height: 1.4rem;
+  font-size: 1rem;
   font-weight: 500;
 `;
 
