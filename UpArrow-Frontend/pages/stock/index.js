@@ -1,7 +1,11 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
 import { MainLayout } from "../../Layouts";
-import { HeadH5Bold } from "../../styles/typography";
+import {
+  Body12Medium,
+  Body14Medium,
+  HeadH5Bold,
+} from "../../styles/typography";
 import Image from "next/image";
 import Viewmore from "../../components/common/Viewmore";
 import OrderChip from "../../components/OrderChip";
@@ -200,6 +204,13 @@ const StockBlock = styled.div`
     }
 
     @media screen and (max-width: ${mobileWidth}) {
+      .name-ticker {
+        ${Body14Medium}
+      }
+
+      .number {
+        ${Body12Medium}
+      }
     }
   }
 `;

@@ -266,7 +266,7 @@ const IdeasBlock = styled.div`
     .mobile-idea-wrapper {
       display: flex;
       flex-direction: column;
-      margin: 0 1.6rem;
+      margin: 0 2rem;
       gap: 1.6rem;
       margin-bottom: 4rem;
     }

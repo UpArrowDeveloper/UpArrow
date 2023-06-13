@@ -199,6 +199,7 @@ const CommentBlock = styled.div`
     }
 
     .picture-wrapper {
+      margin-right: 2rem;
       img {
         width: 4rem;
         height: 4rem;

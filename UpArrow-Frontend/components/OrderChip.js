@@ -19,7 +19,7 @@ const OrderChipBlock = styled.div`
   background: white;
   color: black;
   border-radius: 999rem;
-  border: 0.1rem solid black;
+  border: 0.1rem solid rgba(0 0 0 / 20%);
   cursor: pointer;
   ${Body16Regular}
 

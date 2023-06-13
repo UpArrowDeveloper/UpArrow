@@ -123,7 +123,7 @@ const FinancialsBlock = styled.div`
 
     .bar-wrapper {
       width: 100%;
-      height: 17rem;
+      height: 23.5rem;
     }
   }
 `;

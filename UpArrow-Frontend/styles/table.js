@@ -45,9 +45,18 @@ export const commonListCss = css`
       ${HeadH3Bold}
     }
 
+    header {
+      padding: 0.8rem 2rem;
+    }
+
     .order-option-wrapper {
       margin-bottom: 1.6rem;
+      padding: 0.8rem 2rem;
       overflow-x: scroll;
+
+      & > div {
+        padding: 0.6rem 1.4rem;
+      }
     }
   }
 `;
@@ -85,12 +94,6 @@ export const commonTableCss = css`
     }
 
     tbody {
-      &:before {
-        content: "-";
-        display: block;
-        line-height: 0.8rem;
-        color: transparent;
-      }
       tr {
         border-bottom: 0.1rem solid rgba(0 0 0 / 20%);
       }
@@ -99,7 +102,7 @@ export const commonTableCss = css`
 
   @media screen and (max-width: ${mobileWidth}) {
     .table-wrapper {
-      padding: 0 1.6rem;
+      padding: 0 2rem;
     }
 
     .title-author {
@@ -109,8 +112,15 @@ export const commonTableCss = css`
     }
 
     .image-wrapper {
-      width: 3.6rem;
-      height: 3.6rem;
+      width: 4rem;
+      height: 4rem;
+
+      border: 0.1rem solid rgba(0 0 0 / 20%);
+      border-radius: 999px;
+    }
+
+    .image-container {
+      padding: 0.8rem;
     }
   }
 `;
