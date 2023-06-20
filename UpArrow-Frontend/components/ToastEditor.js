@@ -1,15 +1,19 @@
-import styled from '@emotion/styled';
-import { Editor } from '@toast-ui/react-editor';
-import { useRef } from 'react';
+import styled from "@emotion/styled";
+import { Editor } from "@toast-ui/react-editor";
+import { useRef } from "react";
+import { mobileWidth } from "../styles/responsive";
+import { useMobile } from "../hooks/useMobile";
 
 const ToastEditorBlock = styled.div`
   .toastui-editor-contents {
     font-size: 1.2rem;
-    font-family: 'Pretendard';
+    font-family: "Pretendard";
   }
 `;
+
 const ToastEditor = ({ content, setPostForm, placeholder }) => {
   const editorRef = useRef();
+  const { isMobile } = useMobile();
   return (
     <ToastEditorBlock>
       <Editor
@@ -21,9 +25,12 @@ const ToastEditor = ({ content, setPostForm, placeholder }) => {
             content: editorRef.current.getInstance().getHTML(),
           }));
         }}
-        previewStyle='vertical'
-        height='1000px'
-        initialEditType='wysiwyg'
+        height={isMobile ? "400px" : "1000px"}
+        previewStyle={
+          window.innerWidth > +mobileWidth.split("px")[0] ? "vertical" : "tab"
+        } // tab, vertical
+        initialEditType="wysiwyg"
+        hideModeSwitch={true}
         useCommandShortcut={true}
         ref={editorRef}
       />

@@ -16,6 +16,7 @@ import VideoUploader from "./VideoUploader";
 import { useRouter } from "next/router";
 import { useAppUser } from "../hooks/useAppUser";
 import { mobileWidth } from "../styles/responsive";
+import { useMobile } from "../hooks/useMobile";
 
 const ToastEditor = dynamic(() => import("../components/ToastEditor"), {
   ssr: false,
@@ -30,6 +31,7 @@ const Editor = ({ editData }) => {
     editData || { title: "", content: "", thumbnailImageUrl: "", stockIds: [] }
   );
   const router = useRouter();
+  const { isMobile } = useMobile();
 
   const [stockTextForSearch, setStockTextForSearch] = useState("");
   const [stockSearchResult, setStockSearchResult] = useState([]);
@@ -148,25 +150,18 @@ const Editor = ({ editData }) => {
             </div>
           </div>
         </div>
-        <div className="stock-image-input">
-          <span className="stock-search-label">
-            Upload the thumbnail image of your ideas
-          </span>
+        <div className="file-selector">
           <ImageUploader id="image" file={file} setFile={setFile} />
-        </div>
-        <div className="stock-image-input">
-          <span className="stock-search-label">
-            Do you have any video URL to support your ideas?
-          </span>
           <VideoUploader url={videoUrl} setUrl={setVideoUrl} />
-        </div>
 
+          {isMobile && <SubmitBtn onClick={() => submit()}>Post</SubmitBtn>}
+        </div>
         <ToastEditor
-          placeholder="Write your investment ideas"
+          placeholder="Write something"
           content={postForm.content}
           setPostForm={setPostForm}
         />
-        <SubmitBtn onClick={() => submit()}>Post</SubmitBtn>
+        {!isMobile && <SubmitBtn onClick={() => submit()}>Post</SubmitBtn>}
         <div
           className="stock-search-input-cover"
           onClick={() => setSearchModalOpen(false)}
@@ -196,6 +191,13 @@ const SubmitBtn = styled.button`
   cursor: pointer;
   margin-left: auto;
   margin-top: 1.6rem;
+
+  @media screen and (max-width: ${mobileWidth}) {
+    margin-top: 0;
+    margin-right: 1.6rem;
+    width: 6rem;
+    height: 3rem;
+  }
 `;
 
 const InputWrapper = styled.div`
@@ -259,6 +261,7 @@ const InputWrapper = styled.div`
     }
 
     .stock-plus {
+      display: flex;
       background-color: transparent;
       border: 0.1rem solid ${color.B80};
       border-radius: 999rem;
@@ -295,12 +298,31 @@ const InputWrapper = styled.div`
     height: 100%;
   }
 
+  .file-selector {
+    display: flex;
+    align-items: center;
+  }
+
   @media screen and (max-width: ${mobileWidth}) {
     .stock-search {
       .stock-plus {
         width: 3.8rem;
         height: 3.8rem;
       }
+    }
+
+    .file-selector {
+      position: fixed;
+      background-color: white;
+      align-items: center;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      z-index: 100;
+      gap: 0.8rem;
+      padding: 0.2rem;
+      padding-left: 1rem;
+      border-top: 0.1rem solid ${color.B80};
     }
   }
 `;

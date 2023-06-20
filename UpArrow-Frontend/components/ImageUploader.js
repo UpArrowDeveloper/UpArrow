@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
-import { ImageIcon } from './icons';
+import styled from "@emotion/styled";
+import { ImageIcon } from "./icons";
 
 const ImageUploaderBlock = styled.div`
   display: flex;
@@ -19,13 +19,13 @@ const ImageUploaderBlock = styled.div`
 const ImageUploader = ({ id, file, setFile }) => {
   return (
     <ImageUploaderBlock>
-      <label for={id}>
+      <label htmlFor={id}>
         <ImageIcon src={ImageIcon} />
       </label>
       <input
         id={id}
-        type='file'
-        accept='image/*'
+        type="file"
+        accept="image/*"
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (!file) return;
