@@ -50,6 +50,13 @@ const SearchInputBlock = styled.div`
   }};
 
   .input-wrapper {
+    height: 4.8rem;
+
+    padding: 0.72rem 1.2rem 0.72rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
     & > input {
       width: 6rem;
       height: 2.2rem;
@@ -64,11 +71,6 @@ const SearchInputBlock = styled.div`
     .x-icon {
       cursor: pointer;
     }
-
-    padding: 0.72rem 1.2rem 0.72rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
 
     ${({ hidden }) => {
       return !hidden
@@ -93,6 +95,9 @@ const SearchInputBlock = styled.div`
   }
 
   @media screen and (max-width: ${mobileWidth}) {
+    .input-wrapper {
+      height: 100%;
+    }
   }
 `;
 

@@ -254,7 +254,7 @@ const InputWrapper = styled.div`
       `}
       z-index: 30;
       top: 0;
-      left: 4.5rem;
+      left: 5.8rem;
       position: absolute;
       opacity: 1;
       background-color: white;
@@ -308,6 +308,10 @@ const InputWrapper = styled.div`
       .stock-plus {
         width: 3.8rem;
         height: 3.8rem;
+      }
+
+      .stock-search-input {
+        left: 4.5rem;
       }
     }
 
