@@ -124,8 +124,6 @@ export async function getStaticProps(context) {
   const { investor, stockPurchaseInfos, userIdeas, userRank } =
     await getInvestorProfileInfo(id);
 
-  console.log("investor : ", investor);
-
   const { totalInvestment, totalProfits } = await getInvestorInvestInfo(id);
   const stockIds = Object.keys(stockPurchaseInfos);
 
