@@ -206,6 +206,7 @@ const StockBlock = styled.div`
     @media screen and (max-width: ${mobileWidth}) {
       .name-ticker {
         ${Body14Medium}
+        gap:0.8rem;
       }
 
       .number {

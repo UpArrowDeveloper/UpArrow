@@ -205,11 +205,11 @@ const IndexWrapper = styled.div`
   }
 
   .ideaList {
-    max-width: 59rem;
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 2rem;
-    gap: 2rem;
+    gap: 3.6rem;
+    row-gap: 2.4rem;
 
     /* & > div {
       &:not(

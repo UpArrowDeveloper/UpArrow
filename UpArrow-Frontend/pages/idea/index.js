@@ -218,6 +218,8 @@ const IdeasBlock = styled.div`
     }
 
     .tagwrapper {
+      max-width: 24rem;
+      min-width: 12rem;
       padding: 0 2rem 0 0;
     }
 
@@ -255,6 +257,7 @@ const IdeasBlock = styled.div`
       font-weight: 500;
       font-size: 1.6rem;
       line-height: 2.2rem;
+      min-width: 13.6rem;
     }
 
     .title-wrapper-fill {

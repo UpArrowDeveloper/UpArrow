@@ -72,6 +72,7 @@ export const commonTableCss = css`
 
   .image-container {
     padding: 1.6rem 0.8rem;
+    margin-right: 0.8rem;
   }
 
   .image-wrapper {

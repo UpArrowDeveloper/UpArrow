@@ -12,7 +12,6 @@ const TagPillBlock = styled.div`
   gap:0.8rem;
   padding: 0.8rem;
   border: 0.1rem solid ${color.B80};
-  height: 4.8rem;
   border-radius: 12rem;
 
   & > img {
