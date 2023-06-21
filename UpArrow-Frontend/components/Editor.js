@@ -11,8 +11,6 @@ import color from "../styles/color";
 import SearchInput from "./common/SearchInput";
 import TagPill from "./Editor/TagPill";
 import { PlusIcon } from "./icons";
-import ImageUploader from "./ImageUploader";
-import VideoUploader from "./VideoUploader";
 import { useRouter } from "next/router";
 import { useAppUser } from "../hooks/useAppUser";
 import { mobileWidth } from "../styles/responsive";
@@ -151,15 +149,15 @@ const Editor = ({ editData }) => {
           </div>
         </div>
         <div className="file-selector">
-          <ImageUploader id="image" file={file} setFile={setFile} />
-          <VideoUploader url={videoUrl} setUrl={setVideoUrl} />
-
           {isMobile && <SubmitBtn onClick={() => submit()}>Post</SubmitBtn>}
         </div>
         <ToastEditor
           placeholder="Write something"
           content={postForm.content}
           setPostForm={setPostForm}
+          url={videoUrl}
+          setFile={setFile}
+          setUrl={setVideoUrl}
         />
         {!isMobile && <SubmitBtn onClick={() => submit()}>Post</SubmitBtn>}
         <div
@@ -254,7 +252,7 @@ const InputWrapper = styled.div`
       `}
       z-index: 30;
       top: 0;
-      left: 5.8rem;
+      left: 5rem;
       position: absolute;
       opacity: 1;
       background-color: white;
@@ -268,8 +266,8 @@ const InputWrapper = styled.div`
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      width: 4.8rem;
-      height: 4.8rem;
+      width: 3.8rem;
+      height: 3.8rem;
     }
   }
   .stock-with-search-input {
@@ -301,15 +299,11 @@ const InputWrapper = styled.div`
   .file-selector {
     display: flex;
     align-items: center;
+    padding: 0.8rem 0;
   }
 
   @media screen and (max-width: ${mobileWidth}) {
     .stock-search {
-      .stock-plus {
-        width: 3.8rem;
-        height: 3.8rem;
-      }
-
       .stock-search-input {
         left: 4.5rem;
       }
@@ -324,7 +318,7 @@ const InputWrapper = styled.div`
       width: 100%;
       z-index: 100;
       gap: 0.8rem;
-      padding: 0.2rem;
+      padding: 0.8rem 0.4rem;
       padding-left: 1rem;
       border-top: 0.1rem solid ${color.B80};
     }

@@ -50,8 +50,6 @@ const SearchInputBlock = styled.div`
   }};
 
   .input-wrapper {
-    height: 4.8rem;
-
     padding: 0.72rem 1.2rem 0.72rem 2rem;
     display: flex;
     align-items: center;

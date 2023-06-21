@@ -60,6 +60,7 @@ const IdeaWrapper = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  max-width: 58rem;
   gap: 2rem;
   cursor: pointer;
 
