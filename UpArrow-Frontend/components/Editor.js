@@ -19,7 +19,6 @@ import { useMobile } from "../hooks/useMobile";
 const ToastEditor = dynamic(() => import("../components/ToastEditor"), {
   ssr: false,
 });
-
 const Editor = ({ editData }) => {
   const { data: stocks } = useQuery(["stock"], api.stock.get);
   const { user } = useAppUser({ isAuthorized: true });
@@ -30,7 +29,6 @@ const Editor = ({ editData }) => {
   );
   const router = useRouter();
   const { isMobile } = useMobile();
-
   const [stockTextForSearch, setStockTextForSearch] = useState("");
   const [stockSearchResult, setStockSearchResult] = useState([]);
   const [selectedStocks, setSelectedStocks] = useState([]);
