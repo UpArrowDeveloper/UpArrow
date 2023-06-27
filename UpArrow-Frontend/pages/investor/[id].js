@@ -41,6 +41,7 @@ export function Investor({ investor, stocksWithPrices, rank }) {
     username,
     websiteUrl,
   } = investor;
+  console.log("username : ", username);
 
   return (
     <InvestorBlock>

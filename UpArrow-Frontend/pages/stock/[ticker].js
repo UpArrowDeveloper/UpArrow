@@ -13,6 +13,7 @@ import { MainLayout } from "../../Layouts";
 import useModal from "../../hooks/useModal";
 import { PurchaseModal } from "../../components/Popup/PurchaseModal";
 import { mobileWidth } from "../../styles/responsive";
+import { numberComma } from "../../utils/number";
 
 export default function StockPage(props) {
   return (
@@ -57,7 +58,13 @@ function Stock({ stock, analysis }) {
           children: ({ onConfirm }) => (
             <PurchaseModal
               onConfirm={onConfirm}
-              message={`You purchased ${stockOrderQuantity} shares of ${stock?.name}`}
+              message={`You purchased ${stockOrderQuantity} shares of ${
+                stock?.name
+              }\nAvailable UpArrow Cash: $${numberComma(
+                Math.round(
+                  user?.cash - stockOrderQuantity * stock?.currentPrice
+                )
+              )}`}
             />
           ),
           onConfirm: closeModal,
@@ -82,6 +89,33 @@ function Stock({ stock, analysis }) {
       refetch();
       refetchUser();
       refetchLiveStock();
+    },
+    onError: (e) => {
+      const message = e.response.data.message;
+      if (message === "exceed cash") {
+        openModal({
+          children: ({ onConfirm }) => (
+            <PurchaseModal
+              title="UpArrow Cash is insufficient"
+              onConfirm={onConfirm}
+              message={`You don't have enough cash`}
+            />
+          ),
+          onConfirm: closeModal,
+        });
+      }
+      if (message === "exceed quantity") {
+        openModal({
+          children: ({ onConfirm }) => (
+            <PurchaseModal
+              title={`You own ${currentStockValuationData?.quantity} ${stock.name} shares`}
+              onConfirm={onConfirm}
+              message={`You cannnot sell more shares than you own`}
+            />
+          ),
+          onConfirm: closeModal,
+        });
+      }
     },
   });
 

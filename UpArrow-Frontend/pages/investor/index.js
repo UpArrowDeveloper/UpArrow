@@ -86,13 +86,15 @@ function Investors({ investors, top3Stocks }) {
                     <div className="title wrapper investors">
                       <div className="image-container">
                         <div className="image-wrapper rounded">
-                          {!!investor.profileImageUrl && (
+                          {!!investor.profileImageUrl ? (
                             <Image
                               objectFit="cover"
                               src={investor.profileImageUrl}
                               layout="fill"
                               alt={investor.name}
                             />
+                          ) : (
+                            <div className="empty"></div>
                           )}
                         </div>
                       </div>
@@ -106,7 +108,9 @@ function Investors({ investors, top3Stocks }) {
                       <div className="wrapper">
                         <TagGroup
                           tags={top3Stocks[index]?.map(({ name, profit }) => ({
-                            name: `${name} ${profit?.toLocaleString("en-US")}%`,
+                            name: `${name} ${
+                              profit?.toLocaleString("en-US") || 0
+                            }%`,
                             type:
                               profit > 0
                                 ? "plus"
@@ -204,6 +208,14 @@ const IdeasBlock = styled.div`
       & > div {
         display: flex;
         align-items: center;
+      }
+    }
+
+    .image-wrapper {
+      .empty {
+        background-color: rgba(0, 0, 0, 0.1);
+        width: 100%;
+        height: 100%;
       }
     }
 
