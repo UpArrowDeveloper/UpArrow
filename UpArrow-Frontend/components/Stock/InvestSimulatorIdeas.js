@@ -84,12 +84,16 @@ const InvestSimulatorIdeas = ({
           <h4>Current Price</h4>
           <div className="current-price">${stock.currentPrice}</div>
           <div className="target-price-block">
-            <TargetIcon />
-            <span className="target-price">
-              <strong>${targetPrice?.price}</strong>(
-              {getProfitPercent(stock.currentPrice, targetPrice?.price)})
-            </span>
-            <div className="recommander">{targetPrice?.name}</div>
+            {!!targetPrice && (
+              <>
+                <TargetIcon />
+                <span className="target-price">
+                  <strong>${targetPrice?.price}</strong>(
+                  {getProfitPercent(stock.currentPrice, targetPrice?.price)})
+                </span>
+                <div className="recommander">{targetPrice?.name}</div>
+              </>
+            )}
           </div>
           <div>
             <h4>Order</h4>

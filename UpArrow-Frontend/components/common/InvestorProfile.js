@@ -31,7 +31,14 @@ const InvestorProfileView = ({
       <Rank rank={rank} />
       <Avatar className="avatar" src={profileImageUrl} />
       <div className="name">{username}</div>
-      <button className="follow-btn">Follow</button>
+      <button
+        className="follow-btn"
+        onClick={() => {
+          console.log("not implemented");
+        }}
+      >
+        Follow
+      </button>
       <div className="invest-info">
         <div>
           <span>{investedCompanies.length}</span> Invested

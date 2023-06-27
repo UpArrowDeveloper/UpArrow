@@ -1,17 +1,18 @@
 import styled from "@emotion/styled";
 import React from "react";
-import { HeadH3Bold } from "../../styles/typography";
+import { HeadH3Bold, HeadH4Bold, HeadH5Bold } from "../../styles/typography";
 import Button from "../common/Button";
+import { mobileWidth } from "../../styles/responsive";
 
 export const PurchaseModal = ({
   onConfirm,
   title = "Congraturations!",
   message,
 }) => {
+  console.log("title : ", title);
   return (
     <SignupCelebrateBlock>
       <h1>{title}</h1>
-
       <pre>{message}</pre>
       <Button onClick={onConfirm}>Got it!</Button>
     </SignupCelebrateBlock>
@@ -37,17 +38,28 @@ const SignupCelebrateBlock = styled.div`
 
   h1 {
     text-align: center;
-    ${HeadH3Bold}
+    ${HeadH4Bold}
     margin-bottom: 1.6rem;
   }
 
   pre {
     text-align: center;
-    margin-bottom: 4rem;
-    font-size: 1.8rem;
+    margin-bottom: 2.4rem;
+    font-size: 1.6rem;
+    line-height: 2.2rem;
   }
 
   button {
     width: 100%;
+    padding: 1.6rem;
+    ${HeadH5Bold}
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    width: 30rem;
+    pre {
+      overflow-wrap: break-word;
+      white-space: pre-wrap;
+    }
   }
 `;

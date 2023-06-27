@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { EmptyAvatar } from "./icons";
 import { env } from "../config";
 import storage from "../utils/storage";
+import { HeadH5Bold } from "../styles/typography";
 
 const InvisibleCover = styled.div`
   background-color: rgba(0 0 0 / 10%);
@@ -76,13 +77,15 @@ const ProfileIconWrapper = styled.div`
   align-items: center;
 
   .menu {
+    ${HeadH5Bold}
     position: absolute;
+    border-radius: 0.8rem;
     bottom: -20rem;
     right: 0.2rem;
     width: 20rem;
     background-color: white;
     border-radius: 0.6rem;
-    box-shadow: 0.5rem 0.5rem 0.8rem 0.5rem rgba(0, 0, 0, 0.28);
+    box-shadow: 0 1.6rem 12rem 0 rgba(0, 0, 0, 0.1);
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -91,6 +94,7 @@ const ProfileIconWrapper = styled.div`
   a {
     padding: 1.6rem;
     cursor: pointer;
+    text-align: center;
   }
 
   .profile-icon {

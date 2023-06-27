@@ -1,11 +1,11 @@
-import React, { useEffect, useState, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import List from '@mui/material/List';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
-import { useRouter } from 'next/router';
-import axios from 'axios';
-import styled from '@emotion/styled';
+import React, { useEffect, useState, Fragment } from "react";
+import PropTypes from "prop-types";
+import List from "@mui/material/List";
+import DialogTitle from "@mui/material/DialogTitle";
+import Dialog from "@mui/material/Dialog";
+import { useRouter } from "next/router";
+import axios from "axios";
+import styled from "@emotion/styled";
 
 const InvestorSocialBlock = styled.div`
   .social-button {
@@ -86,20 +86,20 @@ function SimpleDialog(props) {
 
   useEffect(() => {
     const getDocList = async () => {
-      var investorStrId = localStorage.getItem('investorStrId');
-      if (props.modalTitle == 'Invested') {
+      var investorStrId = localStorage.getItem("investorStrId");
+      if (props.modalTitle == "Invested") {
         const stockDocumentListResponse = await axios.get(
           `http://localhost:4000/api/v1/investor/purchases/${investorStrId}`
         );
         setDocList(stockDocumentListResponse.data);
       }
-      if (props.modalTitle == 'Followers') {
+      if (props.modalTitle == "Followers") {
         const followersDocumentListResponse = await axios.get(
           `http://localhost:4000/api/v1/investor/followers/${investorStrId}`
         );
         setDocList(followersDocumentListResponse.data);
       }
-      if (props.modalTitle == 'Following') {
+      if (props.modalTitle == "Following") {
         const followingsDocumentListResponse = await axios.get(
           `http://localhost:4000/api/v1/investor/followings/${investorStrId}`
         );
@@ -122,12 +122,12 @@ function SimpleDialog(props) {
   const handleListItemClick = async (id, isStock, currUserId) => {
     var currUserStringId = String(currUserId);
     if (isStock) {
-      localStorage.setItem('stockIdStrModal', id);
-      localStorage.removeItem('stockIdStr');
-      router.push('/stock');
+      localStorage.setItem("stockIdStrModal", id);
+      localStorage.removeItem("stockIdStr");
+      router.push("/stock");
     } else {
-      localStorage.setItem('investorStrId', id);
-      router.push('/investor');
+      localStorage.setItem("investorStrId", id);
+      router.push("/investor");
       router.reload();
     }
   };
@@ -140,34 +140,34 @@ function SimpleDialog(props) {
   };
 
   const renderedEmailList = docList.map((doc) => {
-    var id = String(doc._id);
-    var isStock = false;
-    var isFollowing = false;
+    const id = String(doc._id);
+    let isStock = false;
+    let isFollowing = false;
     if (doc.ticker) {
       isStock = true;
     } else {
-      var userFollowersList = doc.followers;
+      const userFollowersList = doc.followers;
       if (userFollowersList.includes(props.currentUserId)) {
         isFollowing = true;
       }
     }
-    var followText = isFollowing ? 'Unfollow' : 'Follow';
+    const followText = isFollowing ? "Unfollow" : "Follow";
     return (
       <ModalBlock
         key={doc._id}
         onClick={() => handleListItemClick(id, isStock, props.currentUserId)}
       >
-        <div className='avatar'>
+        <div className="avatar">
           <img alt={doc.name} src={doc.profile_image_url} />
         </div>
 
-        <div className='avatarName'>{doc.name}</div>
+        <div className="avatarName">{doc.name}</div>
 
         {!isStock && (
-          <div className='follow-button'>
+          <div className="follow-button">
             <div
               onClick={() => onFollow(id, isStock, props.currentUserId)}
-              variant='outlined'
+              variant="outlined"
             >
               {followText}
             </div>
@@ -181,7 +181,7 @@ function SimpleDialog(props) {
     <Dialog onClose={handleClose} open={open}>
       <DialogBlock>
         <DialogTitle>
-          <div className='modal-title'>{props.title}</div>
+          <div className="modal-title">{props.title}</div>
         </DialogTitle>
         <List sx={{ pt: 0 }}>{renderedEmailList}</List>
       </DialogBlock>
@@ -211,8 +211,8 @@ const ProfileModal = ({ title, docJSONList, currentUserId, modalTitle }) => {
   return (
     <InvestorSocialBlock>
       <button
-        className='social-button'
-        variant='outlined'
+        className="social-button"
+        variant="outlined"
         onClick={handleClickOpen}
       >
         {`${docJSONList.length} ${title}`}

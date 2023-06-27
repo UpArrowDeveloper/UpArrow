@@ -36,7 +36,7 @@ const InvestorCard = ({
             {investorAvatar ? (
               <img className="avatar" alt={investorName} src={investorAvatar} />
             ) : (
-              <div className="empty">empty</div>
+              <div className="empty"></div>
             )}
           </div>
 
@@ -54,7 +54,7 @@ const InvestorCard = ({
             {investorAvatar ? (
               <img className="avatar" alt={investorName} src={investorAvatar} />
             ) : (
-              <div className="empty">empty</div>
+              <div className="empty"></div>
             )}
           </div>
 
