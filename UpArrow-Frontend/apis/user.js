@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { env } from '../config';
+import axios from "axios";
+import { env } from "../config";
 
 const url = `${env.serverUrl}/user`;
 const user = {
@@ -19,6 +19,8 @@ const user = {
   post: (payload) => axios.post(url, payload).then((res) => res.data),
   updateById: (id, payload) =>
     axios.put(`${url}/${id}`, payload).then((res) => res.data),
+  followUserById: (id) =>
+    axios.put(`${url}/${id}/follow`).then((res) => res.data),
 };
 
 export default user;

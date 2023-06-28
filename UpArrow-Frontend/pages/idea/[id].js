@@ -52,13 +52,13 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   const { id } = router.query;
   const { user } = useAppUser();
 
-  const { data, isLoading } = useQuery(
-    ["user", user?.email],
-    api.user.getByEmail(user?.email),
-    {
-      enabled: !!user?.email,
-    }
-  );
+  const {
+    data,
+    isLoading,
+    refetch: userRefetch,
+  } = useQuery(["user", user?.email], api.user.getByEmail(user?.email), {
+    enabled: !!user?.email,
+  });
   const commentInputRef = useRef();
   const { idea, refetch: refetchIdea } = useIdea(id);
   const commentIds = idea?.commentIds || [];
@@ -125,11 +125,12 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
       {!isMobile && (
         <div>
           <InvestorProfile
+            id={investorId}
             profileImageUrl={profileImageUrl}
             username={username}
             investedCompanies={stocksWithPrices}
-            followers={followers}
-            followings={followings}
+            followers={data.followers || followers}
+            followings={data.followings || followings}
             description={description}
             websiteUrl={websiteUrl}
             cash={cash}
@@ -137,6 +138,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
             totalProfits={totalProfits}
             totalAssets={totalInvestment + cash}
             rank={rank}
+            userRefetch={userRefetch}
           />
         </div>
       )}

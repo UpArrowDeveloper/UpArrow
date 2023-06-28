@@ -22,6 +22,7 @@ import { mobileWidth } from "../../styles/responsive";
 
 export function Investor({ investor, stocksWithPrices, rank }) {
   const {
+    id,
     cash,
     comments,
     description,
@@ -41,11 +42,11 @@ export function Investor({ investor, stocksWithPrices, rank }) {
     username,
     websiteUrl,
   } = investor;
-  console.log("username : ", username);
 
   return (
     <InvestorBlock>
       <InvestorProfileView
+        id={id}
         profileImageUrl={profileImageUrl}
         username={username}
         investedCompanies={stocksWithPrices}

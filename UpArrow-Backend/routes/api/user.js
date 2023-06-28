@@ -1,23 +1,23 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const User = require('../../models/User');
-const Stock = require('../../models/Stock');
-const Advertisement = require('../../models/Advertisement');
-const Comment = require('../../models/Comment');
-const Analysis = require('../../models/Analysis');
-const Order = require('../../models/Order');
-const Average = require('../../models/Config');
-var ObjectId = require('mongodb').ObjectId;
-const axios = require('axios');
-const Config = require('../../models/Config');
+const User = require("../../models/User");
+const Stock = require("../../models/Stock");
+const Advertisement = require("../../models/Advertisement");
+const Comment = require("../../models/Comment");
+const Analysis = require("../../models/Analysis");
+const Order = require("../../models/Order");
+const Average = require("../../models/Config");
+var ObjectId = require("mongodb").ObjectId;
+const axios = require("axios");
+const Config = require("../../models/Config");
 const {
   getTop3StocksByUserId,
   addUser,
   updateUserById,
-} = require('../../services/user');
-const { getIdeasByUserId } = require('../../services/idea');
-const { USER_ALREADY_EXIST, UserAlreadyExist } = require('../../error/user');
-const { validUser } = require('../../middlewares/auth');
+} = require("../../services/user");
+const { getIdeasByUserId } = require("../../services/idea");
+const { USER_ALREADY_EXIST, UserAlreadyExist } = require("../../error/user");
+const { validUser } = require("../../middlewares/auth");
 
 // POST http://localhost:4000/api/v1/investor/register/user
 // a user is registering for the first time on UpArrow
@@ -38,7 +38,7 @@ const { validUser } = require('../../middlewares/auth');
 // PUT ('/user/:id') <- 회원정보 하나 가져오기
 // DELETE ('/user/:id') <- 회원정보 하나 가져오기
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const userList = await User.find();
     return res.status(200).json(userList);
@@ -47,18 +47,18 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id/top3stocks', async (req, res) => {
+router.get("/:id/top3stocks", async (req, res) => {
   const id = req.params.id;
   try {
     const result = await getTop3StocksByUserId(id);
     return res.status(200).json(result);
   } catch (err) {
-    console.error('error : ', err);
+    console.error("error : ", err);
     return res.status(500).json({ error: err });
   }
 });
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   const {
     name,
     email,
@@ -89,7 +89,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   const id = req.params.id;
   const {
     name,
@@ -117,17 +117,17 @@ router.put('/:id', async (req, res) => {
     if (error.errorType === USER_ALREADY_EXIST) {
       return UserAlreadyExist.responseError();
     }
-    console.log('error : ', error);
+    console.log("error : ", error);
     return res.status(500).json(error);
   }
 });
 
 // a user getting a user data using email
-router.get('/me', validUser, async (req, res) => {
+router.get("/me", validUser, async (req, res) => {
   return res.status(200).json({ user: req.user });
 });
 
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   const _id = req.params.id;
 
   try {
@@ -138,7 +138,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.get('/:id/rank', async (req, res) => {
+router.get("/:id/rank", async (req, res) => {
   try {
     const _id = req.params.id;
     const user = await User.find();
@@ -149,25 +149,25 @@ router.get('/:id/rank', async (req, res) => {
 
     return res.status(200).json({ userId: _id, rank: rank + 1 });
   } catch (error) {
-    console.error('erro : ', error);
+    console.error("erro : ", error);
     return res.status(500).send({ error });
   }
 });
 
-router.get('/:email/email', async (req, res) => {
+router.get("/:email/email", async (req, res) => {
   const email = req.params.email;
   const user = await User.findOne({ email: email });
 
   if (user) {
     return res.status(200).send(user);
   } else {
-    return res.status(400).send({ message: 'no user' });
+    return res.status(400).send({ message: "no user" });
   }
 });
 
 // a logged user can see other investor’s profile and comments
 
-router.get('/:userId/profile', async (req, res) => {
+router.get("/:userId/profile", async (req, res) => {
   try {
     const userId = req.params.userId;
     const userObjectId = ObjectId(userId);
@@ -183,7 +183,7 @@ router.get('/:userId/profile', async (req, res) => {
   }
 });
 
-router.get('/:userId/profit-percentage', async (req, res) => {
+router.get("/:userId/profit-percentage", async (req, res) => {
   try {
     const userId = req.params.userId;
     const user = await User.findById(userId);
@@ -196,7 +196,7 @@ router.get('/:userId/profit-percentage', async (req, res) => {
     const stockList = await Promise.all(
       orderList.map((order) => Stock.findById(order.stockId))
     );
-    console.log('stockList : ', stockList);
+    console.log("stockList : ", stockList);
     const finalPurchaseList = orderList
       .filter((order, index) => {
         return stockList[index];
@@ -227,7 +227,7 @@ router.get('/:userId/profit-percentage', async (req, res) => {
 
     return res.status(200).send(profitPercentageList);
   } catch (error) {
-    console.error('error: ', error);
+    console.error("error: ", error);
     return res.status(500).send({ error: JSON.stringify(error) });
   }
 });
@@ -235,7 +235,7 @@ router.get('/:userId/profit-percentage', async (req, res) => {
 // GET http://localhost:4000/api/v1/investor/search/user/:email
 // a user can see other user's profile and comments using email address
 
-router.get('/:email/search', async (req, res) => {
+router.get("/:email/search", async (req, res) => {
   try {
     const userEmail = req.params.email;
     const userDocument = await User.findOne({ email: userEmail });
@@ -250,17 +250,64 @@ router.get('/:email/search', async (req, res) => {
   }
 });
 
-router.get('/:id/ideas', async (req, res) => {
+router.get("/:id/ideas", async (req, res) => {
   const id = req.params.id;
   const ideas = await getIdeasByUserId(id);
   res.json(ideas);
 });
 
-// TODO: follow
-router.put('/:id/follow', validUser, async (req, res) => {
+// TODO: follow 하면 2번 중복 됨
+router.put("/:id/follow", validUser, async (req, res) => {
   const user = req.user;
   const currentUserId = user.id;
   const targetUserId = req.params.id;
+
+  const hasTargetUserInFollowing = user.followings.find(
+    (following) => following === targetUserId
+  );
+  if (hasTargetUserInFollowing) {
+    await User.updateOne(
+      { _id: currentUserId },
+      { $pull: { followings: targetUserId } },
+      (err, doc) => {
+        if (err) {
+          console.error("current user follow error : ", err);
+        }
+      }
+    ).clone();
+
+    await User.updateOne(
+      { _id: targetUserId },
+      { $pull: { followers: currentUserId } },
+      (err, doc) => {
+        if (err) {
+          console.error("target user follow error : ", err);
+        }
+      }
+    ).clone();
+  } else {
+    await User.updateOne(
+      { _id: currentUserId },
+      { $push: { followings: targetUserId } },
+      (err, doc) => {
+        if (err) {
+          console.error("current user follow error : ", err);
+        }
+      }
+    ).clone();
+
+    await User.updateOne(
+      { _id: targetUserId },
+      { $push: { followers: currentUserId } },
+      (err, doc) => {
+        if (err) {
+          console.error("target user follow error : ", err);
+        }
+      }
+    ).clone();
+  }
+
+  res.json({ message: "success" });
 });
 
 // GET http://localhost:4000/api/v1/investor/fetch/userprofiles/

@@ -11,8 +11,11 @@ import {
 } from "../../styles/typography";
 import color from "../../styles/color";
 import { mobileWidth } from "../../styles/responsive";
+import api from "../../apis";
+import { useAppUser } from "../../hooks/useAppUser";
 
 const InvestorProfileView = ({
+  id,
   profileImageUrl,
   username,
   investedCompanies,
@@ -25,19 +28,27 @@ const InvestorProfileView = ({
   totalAssets,
   totalProfits,
   rank,
+  userRefetch,
 }) => {
+  const { user, refetch } = useAppUser();
   return (
     <InvestorProfileBlock>
       <Rank rank={rank} />
       <Avatar className="avatar" src={profileImageUrl} />
       <div className="name">{username}</div>
       <button
-        className="follow-btn"
-        onClick={() => {
-          console.log("not implemented");
+        disabled={id === user?._id}
+        className={`follow-btn ${id === user?._id ? "disabled" : ""} ${
+          user?.followings?.includes(id) ? "following" : ""
+        }`}
+        onClick={async () => {
+          if (id === user?._id) return;
+          await api.user.followUserById(id);
+          userRefetch();
+          refetch();
         }}
       >
-        Follow
+        {user?.followings?.includes(id) ? "Unfollow" : "Follow"}
       </button>
       <div className="invest-info">
         <div>
@@ -108,6 +119,14 @@ const InvestorProfileBlock = styled.div`
     ${FollowBtn}
     margin-bottom: 1.6rem;
     cursor: pointer;
+
+    &.disabled {
+      background-color: ${color.B40};
+    }
+
+    &.following {
+      background-color: ${color.DISAGREE_RED};
+    }
   }
 
   .invest-info {
