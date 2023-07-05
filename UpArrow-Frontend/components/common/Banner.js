@@ -8,12 +8,13 @@ import {
 } from "../../styles/typography";
 import { ChevronRightMobileIcon, NextIcon } from "../icons";
 import { numberComma } from "../../utils/number";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { getBannerYMD, getYMD } from "../../utils/date";
 import { useMobile } from "../../hooks/useMobile";
 import { mobileWidth } from "../../styles/responsive";
 import color from "../../styles/color";
+import api from "../../apis";
 
 const Banner = ({ config: initConfig }) => {
   const { config, getConfig } = useConfig(initConfig);
@@ -22,6 +23,7 @@ const Banner = ({ config: initConfig }) => {
   const timerRef = useRef();
   const dotLocation = stock?.dotLocation;
 
+  const [bannerStockPrice, setBannerStockPrice] = useState(0);
   const { isMobile } = useMobile();
 
   useEffect(() => {
@@ -30,6 +32,16 @@ const Banner = ({ config: initConfig }) => {
     }, 10000);
     return () => clearInterval(timerRef.current);
   }, []);
+
+  useEffect(() => {
+    const getStockPrice = async () => {
+      const res = await api.stock.getById(stock?.stockId)();
+      setBannerStockPrice(res?.currentPrice);
+    };
+    if (stock?.stockId) {
+      getStockPrice();
+    }
+  }, [stock?.stockId]);
 
   if (!stock) return null;
 
@@ -43,15 +55,15 @@ const Banner = ({ config: initConfig }) => {
           <div className="board">
             <img className="stock-icon" src={stock.imageUrl} />
             <div className="text">
-              If You Invested $10,000 in{" "}
+              If You Invested ${numberComma(stock.importantDateInvestCost)} in{" "}
               <span className="stock-name">{stock.name}</span> on{" "}
               {getBannerYMD(new Date(stock.importantDateString))}, you have $
-              {numberComma(
-                (
-                  (10000 / stock.importantDatePrice) *
-                  (config.prices?.[stock.ticker] || 1)
-                ).toFixed(2)
-              )}
+              {
+                numberComma(
+                  (stock.importantDateInvestCost / stock.importantDatePrice) *
+                    (bannerStockPrice || 1)
+                ).split(".")[0]
+              }
             </div>
             <div className="chart">
               {stock.chartImageUrl ? (
@@ -73,12 +85,12 @@ const Banner = ({ config: initConfig }) => {
             If You Invested $10,000 in{" "}
             <span className="stock-name">{stock.name}</span> on{" "}
             {getBannerYMD(new Date(stock.importantDateString))}, you have $
-            {numberComma(
-              (
-                (10000 / stock.importantDatePrice) *
-                (config.prices?.[stock.ticker] || 1)
-              ).toFixed(2)
-            )}
+            {
+              numberComma(
+                (stock.importantDateInvestCost / stock.importantDatePrice) *
+                  (bannerStockPrice || 1)
+              ).split(".")[0]
+            }
           </div>
           <div className="chart">
             {stock.chartImageUrl ? (
@@ -147,7 +159,6 @@ const BannerBlock = styled.div`
       position: relative;
       width: 44.7rem;
       height: 18rem;
-      background-color: #d3d3d3;
       margin-bottom: 4.1rem;
 
       .dot {
