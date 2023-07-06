@@ -176,6 +176,9 @@ const SignupBlock = styled.div`
   }
 
   @media screen and (max-width: ${mobileWidth}) {
+    .title-block {
+      padding-top: 3.2rem;
+    }
     .signup-form {
       width: 100%;
     }

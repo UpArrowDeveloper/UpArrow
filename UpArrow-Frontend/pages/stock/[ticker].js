@@ -46,8 +46,9 @@ function Stock({ stock, analysis }) {
     { enabled: !!stock._id }
   );
   const { data: comments, refetch: refetchComments } = useQuery(
-    ["stockComments", stock._id],
-    (stock?.commentIds && api.comment.getByIds(stock.commentIds?.join(","))) ||
+    ["stockComments", liveStock?._id],
+    (liveStock?.commentIds &&
+      api.comment.getByIds(liveStock.commentIds?.join(","))) ||
       []
   );
 
@@ -131,9 +132,10 @@ function Stock({ stock, analysis }) {
           likes: [],
         })();
         await axios.get(`/api/revalidate/stock/${stock.ticker}`);
+        refetchLiveStock();
         setTimeout(() => {
           refetchComments();
-        }, 500);
+        }, 300);
       } catch (e) {
         console.error("e : ", e);
       } finally {

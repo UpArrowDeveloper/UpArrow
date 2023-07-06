@@ -15,6 +15,7 @@ import { useMobile } from "../../hooks/useMobile";
 import { mobileWidth } from "../../styles/responsive";
 import color from "../../styles/color";
 import api from "../../apis";
+import { useRouter } from "next/router";
 
 const Banner = ({ config: initConfig }) => {
   const { config, getConfig } = useConfig(initConfig);
@@ -22,6 +23,7 @@ const Banner = ({ config: initConfig }) => {
   const stock = config?.board;
   const timerRef = useRef();
   const dotLocation = stock?.dotLocation;
+  const router = useRouter();
 
   const [bannerStockPrice, setBannerStockPrice] = useState(0);
   const { isMobile } = useMobile();
@@ -71,7 +73,13 @@ const Banner = ({ config: initConfig }) => {
               ) : null}
               <div className="dot" />
             </div>
-            <div className="more">
+            <div
+              className="more"
+              onClick={() => {
+                console.log("more click");
+                router.push("/stock");
+              }}
+            >
               <span>Let's find the next Tesla</span>
               <NextIcon />
             </div>
@@ -98,7 +106,13 @@ const Banner = ({ config: initConfig }) => {
             ) : null}
             <div className="dot" />
           </div>
-          <div className="more">
+          <div
+            className="more"
+            onClick={() => {
+              console.log("more click");
+              router.push("/stock");
+            }}
+          >
             {isMobile && <div></div>}
             <span>Let's find the next Tesla</span>
             {isMobile ? (
@@ -192,6 +206,7 @@ const BannerBlock = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
+      cursor: pointer;
       ${HeadH4Medium};
     }
   }

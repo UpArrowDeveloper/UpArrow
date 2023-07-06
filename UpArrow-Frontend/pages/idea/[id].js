@@ -56,9 +56,13 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
     data,
     isLoading,
     refetch: userRefetch,
-  } = useQuery(["user", user?.email], api.user.getByEmail(user?.email), {
-    enabled: !!user?.email,
-  });
+  } = useQuery(
+    ["user", investor?.email],
+    api.user.getByEmail(investor?.email),
+    {
+      enabled: !!investor?.email,
+    }
+  );
   const commentInputRef = useRef();
   const { idea, refetch: refetchIdea } = useIdea(id);
   const commentIds = idea?.commentIds || [];
@@ -85,7 +89,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   const onCommentButtonClick = async () => {
     await axios.post(`${env.serverUrl}/comment`, {
       postId: id,
-      userId: data._id,
+      userId: user._id,
       content: comment,
       likes: [],
     });
@@ -129,8 +133,8 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
             profileImageUrl={profileImageUrl}
             username={username}
             investedCompanies={stocksWithPrices}
-            followers={data.followers || followers}
-            followings={data.followings || followings}
+            followers={data?.followers || followers}
+            followings={data?.followings || followings}
             description={description}
             websiteUrl={websiteUrl}
             cash={cash}

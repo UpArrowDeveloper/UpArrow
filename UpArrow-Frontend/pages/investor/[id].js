@@ -19,10 +19,23 @@ import color from "../../styles/color";
 import api from "../../apis";
 import { MainLayout } from "../../Layouts";
 import { mobileWidth } from "../../styles/responsive";
+import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
 
 export function Investor({ investor, stocksWithPrices, rank }) {
   const {
-    id,
+    data,
+    isLoading,
+    refetch: userRefetch,
+  } = useQuery(
+    ["user", investor?.email],
+    api.user.getByEmail(investor?.email),
+    {
+      enabled: !!investor?.email,
+    }
+  );
+  const {
+    _id,
     cash,
     comments,
     description,
@@ -43,15 +56,17 @@ export function Investor({ investor, stocksWithPrices, rank }) {
     websiteUrl,
   } = investor;
 
+  const router = useRouter();
+
   return (
     <InvestorBlock>
       <InvestorProfileView
-        id={id}
+        id={_id}
         profileImageUrl={profileImageUrl}
         username={username}
         investedCompanies={stocksWithPrices}
-        followers={followers}
-        followings={followings}
+        followers={data?.followers || followers}
+        followings={data?.followings || followings}
         description={description}
         websiteUrl={websiteUrl}
         cash={cash}
@@ -59,13 +74,20 @@ export function Investor({ investor, stocksWithPrices, rank }) {
         totalProfits={totalProfits}
         totalAssets={totalInvestment + cash}
         rank={rank}
+        userRefetch={userRefetch}
       />
       <InvestorDataBlock>
         <div className="portfolio-wrapper">
           <div className="investor-title">{username}'s Portfolio</div>
           <div className="stocks">
             {stocksWithPrices.map((company) => (
-              <div className="stock" key={company.name}>
+              <div
+                className="stock"
+                key={company.name}
+                onClick={() => {
+                  router.push(`/stock/${company.ticker}`);
+                }}
+              >
                 <img className="stock-logo" src={company.logoUrl} />
                 <div className="stock-info">
                   <div className="stock-name">{company.name}</div>
@@ -166,7 +188,6 @@ const InvestorDataBlock = styled.div`
   flex: 1;
   width: 100%;
   display: flex;
-  justify-content: center;
   flex-direction: column;
   margin-top: 1.8rem;
 
@@ -196,6 +217,7 @@ const InvestorDataBlock = styled.div`
         display: flex;
         gap: 1.6rem;
         align-items: center;
+        cursor: pointer;
 
         .stock-logo {
           width: 7.2rem;
@@ -225,7 +247,7 @@ const InvestorDataBlock = styled.div`
   }
 
   .rank {
-    font-size: 2rema;
+    font-size: 2rem;
   }
 
   .view-all {
@@ -236,6 +258,7 @@ const InvestorDataBlock = styled.div`
     border: 0.1rem solid ${color.B80};
     border-radius: 0.4rem;
     height: 4.4rem;
+    cursor: pointer;
   }
 
   .ideas-wrapper {

@@ -54,6 +54,12 @@ export const commonListCss = css`
       padding: 0.8rem 2rem;
       overflow-x: scroll;
 
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
       & > div {
         padding: 0.6rem 1.4rem;
       }

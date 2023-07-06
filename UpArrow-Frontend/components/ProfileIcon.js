@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { EmptyAvatar } from "./icons";
 import { env } from "../config";
-import storage from "../utils/storage";
 import { HeadH5Bold } from "../styles/typography";
 
 const InvisibleCover = styled.div`
@@ -80,7 +79,7 @@ const ProfileIconWrapper = styled.div`
     ${HeadH5Bold}
     position: absolute;
     border-radius: 0.8rem;
-    bottom: -20rem;
+    top: 6rem;
     right: 0.2rem;
     width: 20rem;
     background-color: white;

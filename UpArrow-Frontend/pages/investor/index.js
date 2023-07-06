@@ -67,7 +67,7 @@ function Investors({ investors, top3Stocks }) {
             <tr>
               <th style={{ paddingLeft: "1rem" }}>Ranks</th>
               <th style={{ paddingLeft: "0.8rem" }}>Investors</th>
-              {!isMobile && <th>Top3 Stocks</th>}
+              {!isMobile && <th>Top 3 Stocks</th>}
               <th>Ideas</th>
               {!isMobile && <th>Total Profits</th>}
               <th>Total Assets</th>
@@ -221,7 +221,6 @@ const IdeasBlock = styled.div`
 
     h5 {
       ${HeadH5Bold}
-      width: 40rem;
     }
 
     .wrapper {
@@ -265,7 +264,7 @@ const IdeasBlock = styled.div`
   }
 
   .numbers {
-    width: 14rem;
+    width: 10rem;
   }
 
   .stocks {
@@ -273,7 +272,7 @@ const IdeasBlock = styled.div`
   }
 
   .investors {
-    width: 32rem;
+    width: 22rem;
   }
 
   @media screen and (max-width: ${mobileWidth}) {
