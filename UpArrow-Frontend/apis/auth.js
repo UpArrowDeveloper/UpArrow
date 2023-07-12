@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { env } from '../config';
+import axios from "axios";
+import { env } from "../config";
 
 const auth = {
   authenticate: (code) => () =>
@@ -8,6 +8,11 @@ const auth = {
         params: { code },
       })
       .then((res) => res.data),
+  npcLogin: async ({ id, password }) => {
+    return axios
+      .post(`${env.serverUrl}/oauth/local/npc-login`, { id, password })
+      .then((res) => res.data);
+  },
   customLogin: async ({ email, password }) => {
     return axios
       .post(`${env.serverUrl}/oauth/local/auth`, { email, password })

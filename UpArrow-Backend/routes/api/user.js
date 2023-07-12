@@ -2,14 +2,8 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../models/User");
 const Stock = require("../../models/Stock");
-const Advertisement = require("../../models/Advertisement");
-const Comment = require("../../models/Comment");
-const Analysis = require("../../models/Analysis");
 const Order = require("../../models/Order");
-const Average = require("../../models/Config");
-var ObjectId = require("mongodb").ObjectId;
-const axios = require("axios");
-const Config = require("../../models/Config");
+const ObjectId = require("mongodb").ObjectId;
 const {
   getTop3StocksByUserId,
   addUser,

@@ -5,18 +5,19 @@ module.exports = {
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,
-      use: ['@svgr/webpack'],
+      use: ["@svgr/webpack"],
     });
     return config;
   },
   images: {
     domains: [
-      'upload.wikimedia.org',
-      'uparrow-images.s3.ap-northeast-2.amazonaws.com',
-      'pbs.twimg.com',
-      'www.humanesociety.org',
-      'lh3.googleusercontent.com',
-      'www.rollingstone.com',
+      "upload.wikimedia.org",
+      "uparrow-images.s3.ap-northeast-2.amazonaws.com",
+      "pbs.twimg.com",
+      "www.humanesociety.org",
+      "lh3.googleusercontent.com",
+      "www.rollingstone.com",
+      "nationaltoday.com",
     ],
   },
 };
