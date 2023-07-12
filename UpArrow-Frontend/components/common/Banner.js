@@ -57,9 +57,8 @@ const Banner = ({ config: initConfig }) => {
           <div className="board">
             <img className="stock-icon" src={stock.imageUrl} />
             <div className="text">
-              If You Invested ${numberComma(stock.importantDateInvestCost)} in{" "}
-              <span className="stock-name">{stock.name}</span> on{" "}
-              {getBannerYMD(new Date(stock.importantDateString))}, you have $
+              If You Invested ${numberComma(stock.importantDateInvestCost)} on
+              June 29th, 2010, you have $
               {
                 numberComma(
                   (stock.importantDateInvestCost / stock.importantDatePrice) *
@@ -76,7 +75,6 @@ const Banner = ({ config: initConfig }) => {
             <div
               className="more"
               onClick={() => {
-                console.log("more click");
                 router.push("/stock");
               }}
             >
@@ -90,9 +88,8 @@ const Banner = ({ config: initConfig }) => {
         <div className="board">
           <img className="stock-icon" src={stock.imageUrl} />
           <div className="text">
-            If You Invested $10,000 in{" "}
-            <span className="stock-name">{stock.name}</span> on{" "}
-            {getBannerYMD(new Date(stock.importantDateString))}, you have $
+            If You Invested ${numberComma(stock.importantDateInvestCost)} on
+            June 29th, 2010, you would have $
             {
               numberComma(
                 (stock.importantDateInvestCost / stock.importantDatePrice) *
@@ -212,8 +209,16 @@ const BannerBlock = styled.div`
   }
 
   @media screen and (max-width: ${mobileWidth}) {
+    width: 96vw;
+    overflow: hidden;
+
     .image-wrapper {
+      margin-top: 5rem;
+      width: 66rem;
+      overflow-x: hidden;
       height: 28rem;
+      > * {
+      }
     }
     .board {
       position: static;
