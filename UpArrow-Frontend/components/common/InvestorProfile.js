@@ -31,8 +31,7 @@ const InvestorProfileView = ({
   userRefetch,
 }) => {
   const { user, refetch } = useAppUser();
-  console.log("id : ", id);
-  console.log("user : ", user);
+
   return (
     <InvestorProfileBlock>
       <Rank rank={rank} />

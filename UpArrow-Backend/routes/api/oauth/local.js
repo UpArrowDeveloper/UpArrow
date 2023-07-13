@@ -12,8 +12,6 @@ router.post("/auth", async (req, res) => {
   const { email, password } = req.body;
 
   if (password !== process.env.SECRET_PASSWORD) {
-    console.log("passwrord : ", password);
-    console.log("passwrord : ", process.env.SECRET_PASSWORD);
     return res.status(400).send("wrong password");
   }
 
