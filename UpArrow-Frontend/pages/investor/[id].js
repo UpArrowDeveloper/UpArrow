@@ -69,10 +69,14 @@ export function Investor({ investor, stocksWithPrices, rank }) {
         followings={data?.followings || followings}
         description={description}
         websiteUrl={websiteUrl}
-        cash={cash}
-        totalInvestment={totalInvestment}
-        totalProfits={totalProfits}
-        totalAssets={totalInvestment + cash}
+        cash={data?.cash || cash}
+        totalInvestment={data?.totalInvestment || totalInvestment}
+        totalProfits={data?.totalProfits || totalProfits}
+        totalAssets={
+          data?.totalInvestment
+            ? data.totalInvestment + data?.cash
+            : totalInvestment + cash
+        }
         rank={rank}
         userRefetch={userRefetch}
       />

@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import TimeAgo from "javascript-time-ago";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../../apis";
 import Viewmore from "../../components/common/Viewmore";
 import OrderChip from "../../components/OrderChip";
@@ -41,10 +41,39 @@ const getSortAlgorithmByOrderOption = (orderOption) => {
   }
 };
 
-function Investors({ investors, top3Stocks }) {
+function Investors() {
   const [orderOption, setOrderOption] = useState();
+  const [investors, setInvestors] = useState([]);
+  const [top3Stocks, setTop3Stocks] = useState([]);
   const router = useRouter();
   const { isMobile } = useMobile();
+
+  useEffect(() => {
+    const getDatas = async () => {
+      const users = await api.user.get();
+      const top3StocksResponse = await Promise.all(
+        users.map((user) => api.user.getTop3StocksById(user._id))
+      );
+
+      const investDataIncludedUsers = await Promise.all(
+        users.map(async (user) => {
+          const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
+            user._id
+          );
+          const ideas = await api.user.getIdeasById(user._id)();
+          return {
+            ...user,
+            totalInvestment,
+            totalProfits,
+            ideas,
+          };
+        })
+      );
+      setInvestors(investDataIncludedUsers);
+      setTop3Stocks(top3StocksResponse);
+    };
+    getDatas();
+  }, []);
 
   return (
     <IdeasBlock>
@@ -107,17 +136,19 @@ function Investors({ investors, top3Stocks }) {
                     <td>
                       <div className="wrapper">
                         <TagGroup
-                          tags={top3Stocks[index]?.map(({ name, profit }) => ({
-                            name: `${name} ${
-                              profit?.toLocaleString("en-US") || 0
-                            }%`,
-                            type:
-                              profit > 0
-                                ? "plus"
-                                : profit === 0
-                                ? "outline"
-                                : "minus",
-                          }))}
+                          tags={
+                            top3Stocks[index]?.map(({ name, profit }) => ({
+                              name: `${name} ${
+                                profit?.toLocaleString("en-US") || 0
+                              }%`,
+                              type:
+                                profit > 0
+                                  ? "plus"
+                                  : profit === 0
+                                  ? "outline"
+                                  : "minus",
+                            })) || []
+                          }
                         />
                       </div>
                     </td>
@@ -162,35 +193,6 @@ export default function IdeasPage(props) {
       <Investors {...props} />
     </MainLayout>
   );
-}
-
-export async function getStaticProps() {
-  const users = await api.user.get();
-  const top3Stocks = await Promise.all(
-    users.map((user) => api.user.getTop3StocksById(user._id))
-  );
-
-  const investDataIncludedUsers = await Promise.all(
-    users.map(async (user) => {
-      const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
-        user._id
-      );
-      const ideas = await api.user.getIdeasById(user._id)();
-      return {
-        ...user,
-        totalInvestment,
-        totalProfits,
-        ideas,
-      };
-    })
-  );
-
-  return {
-    props: {
-      investors: investDataIncludedUsers,
-      top3Stocks,
-    },
-  };
 }
 
 const IdeasBlock = styled.div`
