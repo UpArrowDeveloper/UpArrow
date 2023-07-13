@@ -1,10 +1,10 @@
-import api from '../apis';
+import api from "../apis";
 
 export const getInvestorProfileInfo = async (id) => {
   const investor = await api.user.getById(id)();
   const orderIds = investor.orderIds;
   const orders =
-    orderIds?.length > 0 ? await api.order.getByIds(orderIds.join(','))() : [];
+    orderIds?.length > 0 ? await api.order.getByIds(orderIds.join(","))() : [];
 
   const stockPurchaseInfos = orders.reduce((acc, order) => {
     if (acc[order.stockId]) {
@@ -46,10 +46,10 @@ export const getInvestorInvestInfo = async (id) => {
   const stocks = stocksCache;
   const orderIds = investor.orderIds;
   const orders =
-    orderIds.length > 0 ? await api.order.getByIds(orderIds.join(','))() : [];
+    orderIds.length > 0 ? await api.order.getByIds(orderIds.join(","))() : [];
 
   const stockPurchaseInfos = orders.reduce((acc, order) => {
-    const isBuy = order.type === 'buy';
+    const isBuy = order.type === "buy";
     if (acc[order.stockId]) {
       return {
         ...acc,
@@ -74,7 +74,7 @@ export const getInvestorInvestInfo = async (id) => {
       [order.stockId]: {
         id: order.stockId,
         quantity: order.quantity,
-        price: isBuy ? 1 : -1 * order.price,
+        price: (isBuy ? 1 : -1) * order.price,
       },
     };
   }, {});
@@ -87,14 +87,23 @@ export const getInvestorInvestInfo = async (id) => {
   const totalProfits = Object.entries(stockPurchaseInfos).reduce(
     (acc, [key, value]) =>
       acc +
-        value.price * value.quantity -
-        stocks.find((stock) => stock._id === key)?.currentPrice ||
-      0 * value.quantity,
+      (stocks.find((stock) => stock._id === key)?.currentPrice || 0) *
+        value.quantity -
+      value.price * value.quantity,
+    0
+  );
+
+  const currentTotalStockValue = Object.entries(stockPurchaseInfos).reduce(
+    (acc, [key, value]) =>
+      acc +
+      (stocks.find((stock) => stock._id === key)?.currentPrice || 0) *
+        value.quantity,
     0
   );
 
   return {
     totalInvestment,
     totalProfits,
+    currentTotalStockValue,
   };
 };

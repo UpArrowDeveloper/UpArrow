@@ -57,15 +57,15 @@ function Investors() {
 
       const investDataIncludedUsers = await Promise.all(
         users.map(async (user) => {
-          const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
-            user._id
-          );
+          const { totalInvestment, totalProfits, currentTotalStockValue } =
+            await getInvestorInvestInfo(user._id);
           const ideas = await api.user.getIdeasById(user._id)();
           return {
             ...user,
             totalInvestment,
             totalProfits,
             ideas,
+            currentTotalStockValue,
           };
         })
       );
@@ -169,7 +169,7 @@ function Investors() {
                     <div className="comments wrapper numbers">
                       $
                       {(
-                        investor.totalInvestment + investor.cash
+                        investor.currentTotalStockValue + investor.cash
                       )?.toLocaleString("en-US")}
                     </div>
                   </td>

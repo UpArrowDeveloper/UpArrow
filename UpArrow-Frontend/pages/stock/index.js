@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MainLayout } from "../../Layouts";
 import {
   Body12Medium,
@@ -30,11 +30,21 @@ const getSortAlgorithmByOrderOption = (orderOption) => {
       return (a, b) => 0;
   }
 };
-function Home({ stocks }) {
+function Home() {
   const [orderOption, setOrderOption] = useState();
+  const [stocks, setStocks] = useState([]);
 
   const router = useRouter();
   const { isMobile } = useMobile();
+
+  useEffect(() => {
+    const getStocks = async () => {
+      const stocksResponse = await api.stock.get();
+      setStocks(stocksResponse);
+    };
+    getStocks();
+  }, []);
+
   return (
     <StockBlock>
       <header>
@@ -215,13 +225,3 @@ const StockBlock = styled.div`
     }
   }
 `;
-
-export async function getStaticProps() {
-  const stocks = await api.stock.get();
-
-  return {
-    props: {
-      stocks,
-    },
-  };
-}
