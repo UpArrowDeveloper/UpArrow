@@ -90,6 +90,7 @@ const FinancialsBlock = styled.div`
 
   .chart-wrapper {
     display: grid;
+    width: 100% !important;
     grid-template-columns: 50% 50%;
 
     .chart {

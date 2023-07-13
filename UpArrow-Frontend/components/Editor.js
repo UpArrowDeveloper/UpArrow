@@ -59,15 +59,19 @@ const Editor = ({ editData }) => {
   }, []);
 
   const submit = async () => {
-    if (!file) {
+    const link = postForm.content.split('src="')?.[1]?.split('"')?.[0];
+
+    if (!link) {
       alert("no thumbnail");
       return;
     }
-    const formData = new FormData();
-    formData.append("image", file.file);
-    const { link } = (
-      await axios.post(`${env.serverUrl}/file/upload`, formData)
-    ).data;
+
+    // 썸네일 따로 올리는 버튼 생기면 추가할 것.
+    // const formData = new FormData();
+    // formData.append("image", file.file);
+    // const { link } = (
+    //   await axios.post(`${env.serverUrl}/file/upload`, formData)
+    // ).data;
     const splitedVideoUrl = videoUrl?.split("=")?.[1];
     const payload = {
       ...postForm,

@@ -209,7 +209,7 @@ const BannerBlock = styled.div`
   }
 
   @media screen and (max-width: ${mobileWidth}) {
-    width: 96vw;
+    width: 100vw;
     overflow: hidden;
 
     .image-wrapper {

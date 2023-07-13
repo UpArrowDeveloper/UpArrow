@@ -81,6 +81,7 @@ function Ideas({ ideas }) {
                             <Image
                               src={idea.thumbnailImageUrl}
                               layout="fill"
+                              objectFit="cover"
                               alt={idea.title}
                             />
                           </div>
