@@ -190,7 +190,6 @@ router.get("/:userId/profit-percentage", async (req, res) => {
     const stockList = await Promise.all(
       orderList.map((order) => Stock.findById(order.stockId))
     );
-    console.log("stockList : ", stockList);
     const finalPurchaseList = orderList
       .filter((order, index) => {
         return stockList[index];
@@ -230,7 +229,6 @@ router.get("/:userId/profit-percentage", async (req, res) => {
           return acc;
         }
       }, []);
-    console.log("finalPurchaseList : ", finalPurchaseList);
 
     const profitPercentageList = finalPurchaseList.map((purchase) => {
       const quantity = purchase.quantity;
@@ -245,8 +243,6 @@ router.get("/:userId/profit-percentage", async (req, res) => {
       };
     });
 
-    console.log("profitPercentageList : ", profitPercentageList);
-    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
     return res.status(200).send(profitPercentageList);
   } catch (error) {
     console.error("error: ", error);
