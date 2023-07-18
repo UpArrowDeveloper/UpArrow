@@ -106,7 +106,7 @@ export function SignupPage() {
         </div>
 
         <Button className="button" type="submit">
-          Summit
+          Submit
         </Button>
       </form>
     </SignupBlock>
@@ -165,7 +165,6 @@ const SignupBlock = styled.div`
 
   button {
     height: 5.6rem;
-    font-family: "Inter";
     ${HeadH5Bold}
     color: ${color.B96}
   }

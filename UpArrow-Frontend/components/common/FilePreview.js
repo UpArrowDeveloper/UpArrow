@@ -1,12 +1,14 @@
-import styled from '@emotion/styled';
-import React, { useEffect, useState } from 'react';
+import styled from "@emotion/styled";
+import React, { useEffect, useState } from "react";
 
 const Img = styled.img`
   width: 10rem;
   height: 10rem;
 
+  object-fit: cover;
+
   &.empty-image {
-    background-image: url('/images/profile-upload.jpg');
+    background-image: url("/images/profile-upload.jpg");
     background-size: cover;
     background-repeat: no-repeat;
   }
@@ -17,7 +19,7 @@ const EmptyImage = styled.div`
   height: 10rem;
 
   &.empty-image {
-    background-image: url('/images/profile-upload.jpg');
+    background-image: url("/images/profile-upload.jpg");
     background-size: cover;
     background-repeat: no-repeat;
   }
@@ -28,7 +30,7 @@ export default function FilePreview({ file, url, hasEmptyImage, ...props }) {
   useEffect(() => {
     if (file) {
       const reader = new FileReader();
-      reader.addEventListener('load', () => {
+      reader.addEventListener("load", () => {
         setImageUrl(reader.result);
       });
       reader.readAsDataURL(file);
@@ -42,7 +44,7 @@ export default function FilePreview({ file, url, hasEmptyImage, ...props }) {
       {imageUrl ? (
         <Img src={imageUrl} {...props} />
       ) : hasEmptyImage ? (
-        <EmptyImage className='empty-image' {...props} />
+        <EmptyImage className="empty-image" {...props} />
       ) : (
         <EmptyImage {...props} />
       )}

@@ -164,14 +164,17 @@ function Investors({
                   {!isMobile && (
                     <td>
                       <div className="comments wrapper numbers">
-                        ${investor.totalProfits?.toLocaleString("en-US")}
+                        $
+                        {Math.round(investor.totalProfits)?.toLocaleString(
+                          "en-US"
+                        )}
                       </div>
                     </td>
                   )}
                   <td>
                     <div className="comments wrapper numbers">
                       $
-                      {(
+                      {Math.round(
                         investor.currentTotalStockValue + investor.cash
                       )?.toLocaleString("en-US")}
                     </div>

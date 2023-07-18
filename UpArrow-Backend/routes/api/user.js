@@ -204,7 +204,33 @@ router.get("/:userId/profit-percentage", async (req, res) => {
           price: order.price,
           stock: stockList[index],
         };
-      });
+      })
+      .reduce((acc, cur) => {
+        const stockId = cur.stockId;
+        const quantity = cur.quantity;
+        const price = cur.price;
+        const stock = cur.stock;
+        const stockIndex = acc.findIndex(
+          (loopStock) => loopStock.stock.ticker === stock.ticker
+        );
+
+        if (stockIndex === -1) {
+          return [
+            ...acc,
+            {
+              stockId,
+              quantity,
+              price,
+              stock,
+            },
+          ];
+        } else {
+          acc[stockIndex].quantity += quantity;
+          acc[stockIndex].price += price;
+          return acc;
+        }
+      }, []);
+    console.log("finalPurchaseList : ", finalPurchaseList);
 
     const profitPercentageList = finalPurchaseList.map((purchase) => {
       const quantity = purchase.quantity;
@@ -219,6 +245,8 @@ router.get("/:userId/profit-percentage", async (req, res) => {
       };
     });
 
+    console.log("profitPercentageList : ", profitPercentageList);
+    console.log("\n\n\n\n\n\n\n\n\n\n\n\n");
     return res.status(200).send(profitPercentageList);
   } catch (error) {
     console.error("error: ", error);
