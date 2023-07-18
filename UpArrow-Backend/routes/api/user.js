@@ -304,6 +304,17 @@ router.put("/:id/follow", validUser, async (req, res) => {
   res.json({ message: "success" });
 });
 
+router.delete("/:id", async (req, res) => {
+  const _id = req.params.id;
+
+  try {
+    const user = await User.deleteOne({ _id });
+    return res.status(200).send(user);
+  } catch (error) {
+    return res.status(500).send({ error });
+  }
+});
+
 // GET http://localhost:4000/api/v1/investor/fetch/userprofiles/
 // a user can get all investors
 
