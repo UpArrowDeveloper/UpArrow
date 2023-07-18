@@ -31,7 +31,8 @@ const getSortAlgorithmByOrderOption = (orderOption) => {
       return (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     default:
-      return (a, b) => 0;
+      return (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   }
 };
 

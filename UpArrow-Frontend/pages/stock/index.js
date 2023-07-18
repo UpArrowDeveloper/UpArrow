@@ -27,7 +27,8 @@ const getSortAlgorithmByOrderOption = (orderOption) => {
     case "Market Cap":
       return (a, b) => b.marketCap - a.marketCap;
     default:
-      return (a, b) => 0;
+      return (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   }
 };
 function Home() {

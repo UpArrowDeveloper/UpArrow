@@ -56,7 +56,7 @@ const Opinions = ({
         </div>
         <div className="opinion-cards-outer-wrapper">
           <div className="opinion-cards-wrapper">
-            {opinionCards.map((card) => (
+            {opinionCards.reverse().map((card) => (
               <OpinionCard {...card} />
             ))}
           </div>

@@ -21,6 +21,7 @@ const user = {
     axios.put(`${url}/${id}`, payload).then((res) => res.data),
   followUserById: (id) =>
     axios.put(`${url}/${id}/follow`).then((res) => res.data),
+  deleteById: (id) => axios.delete(`${url}/${id}`).then((res) => res.data),
 };
 
 export default user;

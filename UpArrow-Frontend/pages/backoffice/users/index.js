@@ -61,8 +61,8 @@ const columns = [
   },
 ];
 
-const BackofficeIdeaList = () => {
-  const { data } = useQuery(["user list"], api.user.get);
+const BackofficeUserList = () => {
+  const { data, refetch } = useQuery(["user list"], api.user.get);
   const [selectedIds, setSelectedIds] = useState([]);
   const router = useRouter();
   const handleClick = (params, e) => {
@@ -79,7 +79,13 @@ const BackofficeIdeaList = () => {
     });
   };
   const clickDelete = () => {
-    selectedIds.forEach((id) => {
+    selectedIds.forEach((id, idx) => {
+      if (idx === selectedIds.length - 1) {
+        api.user.deleteById(id).then(() => {
+          refetch();
+        });
+        return;
+      }
       api.user.deleteById(id);
     });
   };
@@ -108,7 +114,7 @@ const App = () => {
     <RecoilRoot>
       <StyledEngineProvider injectFirst>
         <BackofficeLayout>
-          <BackofficeIdeaList />
+          <BackofficeUserList />
           <div>
             <h1>npc login</h1>
             <form

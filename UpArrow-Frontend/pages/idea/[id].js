@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { Viewer } from "@toast-ui/react-editor";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -181,7 +182,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
           <Youtube youtubeCode={serverIdea.youtubeCode} />
         )}
 
-        <IdeaContent dangerouslySetInnerHTML={{ __html: serverIdea.content }} />
+        <Viewer initialValue={serverIdea.content} />
 
         <h2 className="sub-header">Comments</h2>
         {comments && (

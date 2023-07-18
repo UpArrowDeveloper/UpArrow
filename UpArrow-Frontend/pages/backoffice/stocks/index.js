@@ -1,65 +1,65 @@
 // material-ui
-import { Box, Button, StyledEngineProvider } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { Box, Button, StyledEngineProvider } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 
-import Image from 'next/image';
+import Image from "next/image";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import React, { useState } from 'react';
-import { RecoilRoot } from 'recoil';
-import api from '../../../apis';
-import BackofficeLayout from '../../../Layouts/Backoffice';
-import { useRouter } from 'next/router';
-import axios from 'axios';
+import React, { useState } from "react";
+import { RecoilRoot } from "recoil";
+import api from "../../../apis";
+import BackofficeLayout from "../../../Layouts/Backoffice";
+import { useRouter } from "next/router";
+import axios from "axios";
 
 const columns = [
   {
-    field: 'logoUrl',
-    headerName: 'Logo',
+    field: "logoUrl",
+    headerName: "Logo",
     width: 50,
-    type: 'image',
+    type: "image",
     renderCell: (params) => {
       return <Image src={params.value} width={30} height={30} />;
     },
   },
-  { field: 'name', headerName: 'Name', width: 130 },
-  { field: 'ticker', headerName: 'Ticker', width: 130 },
+  { field: "name", headerName: "Name", width: 130 },
+  { field: "ticker", headerName: "Ticker", width: 130 },
   {
-    field: 'currentPrice',
-    headerName: 'currentPrice',
-    type: 'number',
+    field: "currentPrice",
+    headerName: "currentPrice",
+    type: "number",
     width: 90,
   },
   {
-    field: 'targetPrice',
-    headerName: 'targetPrice',
-    type: 'number',
+    field: "targetPrice",
+    headerName: "targetPrice",
+    type: "number",
     width: 90,
   },
   {
-    field: 'createdAt',
-    headerName: 'createdAt',
-    type: 'date',
+    field: "createdAt",
+    headerName: "createdAt",
+    type: "date",
     width: 90,
     valueGetter: (params) => new Date(params.value),
   },
   {
-    field: 'updatedAt',
-    headerName: 'updatedAt',
-    type: 'date',
+    field: "updatedAt",
+    headerName: "updatedAt",
+    type: "date",
     width: 90,
     valueGetter: (params) => new Date(params.value),
   },
 ];
 
 const BackofficeStockList = () => {
-  const { data, refetch } = useQuery(['stock list'], api.stock.get);
+  const { data, refetch } = useQuery(["stock list"], api.stock.get);
   const [selectedIds, setSelectedIds] = useState([]);
   const router = useRouter();
   const handleClick = (params, e) => {
     e.stopPropagation();
-    if (params.field !== '__check__') {
+    if (params.field !== "__check__") {
       router.push(`/backoffice/stocks/${params.row._id}`);
       return;
     }
@@ -72,27 +72,32 @@ const BackofficeStockList = () => {
   };
   const clickDelete = async () => {
     await Promise.all(
-      selectedIds.map((id) => {
+      selectedIds.map((id, idx) => {
+        if (idx === selectedIds.length - 1) {
+          return api.stock.deleteById(id).then(() => {
+            refetch();
+          });
+        }
         return api.stock.deleteById(id);
       })
     );
     await Promise.all([
-      axios.get('/api/revalidate/stock'),
-      axios.get('/api/revalidate'),
-      axios.get('/api/revalidate/idea'),
-      axios.get('/api/revalidate/investor'),
+      axios.get("/api/revalidate/stock"),
+      axios.get("/api/revalidate"),
+      axios.get("/api/revalidate/idea"),
+      axios.get("/api/revalidate/investor"),
     ]);
     refetch();
   };
 
-  if (!data) return 'loading';
+  if (!data) return "loading";
   return (
     <Box>
-      <Button onClick={() => router.push('/backoffice/stocks/new')}>
+      <Button onClick={() => router.push("/backoffice/stocks/new")}>
         Create
       </Button>
       <Button onClick={clickDelete}>Delete</Button>
-      <div style={{ height: 400, width: '100%' }}>
+      <div style={{ height: 400, width: "100%" }}>
         <DataGrid
           onCellClick={handleClick}
           rows={data}

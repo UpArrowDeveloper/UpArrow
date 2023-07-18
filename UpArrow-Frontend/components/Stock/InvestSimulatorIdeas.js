@@ -120,17 +120,23 @@ const InvestSimulatorIdeas = ({
       <div className="ideas">
         <h3>Ideas</h3>
         <div className="cell post-cell">
-          {ideaList.map((idea) => (
-            <IdeaCard
-              ideaId={idea._id}
-              ideaImage={idea.thumbnailImageUrl}
-              ideaTitle={idea.title}
-              ideaAuthor={idea.username}
-              ideaDate={idea.date}
-              ideaLikes={idea.likes?.length || 0}
-              ideaStockIds={idea.stockIds}
-            />
-          ))}
+          {ideaList
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            )
+            .map((idea) => (
+              <IdeaCard
+                ideaId={idea._id}
+                ideaImage={idea.thumbnailImageUrl}
+                ideaTitle={idea.title}
+                ideaAuthor={idea.username}
+                ideaDate={idea.date}
+                ideaLikes={idea.likes?.length || 0}
+                ideaStockIds={idea.stockIds}
+              />
+            ))}
 
           <Viewmore className="mt-5" />
         </div>
