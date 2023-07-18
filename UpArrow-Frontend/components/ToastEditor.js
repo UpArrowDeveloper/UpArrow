@@ -62,7 +62,7 @@ const ToastEditor = ({
 
   useEffect(() => {
     editorRef.current?.getInstance()?.insertToolbarItem(
-      { groupIndex: 0, itemIndex: 0 },
+      { groupIndex: 0, itemIndex: 1 },
       {
         name: "myItem",
         tooltip: "video",
@@ -76,34 +76,12 @@ const ToastEditor = ({
         },
       }
     );
-    editorRef.current?.getInstance()?.insertToolbarItem(
-      { groupIndex: 0, itemIndex: 0 },
-      {
-        name: "myItem",
-        tooltip: "picture",
-        command: "bold",
-        text: "",
-        className: "toastui-editor-toolbar-icons picture",
-        style: {
-          backgroundImage: `url(/images/Picture.svg)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        },
-      }
-    );
 
     editorRef.current
       .getRootElement()
       .querySelector(".video")
       .addEventListener("click", (e) => {
         setIsOpen(true);
-      });
-
-    editorRef.current
-      .getRootElement()
-      .querySelector(".picture")
-      .addEventListener("click", (e) => {
-        inputImageRef.current.click();
       });
   }, []);
 
@@ -126,6 +104,15 @@ const ToastEditor = ({
         hideModeSwitch={true}
         useCommandShortcut={true}
         ref={editorRef}
+        toolbarItems={[
+          ["image"],
+          ["heading", "bold", "italic", "strike"],
+          ["hr", "quote"],
+          ["ul", "ol", "task", "indent", "outdent"],
+          ["table", , "link"],
+          ["code", "codeblock"],
+          // Using Option: Customize the last button
+        ]}
       />
       <input
         ref={inputImageRef}
