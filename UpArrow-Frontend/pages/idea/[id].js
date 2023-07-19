@@ -1,14 +1,16 @@
 import styled from "@emotion/styled";
-import { Viewer } from "@toast-ui/react-editor";
+import dynamic from "next/dynamic";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import React, { useLayoutEffect, useRef, useState } from "react";
+const Viewer = dynamic(() => import("../../components/Editor/Viewer"), {
+  ssr: false,
+});
 import axios from "axios";
 import { useRouter } from "next/router";
-import React, { useLayoutEffect, useRef, useState } from "react";
 import api from "../../apis";
 import { env } from "../../config";
 import Youtube from "../../components/Youtube";
 import InvestorProfile from "../../components/common/InvestorProfile";
-import Link from "next/link";
 import {
   getInvestorInvestInfo,
   getInvestorProfileInfo,
