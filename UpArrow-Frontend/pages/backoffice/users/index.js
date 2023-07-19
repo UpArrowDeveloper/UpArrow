@@ -116,24 +116,6 @@ const App = () => {
         <BackofficeLayout>
           <BackofficeUserList />
           <div>
-            <h1>npc login</h1>
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                const res = await api.auth.npcLogin({
-                  id: e.target.id.value,
-                  password: e.target.password.value,
-                });
-                storage.set("access_token", res.accessToken);
-                alert("signin success!");
-              }}
-            >
-              <input placeholder="id" name="id" />
-              <input placeholder="password" type="password" name="password" />
-              <input type="submit" value="login" />
-            </form>
-          </div>
-          <div>
             <h1>custom login</h1>
             <form
               onSubmit={async (e) => {
