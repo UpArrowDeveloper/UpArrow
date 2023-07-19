@@ -224,7 +224,7 @@ export async function getStaticProps(context) {
   ).data;
 
   return {
-    props: { stock, analysis },
+    props: { stock, analysis: analysis.reverse() },
   };
 }
 
