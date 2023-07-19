@@ -56,16 +56,16 @@ const Banner = ({ config: initConfig }) => {
         {!isMobile && (
           <div className="board">
             <img className="stock-icon" src={stock.imageUrl} />
-            <div className="text">
-              If You Invested ${numberComma(stock.importantDateInvestCost)} on
-              June 29th, 2010, you have $
-              {
+            <pre className="text">
+              {`If You Invested $${numberComma(stock.importantDateInvestCost)} 
+on June 29th, 2010 
+you have $${
                 numberComma(
                   (stock.importantDateInvestCost / stock.importantDatePrice) *
                     (bannerStockPrice || 1)
                 ).split(".")[0]
-              }
-            </div>
+              }`}
+            </pre>
             <div className="chart">
               {stock.chartImageUrl ? (
                 <Image layout="fill" src={stock.chartImageUrl} />
@@ -87,16 +87,17 @@ const Banner = ({ config: initConfig }) => {
       {isMobile && (
         <div className="board">
           <img className="stock-icon" src={stock.imageUrl} />
-          <div className="text">
-            If You Invested ${numberComma(stock.importantDateInvestCost)} on
-            June 29th, 2010, you would have $
-            {
+          <pre className="text">
+            {`If You Invested ${numberComma(
+              stock.importantDateInvestCost
+            )} on June 29th, 2010, 
+you would have ${
               numberComma(
                 (stock.importantDateInvestCost / stock.importantDatePrice) *
                   (bannerStockPrice || 1)
               ).split(".")[0]
-            }
-          </div>
+            }`}
+          </pre>
           <div className="chart">
             {stock.chartImageUrl ? (
               <Image layout="fill" src={stock.chartImageUrl} />
@@ -155,6 +156,8 @@ const BannerBlock = styled.div`
 
     .text {
       ${HeadH1Bold};
+
+      white-space: pre-wrap;
 
       .stock-name {
         color: ${({ stockColor }) => stockColor};
