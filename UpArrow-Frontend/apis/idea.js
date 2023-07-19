@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { env } from '../config';
+import axios from "axios";
+import { env } from "../config";
 
 const idea = {
   get: (params) =>
@@ -14,7 +14,7 @@ const idea = {
     axios.post(`${env.serverUrl}/idea`, { ...data }).then((res) => res.data),
   updateById: (id, data) =>
     axios
-      .post(`${env.serverUrl}/idea/${id}`, { ...data })
+      .put(`${env.serverUrl}/idea/${id}`, { ...data })
       .then((res) => res.data),
   deleteById: (id) =>
     axios.delete(`${env.serverUrl}/idea/${id}`).then((res) => res.data),
