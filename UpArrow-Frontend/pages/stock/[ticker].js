@@ -51,7 +51,6 @@ function Stock({ stock, analysis }) {
       api.comment.getByIds(liveStock.commentIds?.join(","))) ||
       []
   );
-
   const postOrder = useMutation(api.order.post, {
     onSuccess: (_, variables) => {
       if (variables.type === "buy") {
