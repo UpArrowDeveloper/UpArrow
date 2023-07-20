@@ -53,7 +53,6 @@ const Editor = ({ editData }) => {
   }, [stockTextForSearch]);
 
   useEffect(() => {
-    console.log("editData : ", editData);
     const getStocks = async () => {
       const res = await Promise.all(
         editData.stockIds.map((stockId) => {
