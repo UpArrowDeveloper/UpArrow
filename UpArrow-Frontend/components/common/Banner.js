@@ -10,7 +10,6 @@ import { ChevronRightMobileIcon, NextIcon } from "../icons";
 import { numberComma } from "../../utils/number";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { getBannerYMD, getYMD } from "../../utils/date";
 import { useMobile } from "../../hooks/useMobile";
 import { mobileWidth } from "../../styles/responsive";
 import color from "../../styles/color";

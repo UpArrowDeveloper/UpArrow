@@ -176,9 +176,6 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
         <div className="vote-wrapper">
           <IdeaVote agreeCount={agreeCount} disagreeCount={disagreeCount} />
         </div>
-        <div className="thumbnail-wrapper">
-          <img src={serverIdea.thumbnailImageUrl} />
-        </div>
 
         {serverIdea.youtubeCode && (
           <Youtube youtubeCode={serverIdea.youtubeCode} />

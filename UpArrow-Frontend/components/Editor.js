@@ -66,12 +66,11 @@ const Editor = ({ editData }) => {
       return;
     }
 
-    // 썸네일 따로 올리는 버튼 생기면 추가할 것.
-    // const formData = new FormData();
-    // formData.append("image", file.file);
-    // const { link } = (
-    //   await axios.post(`${env.serverUrl}/file/upload`, formData)
-    // ).data;
+    if (selectedStocks.length === 0) {
+      alert("no stocks");
+      return;
+    }
+
     const splitedVideoUrl = videoUrl?.split("=")?.[1];
     const payload = {
       ...postForm,
@@ -82,12 +81,12 @@ const Editor = ({ editData }) => {
     };
     let result;
     if (editData) {
-      result = await api.idea.updateById(editData._id, payload);
+      await api.idea.updateById(editData._id, payload);
+      router.push(`/idea/${editData._id}`);
     } else {
       result = await api.idea.post(payload);
+      router.push(`/idea/${result.data._id}`);
     }
-
-    router.push(`/idea/${result.data._id}`);
   };
 
   return (
