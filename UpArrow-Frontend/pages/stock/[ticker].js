@@ -223,7 +223,13 @@ export async function getStaticProps(context) {
   ).data;
 
   return {
-    props: { stock, analysis: analysis?.reverse?.() || [] },
+    props: {
+      stock,
+      analysis: {
+        ...analysis,
+        opinions: analysis.opinions?.reverse?.() || [],
+      },
+    },
   };
 }
 
