@@ -53,6 +53,22 @@ const Editor = ({ editData }) => {
   }, [stockTextForSearch]);
 
   useEffect(() => {
+    console.log("editData : ", editData);
+    const getStocks = async () => {
+      const res = await Promise.all(
+        editData.stockIds.map((stockId) => {
+          return api.stock.getById(stockId)();
+        })
+      );
+      setSelectedStocks(res);
+    };
+    if (editData.stockIds) {
+      getStocks();
+    }
+    setStockSearchResult(editData?.stockIds || []);
+  }, [editData?.stockIds]);
+
+  useEffect(() => {
     setTimeout(() => {
       titleInputRef.current.focus();
     }, 300);
