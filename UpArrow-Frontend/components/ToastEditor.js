@@ -5,6 +5,7 @@ import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
 import VideoUploader from "./VideoUploader";
 import color from "../styles/color";
+import { getUploadUrl } from "../utils/file";
 
 const ToastEditorBlock = styled.div`
   .toastui-editor-contents {
@@ -113,6 +114,12 @@ const ToastEditor = ({
           ["code", "codeblock"],
           // Using Option: Customize the last button
         ]}
+        hooks={{
+          addImageBlobHook: async (blob, callback) => {
+            const res = await getUploadUrl(blob);
+            callback(res, blob.name);
+          },
+        }}
       />
       <input
         ref={inputImageRef}

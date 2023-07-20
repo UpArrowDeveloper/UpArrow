@@ -62,7 +62,7 @@ const Editor = ({ editData }) => {
       );
       setSelectedStocks(res);
     };
-    if (editData.stockIds) {
+    if (editData?.stockIds) {
       getStocks();
     }
     setStockSearchResult(editData?.stockIds || []);
@@ -104,7 +104,6 @@ const Editor = ({ editData }) => {
       router.push(`/idea/${result.data._id}`);
     }
     axios.get("/api/revalidate/idea");
-    axios.get("/api/revalidate/idea" + (result?.data?._id || editData?._id));
   };
 
   return (
