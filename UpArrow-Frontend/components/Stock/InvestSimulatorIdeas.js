@@ -15,6 +15,7 @@ import Viewmore from "../common/Viewmore";
 import { useEffect, useRef, useState } from "react";
 import { isNumber, numberComma } from "../../utils/number";
 import { mobileWidth } from "../../styles/responsive";
+import { useRouter } from "next/router";
 
 const getProfitPercent = (currentPrice, targetPrice) => {
   const sign = targetPrice - currentPrice >= 0 ? "+" : "";
@@ -37,6 +38,7 @@ const InvestSimulatorIdeas = ({
   ...restProps
 }) => {
   const [targetPriceIndex, setTargetPriceIndex] = useState(0);
+  const router = useRouter();
 
   const targetPrice = stock.targetPrices[targetPriceIndex];
   useEffect(() => {
@@ -138,7 +140,13 @@ const InvestSimulatorIdeas = ({
               />
             ))}
 
-          <Viewmore className="mt-5" />
+          <Viewmore
+            className="mt-5"
+            onClick={() => {
+              console.log("click");
+              router.push("/idea");
+            }}
+          />
         </div>
       </div>
     </InvestSimulatorIdeasBlock>

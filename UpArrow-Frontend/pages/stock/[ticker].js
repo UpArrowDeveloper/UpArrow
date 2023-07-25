@@ -174,7 +174,13 @@ function Stock({ stock, analysis }) {
         <InvestSimulatorIdeas
           stock={liveStock || stock}
           user={user}
-          ideaList={ideaList || []}
+          ideaList={
+            ideaList
+              ?.sort((a, b) => {
+                return a.createdAt - b.createdAt;
+              })
+              .slice(0, 5) || []
+          }
           onBuyClick={onBuyClick}
           onSellClick={onSellClick}
           stockOrderQuantity={stockOrderQuantity}

@@ -15,8 +15,12 @@ const ViewmoreButton = styled.div`
   ${HeadH6Bold}
 `;
 
-const Viewmore = ({ className }) => {
-  return <ViewmoreButton className={className}>View more</ViewmoreButton>;
+const Viewmore = ({ className, onClick }) => {
+  return (
+    <ViewmoreButton className={className} onClick={onClick}>
+      View more
+    </ViewmoreButton>
+  );
 };
 
 export default Viewmore;
