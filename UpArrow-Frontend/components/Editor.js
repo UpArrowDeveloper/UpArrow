@@ -20,7 +20,6 @@ const ToastEditor = dynamic(() => import("../components/ToastEditor"), {
   ssr: false,
 });
 const Editor = ({ editData }) => {
-  const { data: stocks } = useQuery(["stock"], api.stock.get);
   const { user } = useAppUser({ isAuthorized: true });
   // https://www.youtube.com/watch?v=fzEcKYFmQxM ex video url
   const [videoUrl, setVideoUrl] = useState("");
@@ -97,6 +96,7 @@ const Editor = ({ editData }) => {
     let result;
     if (editData) {
       await api.idea.updateById(editData._id, payload);
+      axios.get("/api/revalidate/idea/" + editData._id);
       router.push(`/idea/${editData._id}`);
     } else {
       result = await api.idea.post(payload);
