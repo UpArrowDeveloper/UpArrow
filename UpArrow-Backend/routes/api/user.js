@@ -276,6 +276,7 @@ router.get("/:id/ideas", async (req, res) => {
 
 // TODO: follow 하면 2번 중복 됨
 router.put("/:id/follow", validUser, async (req, res) => {
+  console.log("followstart");
   const user = req.user;
   const currentUserId = user.id;
   const targetUserId = req.params.id;
@@ -284,45 +285,36 @@ router.put("/:id/follow", validUser, async (req, res) => {
     (following) => following === targetUserId
   );
   if (hasTargetUserInFollowing) {
+    console.log(
+      "unfollow : ",
+      currentUserId,
+      targetUserId,
+      currentUserId === targetUserId
+    );
     await User.updateOne(
       { _id: currentUserId },
-      { $pull: { followings: targetUserId } },
-      (err, doc) => {
-        if (err) {
-          console.error("current user follow error : ", err);
-        }
-      }
-    ).clone();
-
+      { $pull: { followings: targetUserId } }
+    );
     await User.updateOne(
       { _id: targetUserId },
-      { $pull: { followers: currentUserId } },
-      (err, doc) => {
-        if (err) {
-          console.error("target user follow error : ", err);
-        }
-      }
-    ).clone();
+      { $pull: { followers: currentUserId } }
+    );
   } else {
+    console.log(
+      "follow : ",
+      currentUserId,
+      targetUserId,
+      currentUserId === targetUserId
+    );
     await User.updateOne(
       { _id: currentUserId },
-      { $push: { followings: targetUserId } },
-      (err, doc) => {
-        if (err) {
-          console.error("current user follow error : ", err);
-        }
-      }
-    ).clone();
+      { $push: { followings: targetUserId } }
+    );
 
     await User.updateOne(
       { _id: targetUserId },
-      { $push: { followers: currentUserId } },
-      (err, doc) => {
-        if (err) {
-          console.error("target user follow error : ", err);
-        }
-      }
-    ).clone();
+      { $push: { followers: currentUserId } }
+    );
   }
 
   res.json({ message: "success" });
