@@ -97,7 +97,9 @@ const Editor = ({ editData }) => {
     if (editData) {
       await api.idea.updateById(editData._id, payload);
       await axios.get("/api/revalidate/idea/" + editData._id);
-      router.push(`/idea/${editData._id}`);
+      setTimeout(() => {
+        router.push(`/idea/${editData._id}`);
+      }, 1000);
     } else {
       result = await api.idea.post(payload);
       router.push(`/idea/${result.data._id}`);
