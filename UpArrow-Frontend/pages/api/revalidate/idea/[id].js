@@ -2,6 +2,8 @@
 
 export default async function handler(req, res) {
   console.log("req.params : ", req.params);
+  console.log("req.query : ", req.query);
+  console.log("req.body : ", req.body);
   if (!req.params?.id) {
     return res.status(400).json({ message: "missing id" });
   }
