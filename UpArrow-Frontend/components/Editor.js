@@ -96,13 +96,13 @@ const Editor = ({ editData }) => {
     let result;
     if (editData) {
       await api.idea.updateById(editData._id, payload);
-      axios.get("/api/revalidate/idea/" + editData._id);
+      await axios.get("/api/revalidate/idea/" + editData._id);
       router.push(`/idea/${editData._id}`);
     } else {
       result = await api.idea.post(payload);
       router.push(`/idea/${result.data._id}`);
     }
-    axios.get("/api/revalidate/idea");
+    await axios.get("/api/revalidate/idea");
   };
 
   return (
