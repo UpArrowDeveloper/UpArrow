@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 /**
@@ -13,12 +13,22 @@ const Schema = mongoose.Schema;
  *  color: string,
  * }
  */
+
+/**
+ * boards : {
+ * youtubeUrl: string,
+ * thumbnailUrl?: string,
+ * stockId: objectId,
+ * description: string,
+ * }
+ */
 const ConfigSchema = new Schema(
   {
     bannerImageUrl: String,
     board: Object,
+    boards: Array,
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Config', ConfigSchema);
+module.exports = mongoose.model("Config", ConfigSchema);

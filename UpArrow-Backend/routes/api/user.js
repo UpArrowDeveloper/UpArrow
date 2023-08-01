@@ -285,12 +285,6 @@ router.put("/:id/follow", validUser, async (req, res) => {
     (following) => following === targetUserId
   );
   if (hasTargetUserInFollowing) {
-    console.log(
-      "unfollow : ",
-      currentUserId,
-      targetUserId,
-      currentUserId === targetUserId
-    );
     await User.updateOne(
       { _id: currentUserId },
       { $pull: { followings: targetUserId } }
@@ -300,12 +294,6 @@ router.put("/:id/follow", validUser, async (req, res) => {
       { $pull: { followers: currentUserId } }
     );
   } else {
-    console.log(
-      "follow : ",
-      currentUserId,
-      targetUserId,
-      currentUserId === targetUserId
-    );
     await User.updateOne(
       { _id: currentUserId },
       { $push: { followings: targetUserId } }
