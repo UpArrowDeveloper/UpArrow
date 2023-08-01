@@ -2,6 +2,7 @@ import { useConfig } from "../../hooks/useConfig";
 import styled from "@emotion/styled";
 import {
   HeadH1Bold,
+  HeadH3Bold,
   HeadH4Bold,
   HeadH4Medium,
   HeadH6Bold,
@@ -15,24 +16,13 @@ import { mobileWidth } from "../../styles/responsive";
 import color from "../../styles/color";
 import api from "../../apis";
 import { useRouter } from "next/router";
+import Youtube from "../Youtube";
+import { navbarHeight } from "../Navbar";
 
 const Banner = ({ config: initConfig }) => {
   const { config, getConfig } = useConfig(initConfig);
-  const bannerImageUrl = config?.bannerImageUrl;
   const stock = config?.board;
   const timerRef = useRef();
-  const dotLocation = stock?.dotLocation;
-  const router = useRouter();
-
-  const [bannerStockPrice, setBannerStockPrice] = useState(0);
-  const { isMobile } = useMobile();
-
-  useEffect(() => {
-    timerRef.current = setInterval(() => {
-      getConfig();
-    }, 10000);
-    return () => clearInterval(timerRef.current);
-  }, []);
 
   useEffect(() => {
     const getStockPrice = async () => {
@@ -44,82 +34,30 @@ const Banner = ({ config: initConfig }) => {
     }
   }, [stock?.stockId]);
 
+  const videoId = "fO54yjlykvw";
+  const stockName = "Tesla";
+  const thumbnailUrl = `http://img.youtube.com/vi/${videoId}/0.jpg`;
+
   if (!stock) return null;
 
   return (
-    <BannerBlock>
-      <div stockColor={stock.color} dotLocation={dotLocation}>
-        <div className="image-wrapper">
-          <Image layout="fill" objectFit="cover" src={bannerImageUrl} />
-        </div>
-        {!isMobile && (
-          <div className="board">
-            <img className="stock-icon" src={stock.imageUrl} />
-            <pre className="text">
-              {`If You Invested $${numberComma(stock.importantDateInvestCost)} 
-on June 29th, 2010 
-you have $${
-                numberComma(
-                  (stock.importantDateInvestCost / stock.importantDatePrice) *
-                    (bannerStockPrice || 1)
-                ).split(".")[0]
-              }`}
-            </pre>
-            <div className="chart">
-              {stock.chartImageUrl ? (
-                <Image layout="fill" src={stock.chartImageUrl} />
-              ) : null}
-              <div className="dot" />
+    <BannerBlock bgUrl={thumbnailUrl}>
+      <div className="banner-backdrop-filter">
+        <div className="banner-content">
+          <Youtube youtubeCode={videoId} width="711" height="400" />
+          <div className="banner-description">
+            <div>
+              <div className="banner-stock-name">{stockName}</div>
+              <div className="banner-stock-content">
+                {"description : tesla is a good company"}
+              </div>
             </div>
-            <div
-              className="more"
-              onClick={() => {
-                router.push("/stock");
-              }}
-            >
-              <span>Let's find the next Tesla</span>
-              <NextIcon />
+            <div className="find-next-tesla">
+              Let's find the next {stockName}
             </div>
           </div>
-        )}
+        </div>
       </div>
-      {isMobile && (
-        <div className="board">
-          <img className="stock-icon" src={stock.imageUrl} />
-          <pre className="text">
-            {`If You Invested ${numberComma(
-              stock.importantDateInvestCost
-            )} on June 29th, 2010, 
-you would have ${
-              numberComma(
-                (stock.importantDateInvestCost / stock.importantDatePrice) *
-                  (bannerStockPrice || 1)
-              ).split(".")[0]
-            }`}
-          </pre>
-          <div className="chart">
-            {stock.chartImageUrl ? (
-              <Image layout="fill" src={stock.chartImageUrl} />
-            ) : null}
-            <div className="dot" />
-          </div>
-          <div
-            className="more"
-            onClick={() => {
-              console.log("more click");
-              router.push("/stock");
-            }}
-          >
-            {isMobile && <div></div>}
-            <span>Let's find the next Tesla</span>
-            {isMobile ? (
-              <ChevronRightMobileIcon style={{ fill: color.B67 }} />
-            ) : (
-              <NextIcon />
-            )}
-          </div>
-        </div>
-      )}
     </BannerBlock>
   );
 };
@@ -127,126 +65,46 @@ you would have ${
 export default Banner;
 
 const BannerBlock = styled.div`
-  & > div:first-child {
-    background-color: gray;
-    position: relative;
-  }
+  margin-top: ${navbarHeight};
+  width: 100vw;
+  height: 64rem;
+  background-image: url(${(props) => props.bgUrl});
+  background-repeat: no-repeat;
+  background-size: cover;
 
-  .image-wrapper {
-    position: relative;
+  .banner-backdrop-filter {
     width: 100%;
-    height: 70rem;
+    height: 100%;
+    backdrop-filter: blur(60px);
   }
 
-  & .board {
-    padding: 3.2rem;
-    border-radius: 3.42rem;
-    width: 51.1rem;
-    position: absolute;
-    background-color: white;
-    right: 15%;
-    bottom: 3.7rem;
+  .banner-content {
+    display: flex;
+    gap: 3.2rem;
 
-    .stock-icon {
-      width: 7.4rem;
-      height: 7.4rem;
-      margin-bottom: 1.531rem;
-    }
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
 
-    .text {
-      ${HeadH1Bold};
-
-      white-space: pre-wrap;
-
-      .stock-name {
-        color: ${({ stockColor }) => stockColor};
-      }
-      margin-bottom: 1.531rem;
-    }
-
-    .stock-name {
-      color: #e82127;
-    }
-
-    .chart {
-      position: relative;
-      width: 44.7rem;
-      height: 18rem;
-      margin-bottom: 4.1rem;
-
-      .dot {
-        position: absolute;
-        top: ${({ dotLocation }) => dotLocation}%;
-        right: 1.6rem;
-        width: 1.4rem;
-        height: 1.4rem;
-        border-radius: 2rem;
-        background-color: ${({ stockColor }) => stockColor};
-        transform: translateY(-0.7rem);
-
-        animation-duration: 0.5s;
-        animation-name: fadeInOut;
-        animation-iteration-count: infinite;
-        animation-direction: alternate;
-
-        @keyframes fadeInOut {
-          from {
-            opacity: 1;
-          }
-
-          to {
-            opacity: 0.4;
-          }
-        }
-      }
-    }
-
-    .more {
+    padding: 4.8rem;
+    .banner-description {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      ${HeadH4Medium};
+      flex-direction: column;
+
+      ${HeadH1Bold}
+      .banner-stock-name {
+        ${HeadH3Bold}
+        margin-bottom: 1.2rem;
+      }
+
+      .find-next-tesla {
+        ${HeadH4Medium}
+        padding: 1.2rem;
+        padding-left: 0;
+      }
     }
   }
-
   @media screen and (max-width: ${mobileWidth}) {
-    width: 100vw;
-    overflow: hidden;
-
-    .image-wrapper {
-      margin-top: 5rem;
-      width: 66rem;
-      overflow-x: hidden;
-      height: 28rem;
-      > * {
-      }
-    }
-    .board {
-      position: static;
-      width: 100%;
-      padding: 2rem;
-
-      .chart {
-        position: relative;
-        width: 100%;
-        height: 12.8rem;
-      }
-
-      .stock-icon {
-        width: 4.8rem;
-        height: 4.8rem;
-        margin-bottom: 1.531rem;
-      }
-
-      .text {
-        ${HeadH4Bold};
-        text-align: center;
-      }
-
-      .more {
-        ${HeadH6Bold}
-      }
-    }
   }
 `;
