@@ -1,14 +1,15 @@
 import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 
-const menus = ["youtubeUrl", "thumbnailUrl", "stockId", "description"];
+const menus = ["youtubeCode", "thumbnailUrl", "stockName", "description"];
 
 const initBoard = {
-  youtubeUrl: "",
+  youtubeCode: "",
   thumbnailUrl: "",
-  stockId: "",
+  stockName: "",
   description: "",
 };
+
 export const Boards = ({ boards, setBoards }) => {
   const [currentBoard, setCurrentBoard] = useState(initBoard);
   return (

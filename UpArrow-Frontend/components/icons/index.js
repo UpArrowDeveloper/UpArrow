@@ -18,3 +18,5 @@ export { default as ChevronRightMobileIcon } from "./Chevron-Right-Mobile.svg";
 export { default as ChevronBottomIcon } from "./Chevron-bottom.svg";
 export { default as TrashIcon } from "./Trash.svg";
 export { default as FillXIcon } from "./FillXIcon.svg";
+export { default as AngleLeftTailLine } from "./AngleLeftTail-line-24.svg";
+export { default as AngleRightTailLine } from "./AngleRightTail-line-24.svg";

@@ -16,9 +16,9 @@ const Schema = mongoose.Schema;
 
 /**
  * boards : {
- * youtubeUrl: string,
+ * youtubeCode: string,
  * thumbnailUrl?: string,
- * stockId: objectId,
+ * stockName: objectId,
  * description: string,
  * }
  */
