@@ -6,13 +6,23 @@ import { mobileWidth } from "../../styles/responsive";
 import api from "../../apis";
 import Youtube from "../Youtube";
 import { navbarHeight } from "../Navbar";
-import { AngleLeftTailLine, AngleRightTailLine } from "../icons";
+import {
+  AngleLeftTailLine,
+  AngleRightTailLine,
+  ChevronRightIcon,
+} from "../icons";
+import { useRouter } from "next/router";
+
+const bannerWidth = 128;
+const bannerWidthRem = `${bannerWidth}rem`;
+const bannerHalfWidthRem = `${bannerWidth / 2}rem`;
 
 const Banner = ({ config: initConfig }) => {
   const { config, getConfig } = useConfig(initConfig);
   const stock = config?.board;
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
 
+  const router = useRouter();
   useEffect(() => {
     const getStockPrice = async () => {
       const res = await api.stock.getById(stock?.stockId)();
@@ -23,6 +33,14 @@ const Banner = ({ config: initConfig }) => {
     }
   }, [stock?.stockId]);
 
+  useEffect(() => {
+    setInterval(() => {
+      setCurrentBannerIdx((prev) =>
+        prev < config.boards.length - 1 ? prev + 1 : 0
+      );
+    }, 5000);
+  }, []);
+
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
 
   if (!stock) return null;
@@ -32,21 +50,16 @@ const Banner = ({ config: initConfig }) => {
       <AngleLeftTailLine
         className="angle-left-tail-line"
         onClick={() => {
-          setCurrentBannerIdx((prev) =>
-            prev < config.boards.length - 1
-              ? prev + 1
-              : config.boards.length - 1
-          );
+          setCurrentBannerIdx((prev) => (prev > 0 ? prev - 1 : 0));
         }}
       />
       <ContentWrapper>
-        {config.boards.map((board, idx) => (
-          <BannerWrapper
-            bgUrl={getThumbnailUrl(board.youtubeCode)}
-            bannerContentIdx={currentBannerIdx - idx}
-          >
-            <div className="banner-backdrop-filter">
-              <BannerContent>
+        <BannerWrapper
+          bgUrl={getThumbnailUrl(config.boards[currentBannerIdx].youtubeCode)}
+        >
+          <div className="banner-backdrop-filter">
+            {config.boards.map((board, idx) => (
+              <BannerContent bannerContentIdx={idx - currentBannerIdx}>
                 <Youtube
                   youtubeCode={board.youtubeCode}
                   width="711"
@@ -59,19 +72,29 @@ const Banner = ({ config: initConfig }) => {
                       {board.description}
                     </div>
                   </div>
-                  <div className="find-next-tesla">
-                    Let's find the next {board.stockName}
+                  <div
+                    className="find-next-tesla"
+                    onClick={() => {
+                      router.push(`/stock`);
+                    }}
+                  >
+                    <span>Let's find the next {board.stockName}</span>
+                    <ChevronRightIcon />
                   </div>
                 </div>
               </BannerContent>
-            </div>
-          </BannerWrapper>
-        ))}
+            ))}
+          </div>
+        </BannerWrapper>
       </ContentWrapper>
       <AngleRightTailLine
         className="angle-right-tail-line"
         onClick={() => {
-          setCurrentBannerIdx((prev) => (prev > 0 ? prev - 1 : 0));
+          setCurrentBannerIdx((prev) =>
+            prev < config.boards.length - 1
+              ? prev + 1
+              : config.boards.length - 1
+          );
         }}
       />
     </BannerBlock>
@@ -88,14 +111,14 @@ const BannerBlock = styled.div`
   .angle-left-tail-line {
     position: absolute;
     top: 50%;
-    left: 0;
+    left: calc(50% - ${bannerHalfWidthRem} - 5rem);
     z-index: 10;
   }
 
   .angle-right-tail-line {
     position: absolute;
     top: 50%;
-    right: 0;
+    right: calc(50% - ${bannerHalfWidthRem} - 5rem);
   }
 
   @media screen and (max-width: ${mobileWidth}) {
@@ -103,9 +126,14 @@ const BannerBlock = styled.div`
 `;
 
 const BannerContent = styled.div`
+  width: ${bannerWidthRem};
+  position: absolute;
+  top: 0;
+  left: calc(${(props) => props.bannerContentIdx || 0} * 138rem + 50% - 64rem);
+  transition: left 0.5s ease-in-out;
   display: flex;
   gap: 3.2rem;
-  margin: 8rem 0;
+  margin: 8rem auto;
 
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.85);
@@ -114,6 +142,7 @@ const BannerContent = styled.div`
   padding: 4.8rem;
 
   .banner-description {
+    width: 44rem;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -125,6 +154,10 @@ const BannerContent = styled.div`
     }
 
     .find-next-tesla {
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
       ${HeadH4Medium}
       padding: 1.2rem;
       padding-left: 0;
@@ -133,21 +166,21 @@ const BannerContent = styled.div`
 `;
 
 const BannerWrapper = styled.div`
+  display: flex;
   width: 100vw;
-  position: absolute;
-  top: 0;
-  left: calc(${(props) => props.bannerContentIdx || 0} * 100%);
-  transition: left 0.5s ease-in-out;
+
   background-image: url(${(props) => props.bgUrl});
+  transition: background-image 1.1s ease-in-out;
   background-repeat: no-repeat;
   background-size: cover;
 
   .banner-backdrop-filter {
     position: relative;
     display: flex;
+    justify-content: center;
     align-items: center;
     overflow: hidden;
-    width: 100%;
+    width: 100vw;
     height: 100%;
     backdrop-filter: blur(60px);
   }
