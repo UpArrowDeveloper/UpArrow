@@ -48,7 +48,7 @@ const MobileBanner = ({ config: initConfig }) => {
         setCurrentMouseX(e.clientX);
       }}
       onTouchEnd={(e) => {
-        if (e.changedTouche[0]?.clientX - currentMouseX > 0) {
+        if (e.changedTouches[0]?.clientX - currentMouseX > 0) {
           setCurrentBannerIdx((prev) =>
             prev > 0 ? prev - 1 : config.boards.length - 1
           );
