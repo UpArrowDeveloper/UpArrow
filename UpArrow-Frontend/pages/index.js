@@ -5,12 +5,13 @@ import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import { MainLayout } from "../Layouts";
 import { HeadH2Bold, HeadH5Bold } from "../styles/typography";
-import Banner from "../components/common/Banner";
+import PcBanner from "../components/common/PcBanner";
 import api from "../apis";
 import { getInvestorInvestInfo } from "../utils/investor";
 import { ChevronRightMobileIcon, NextIcon } from "../components/icons";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
+import MobileBanner from "../components/common/MobileBanner";
 
 function Home({
   stockList,
@@ -175,9 +176,14 @@ export async function getStaticProps() {
 }
 
 export default function MainPage(props) {
+  const { isMobile } = useMobile();
   return (
     <>
-      <Banner config={props.config} />
+      {isMobile ? (
+        <MobileBanner config={props.config} />
+      ) : (
+        <PcBanner config={props.config} />
+      )}
       <MainLayout isMain>
         <Home {...props} />
       </MainLayout>
