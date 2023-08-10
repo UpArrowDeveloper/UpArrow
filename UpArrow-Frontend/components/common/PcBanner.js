@@ -18,9 +18,12 @@ const bannerWidthRem = `${bannerWidth}rem`;
 const bannerHalfWidthRem = `${bannerWidth / 2}rem`;
 
 const PcBanner = ({ config: initConfig }) => {
-  const { config, getConfig } = useConfig(initConfig);
+  const { config } = useConfig(initConfig);
   const stock = config?.board;
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
+  const [currentPlayIndexes, setCurrentPlayIndexes] = useState(
+    Array(100).fill(false)
+  );
 
   const router = useRouter();
   useEffect(() => {
@@ -32,6 +35,18 @@ const PcBanner = ({ config: initConfig }) => {
       getStockPrice();
     }
   }, [stock?.stockId]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCurrentPlayIndexes((prev) => {
+        const next = prev.map((v, idx) => {
+          if (idx == currentBannerIdx) return true;
+          return false;
+        });
+        return next;
+      });
+    }, 3000);
+  }, [currentBannerIdx]);
 
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
 
@@ -56,7 +71,7 @@ const PcBanner = ({ config: initConfig }) => {
                   youtubeCode={board.youtubeCode}
                   width="711"
                   height="400"
-                  autoplay={true}
+                  autoplay={currentPlayIndexes[idx]}
                 />
                 <div className="banner-description">
                   <div>
