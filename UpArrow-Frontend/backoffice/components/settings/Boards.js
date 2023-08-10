@@ -1,7 +1,7 @@
 import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 
-const menus = ["youtubeCode", "thumbnailUrl", "stockName", "description"];
+const menus = ["youtubeCode", "stockName", "description"];
 
 const initBoard = {
   youtubeCode: "",
