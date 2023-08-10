@@ -13,10 +13,6 @@ import {
 } from "../icons";
 import { useRouter } from "next/router";
 
-const bannerWidth = 128;
-const bannerWidthRem = `${bannerWidth}rem`;
-const bannerHalfWidthRem = `${bannerWidth / 2}rem`;
-
 const PcBanner = ({ config: initConfig }) => {
   const { config } = useConfig(initConfig);
   const stock = config?.board;
@@ -24,6 +20,10 @@ const PcBanner = ({ config: initConfig }) => {
   const [currentPlayIndexes, setCurrentPlayIndexes] = useState(
     Array(100).fill(false)
   );
+  const [bannerWidth, setBannerWidth] = useState(128);
+  const [bannerHeight, setBannerHeight] = useState(64);
+  const bannerWidthRem = `${bannerWidth}rem`;
+  const bannerHalfWidthRem = `${bannerWidth / 2}rem`;
 
   const router = useRouter();
   useEffect(() => {
@@ -35,6 +35,20 @@ const PcBanner = ({ config: initConfig }) => {
       getStockPrice();
     }
   }, [stock?.stockId]);
+
+  console.log("bannerWidth", bannerWidth);
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setBannerWidth(Math.min(window.innerWidth * 0.07, 128));
+      setBannerHeight(Math.min((window.innerWidth * 0.07) / 2, 64));
+    };
+
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -53,10 +67,18 @@ const PcBanner = ({ config: initConfig }) => {
   if (!stock) return null;
 
   return (
-    <BannerBlock className="banner-block">
+    <BannerBlock
+      className="banner-block"
+      bannerHalfWidthRem={bannerHalfWidthRem}
+    >
       <BannerWrapper
         className="banner-wrapper"
         bgUrl={getThumbnailUrl(config.boards[currentBannerIdx].youtubeCode)}
+        bannerContentIdx={
+          currentBannerIdx - Math.floor(config?.boards.length / 2)
+        }
+        bannerWidthRem={bannerWidthRem}
+        bannerHeight={bannerHeight}
       >
         <AngleLeftTailLine
           className="angle-left-tail-line"
@@ -64,16 +86,21 @@ const PcBanner = ({ config: initConfig }) => {
             setCurrentBannerIdx((prev) => (prev > 0 ? prev - 1 : 0));
           }}
         />
-        <div className="banner-backdrop-filter">
+        <div className="banner-content-container">
           {config.boards.map((board, idx) => (
             <BannerContent
               className="banner-content"
               bannerContentIdx={idx - currentBannerIdx}
+              bannerWidthRem={bannerWidthRem}
             >
               <Youtube
                 youtubeCode={board.youtubeCode}
                 width="711"
-                height="400"
+                height={
+                  bannerHeight > 200
+                    ? bannerHeight * 5
+                    : Math.min(bannerHeight * 6, 448)
+                }
                 autoplay={currentPlayIndexes[idx]}
               />
               <div className="banner-description">
@@ -96,7 +123,7 @@ const PcBanner = ({ config: initConfig }) => {
             </BannerContent>
           ))}
         </div>
-        <AngleRightTailLine
+        <AngleLeftTailLine
           className="angle-right-tail-line"
           onClick={() => {
             setCurrentBannerIdx((prev) =>
@@ -118,19 +145,21 @@ const BannerBlock = styled.div`
   margin-top: ${navbarHeight};
   display: flex;
   align-items: center;
-  overflow: hidden;
 
   .angle-left-tail-line {
     position: absolute;
-    top: 50%;
-    left: calc(50% - ${bannerHalfWidthRem} - 5rem);
+    top: calc(50% - 2.4rem);
+    left: calc(50% - ${(props) => props.bannerHalfWidthRem} - 5rem);
+    transition: left 0.5s ease-in-out;
     z-index: 10;
   }
 
   .angle-right-tail-line {
+    rotate: 180deg;
     position: absolute;
-    top: 50%;
-    right: calc(50% - ${bannerHalfWidthRem} - 5rem);
+    top: calc(50% - 2.4rem);
+    right: calc(50% - ${(props) => props.bannerHalfWidthRem} - 5rem);
+    transition: left 0.5s ease-in-out;
   }
 
   @media screen and (max-width: ${mobileWidth}) {
@@ -138,10 +167,7 @@ const BannerBlock = styled.div`
 `;
 
 const BannerContent = styled.div`
-  width: ${bannerWidthRem};
-  position: absolute;
-  left: calc(${(props) => props.bannerContentIdx || 0} * 138rem + 50% - 64rem);
-  transition: left 0.5s ease-in-out;
+  width: ${(props) => props.bannerWidthRem};
   display: flex;
   gap: 3.2rem;
 
@@ -178,21 +204,26 @@ const BannerContent = styled.div`
 const BannerWrapper = styled.div`
   display: flex;
   width: 100vw;
-  height: 64rem;
+  height: ${(props) => props.bannerHeight}rem;
 
   background-image: url(${(props) => props.bgUrl});
   transition: background-image 1.1s ease-in-out;
   background-repeat: no-repeat;
   background-size: cover;
+  overflow: hidden;
 
-  .banner-backdrop-filter {
-    position: relative;
+  .banner-content-container {
+    position: absolute;
+    left: calc(
+      ${(props) => props.bannerContentIdx || 0} *
+        (-${(props) => props.bannerWidthRem} - 8.2rem)
+    );
+    transition: left 0.5s ease-in-out;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    gap: 8.2rem;
     width: 100vw;
     height: 100%;
-    backdrop-filter: blur(60px);
   }
 `;
