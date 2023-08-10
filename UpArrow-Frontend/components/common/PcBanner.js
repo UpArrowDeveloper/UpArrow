@@ -53,58 +53,60 @@ const PcBanner = ({ config: initConfig }) => {
   if (!stock) return null;
 
   return (
-    <BannerBlock>
-      <AngleLeftTailLine
-        className="angle-left-tail-line"
-        onClick={() => {
-          setCurrentBannerIdx((prev) => (prev > 0 ? prev - 1 : 0));
-        }}
-      />
-      <ContentWrapper>
-        <BannerWrapper
-          bgUrl={getThumbnailUrl(config.boards[currentBannerIdx].youtubeCode)}
-        >
-          <div className="banner-backdrop-filter">
-            {config.boards.map((board, idx) => (
-              <BannerContent bannerContentIdx={idx - currentBannerIdx}>
-                <Youtube
-                  youtubeCode={board.youtubeCode}
-                  width="711"
-                  height="400"
-                  autoplay={currentPlayIndexes[idx]}
-                />
-                <div className="banner-description">
-                  <div>
-                    <div className="banner-stock-name">{board.stockName}</div>
-                    <div className="banner-stock-content">
-                      {board.description}
-                    </div>
-                  </div>
-                  <div
-                    className="find-next-tesla"
-                    onClick={() => {
-                      router.push(`/stock`);
-                    }}
-                  >
-                    <span>Let's find the next {board.stockName}</span>
-                    <ChevronRightIcon />
+    <BannerBlock className="banner-block">
+      <BannerWrapper
+        className="banner-wrapper"
+        bgUrl={getThumbnailUrl(config.boards[currentBannerIdx].youtubeCode)}
+      >
+        <AngleLeftTailLine
+          className="angle-left-tail-line"
+          onClick={() => {
+            setCurrentBannerIdx((prev) => (prev > 0 ? prev - 1 : 0));
+          }}
+        />
+        <div className="banner-backdrop-filter">
+          {config.boards.map((board, idx) => (
+            <BannerContent
+              className="banner-content"
+              bannerContentIdx={idx - currentBannerIdx}
+            >
+              <Youtube
+                youtubeCode={board.youtubeCode}
+                width="711"
+                height="400"
+                autoplay={currentPlayIndexes[idx]}
+              />
+              <div className="banner-description">
+                <div>
+                  <div className="banner-stock-name">{board.stockName}</div>
+                  <div className="banner-stock-content">
+                    {board.description}
                   </div>
                 </div>
-              </BannerContent>
-            ))}
-          </div>
-        </BannerWrapper>
-      </ContentWrapper>
-      <AngleRightTailLine
-        className="angle-right-tail-line"
-        onClick={() => {
-          setCurrentBannerIdx((prev) =>
-            prev < config.boards.length - 1
-              ? prev + 1
-              : config.boards.length - 1
-          );
-        }}
-      />
+                <div
+                  className="find-next-tesla"
+                  onClick={() => {
+                    router.push(`/stock`);
+                  }}
+                >
+                  <span>Let's find the next {board.stockName}</span>
+                  <ChevronRightIcon />
+                </div>
+              </div>
+            </BannerContent>
+          ))}
+        </div>
+        <AngleRightTailLine
+          className="angle-right-tail-line"
+          onClick={() => {
+            setCurrentBannerIdx((prev) =>
+              prev < config.boards.length - 1
+                ? prev + 1
+                : config.boards.length - 1
+            );
+          }}
+        />
+      </BannerWrapper>
     </BannerBlock>
   );
 };
@@ -116,6 +118,8 @@ const BannerBlock = styled.div`
   margin-top: ${navbarHeight};
   display: flex;
   align-items: center;
+  overflow: hidden;
+
   .angle-left-tail-line {
     position: absolute;
     top: 50%;
@@ -136,12 +140,10 @@ const BannerBlock = styled.div`
 const BannerContent = styled.div`
   width: ${bannerWidthRem};
   position: absolute;
-  top: 0;
   left: calc(${(props) => props.bannerContentIdx || 0} * 138rem + 50% - 64rem);
   transition: left 0.5s ease-in-out;
   display: flex;
   gap: 3.2rem;
-  margin: 8rem auto;
 
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.85);
@@ -176,6 +178,7 @@ const BannerContent = styled.div`
 const BannerWrapper = styled.div`
   display: flex;
   width: 100vw;
+  height: 64rem;
 
   background-image: url(${(props) => props.bgUrl});
   transition: background-image 1.1s ease-in-out;
@@ -192,12 +195,4 @@ const BannerWrapper = styled.div`
     height: 100%;
     backdrop-filter: blur(60px);
   }
-`;
-
-const ContentWrapper = styled.div`
-  position: relative;
-  display: flex;
-  overflow: hidden;
-  width: 100vw;
-  height: 64rem;
 `;
