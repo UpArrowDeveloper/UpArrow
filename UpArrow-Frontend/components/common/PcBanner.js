@@ -1,16 +1,12 @@
 import { useConfig } from "../../hooks/useConfig";
 import styled from "@emotion/styled";
 import { HeadH1Bold, HeadH3Bold, HeadH4Medium } from "../../styles/typography";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { mobileWidth } from "../../styles/responsive";
 import api from "../../apis";
 import Youtube from "../Youtube";
 import { navbarHeight } from "../Navbar";
-import {
-  AngleLeftTailLine,
-  AngleRightTailLine,
-  ChevronRightIcon,
-} from "../icons";
+import { AngleLeftTailLine, ChevronRightIcon } from "../icons";
 import { useRouter } from "next/router";
 
 const PcBanner = ({ config: initConfig }) => {
@@ -36,7 +32,6 @@ const PcBanner = ({ config: initConfig }) => {
     }
   }, [stock?.stockId]);
 
-  console.log("bannerWidth", bannerWidth);
   useEffect(() => {
     const handleWindowResize = () => {
       setBannerWidth(Math.min(window.innerWidth * 0.07, 128));
@@ -101,6 +96,7 @@ const PcBanner = ({ config: initConfig }) => {
               bannerContentIdx={idx - currentBannerIdx}
               bannerWidthRem={bannerWidthRem}
               lineClamp={getLineClamp()}
+              smallPadding={window.innerWidth < 850}
             >
               <Youtube
                 youtubeCode={board.youtubeCode}
@@ -125,7 +121,11 @@ const PcBanner = ({ config: initConfig }) => {
                     router.push(`/stock`);
                   }}
                 >
-                  <span>Let's find the next {board.stockName}</span>
+                  <span>
+                    {window.innerWidth >= 850
+                      ? `Let's find the next ${board.stockName}`
+                      : `Next ${board.stockName}`}
+                  </span>
                   <ChevronRightIcon />
                 </div>
               </div>
@@ -184,7 +184,7 @@ const BannerContent = styled.div`
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
 
-  padding: 4.8rem;
+  padding: ${(props) => (props.smallPadding ? "2rem" : "4.8rem")};
 
   .banner-description {
     width: 44rem;
