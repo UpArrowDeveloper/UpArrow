@@ -63,6 +63,14 @@ const PcBanner = ({ config: initConfig }) => {
   }, [currentBannerIdx]);
 
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
+  const getLineClamp = () => {
+    const bannerWidth = bannerWidthRem.replace("rem", "");
+    if (bannerWidth < 80) return 3;
+    if (bannerWidth < 90) return 5;
+    if (bannerWidth < 100) return 7;
+    if (bannerWidth < 110) return 8;
+    return 10;
+  };
 
   if (!stock) return null;
 
@@ -92,6 +100,7 @@ const PcBanner = ({ config: initConfig }) => {
               className="banner-content"
               bannerContentIdx={idx - currentBannerIdx}
               bannerWidthRem={bannerWidthRem}
+              lineClamp={getLineClamp()}
             >
               <Youtube
                 youtubeCode={board.youtubeCode}
@@ -198,6 +207,16 @@ const BannerContent = styled.div`
       padding: 1.2rem;
       padding-left: 0;
     }
+  }
+
+  .banner-stock-content {
+    ${HeadH4Medium}
+    margin-bottom: 1.2rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box; // 얘네를 추가히준다
+    -webkit-line-clamp: ${(props) => props.lineClamp};
+    -webkit-box-orient: vertical;
   }
 `;
 
