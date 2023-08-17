@@ -22,6 +22,10 @@ const PcBanner = ({ config: initConfig }) => {
   const bannerHalfWidthRem = `${bannerWidth / 2}rem`;
 
   const router = useRouter();
+
+  const windowInnerWidth =
+    typeof window !== "undefined" ? window.innerWidth : 500;
+
   useEffect(() => {
     const getStockPrice = async () => {
       const res = await api.stock.getById(stock?.stockId)();
@@ -34,8 +38,10 @@ const PcBanner = ({ config: initConfig }) => {
 
   useEffect(() => {
     const handleWindowResize = () => {
-      setBannerWidth(Math.min(window.innerWidth * 0.07, 128));
-      setBannerHeight(Math.min((window.innerWidth * 0.07) / 2, 64));
+      const windowInnerWidth =
+        typeof window !== "undefined" ? window.innerWidth : 500;
+      setBannerWidth(Math.min(windowInnerWidth * 0.07, 128));
+      setBannerHeight(Math.min((windowInnerWidth * 0.07) / 2, 64));
     };
 
     window.addEventListener("resize", handleWindowResize);
@@ -73,10 +79,10 @@ const PcBanner = ({ config: initConfig }) => {
     <BannerBlock
       className="banner-block"
       bannerHalfWidthRem={bannerHalfWidthRem}
+      bgUrl={getThumbnailUrl(config.boards[currentBannerIdx].youtubeCode)}
     >
       <BannerWrapper
         className="banner-wrapper"
-        bgUrl={getThumbnailUrl(config.boards[currentBannerIdx].youtubeCode)}
         bannerContentIdx={
           currentBannerIdx - Math.floor(config?.boards.length / 2)
         }
@@ -96,7 +102,7 @@ const PcBanner = ({ config: initConfig }) => {
               bannerContentIdx={idx - currentBannerIdx}
               bannerWidthRem={bannerWidthRem}
               lineClamp={getLineClamp()}
-              smallPadding={window.innerWidth < 850}
+              smallPadding={windowInnerWidth < 850}
             >
               <Youtube
                 youtubeCode={board.youtubeCode}
@@ -122,7 +128,7 @@ const PcBanner = ({ config: initConfig }) => {
                   }}
                 >
                   <span>
-                    {window.innerWidth >= 850
+                    {windowInnerWidth >= 850
                       ? `Let's find the next ${board.stockName}`
                       : `Next ${board.stockName}`}
                   </span>
@@ -154,6 +160,12 @@ const BannerBlock = styled.div`
   margin-top: ${navbarHeight};
   display: flex;
   align-items: center;
+
+  background-image: url(${(props) => props.bgUrl});
+  transition: background-image 1.1s ease-in-out;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
 
   .angle-left-tail-line {
     position: absolute;
@@ -224,12 +236,7 @@ const BannerWrapper = styled.div`
   display: flex;
   width: 100vw;
   height: ${(props) => props.bannerHeight}rem;
-
-  background-image: url(${(props) => props.bgUrl});
-  transition: background-image 1.1s ease-in-out;
-  background-repeat: no-repeat;
-  background-size: cover;
-  overflow: hidden;
+  backdrop-filter: blur(60px);
 
   .banner-content-container {
     position: absolute;
