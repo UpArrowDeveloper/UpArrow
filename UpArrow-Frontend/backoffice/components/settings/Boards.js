@@ -32,7 +32,7 @@ export const Boards = ({ boards, setBoards }) => {
         })}
         <Button
           onClick={() => {
-            setBoards([...boards, currentBoard]);
+            setBoards([currentBoard, ...boards]);
             setCurrentBoard(initBoard);
           }}
         >

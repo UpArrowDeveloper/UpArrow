@@ -98,7 +98,7 @@ const MobileBanner = ({ config: initConfig }) => {
           }
         }}
       >
-        {config.boards.reverse().map((board, idx) => {
+        {config.boards.map((board, idx) => {
           if (!currentPlayIndexes[idx]) {
             return (
               <Banner

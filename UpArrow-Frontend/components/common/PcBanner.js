@@ -75,6 +75,8 @@ const PcBanner = ({ config: initConfig }) => {
 
   if (!stock) return null;
 
+  const banners = config?.boards;
+
   return (
     <BannerBlock
       className="banner-block"
@@ -96,8 +98,9 @@ const PcBanner = ({ config: initConfig }) => {
           }}
         />
         <div className="banner-content-container">
-          {config.boards.reverse().map((board, idx) => (
+          {banners.map((board, idx) => (
             <BannerContent
+              key={idx}
               className="banner-content"
               bannerContentIdx={idx - currentBannerIdx}
               bannerWidthRem={bannerWidthRem}

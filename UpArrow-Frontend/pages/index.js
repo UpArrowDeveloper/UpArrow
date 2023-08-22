@@ -142,6 +142,7 @@ export async function getStaticProps() {
       api.user.getProfitPercentageById(investor._id)
     )
   );
+
   const totalProfitAttached = [];
   for await (const v of investorList) {
     totalProfitAttached.push({
@@ -165,6 +166,7 @@ export async function getStaticProps() {
     else return y - x;
   });
 
+  console.log("build start in index.js 7");
   return {
     props: {
       stockList,
@@ -172,6 +174,7 @@ export async function getStaticProps() {
       investorDataList: percentBindDataList,
       config,
     },
+    revalidate: 60 * 10, // In seconds
   };
 }
 

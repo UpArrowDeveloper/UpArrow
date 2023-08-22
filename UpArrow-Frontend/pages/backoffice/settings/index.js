@@ -83,7 +83,6 @@ const BackofficeStockList = () => {
       },
       boards,
     })();
-    axios.get("/api/revalidate");
   };
   return (
     <Box>
