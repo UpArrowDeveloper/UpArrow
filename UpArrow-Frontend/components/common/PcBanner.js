@@ -96,7 +96,7 @@ const PcBanner = ({ config: initConfig }) => {
           }}
         />
         <div className="banner-content-container">
-          {config.boards.map((board, idx) => (
+          {config.boards.reverse().map((board, idx) => (
             <BannerContent
               className="banner-content"
               bannerContentIdx={idx - currentBannerIdx}
