@@ -69,7 +69,7 @@ const BackofficeStockList = () => {
       config?.board?.chartImageUrl
     );
 
-    const res = api.config.put({
+    const res = await api.config.put({
       bannerImageUrl,
       board: {
         name,
@@ -83,6 +83,7 @@ const BackofficeStockList = () => {
       },
       boards,
     })();
+    axios.get("/api/revalidate");
   };
   return (
     <Box>
