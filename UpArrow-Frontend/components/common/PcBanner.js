@@ -43,6 +43,7 @@ const PcBanner = ({ config: initConfig }) => {
       setBannerWidth(Math.min(windowInnerWidth * 0.07, 128));
       setBannerHeight(Math.min((windowInnerWidth * 0.07) / 2, 64));
     };
+    handleWindowResize();
 
     window.addEventListener("resize", handleWindowResize);
 
