@@ -1,24 +1,29 @@
-// material-ui
-import { Box, useTheme } from '@mui/material';
-import { BackofficeNavbar } from '../backoffice/components/BackofficeNavbar';
-import React from 'react';
-import backofficeConfig from '../backoffice/config';
+import { BackofficeNavbar } from "../backoffice/components/BackofficeNavbar";
+import React from "react";
+import styled from "@emotion/styled";
 
 const BackofficeLayout = ({ children }) => {
-  const theme = useTheme();
   return (
-    <Box>
+    <Layout>
       <BackofficeNavbar />
-      <Box
-        component='main'
-        sx={{
-          padding: '5.6rem',
-        }}
-      >
-        {children}
-      </Box>
-    </Box>
+      <div className="backoffice-layout-wrapper">
+        <div className="bo-wrapper-content">{children}</div>
+      </div>
+    </Layout>
   );
 };
+
+const Layout = styled.div`
+  .backoffice-layout-wrapper {
+    margin-top: 4.8rem;
+    display: flex;
+    justify-content: center;
+
+    .bo-wrapper-content {
+      width: 100%;
+      max-width: 128rem;
+    }
+  }
+`;
 
 export default BackofficeLayout;
