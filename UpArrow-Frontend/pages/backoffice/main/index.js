@@ -8,7 +8,7 @@ import api from "../../../apis";
 import FilePreview from "../../../components/common/FilePreview";
 import { env } from "../../../config";
 import BackofficeLayout from "../../../Layouts/Backoffice";
-import { getYMD } from "../../../utils/date";
+import { getBannerYMD, getYMD } from "../../../utils/date";
 import { getUploadUrl } from "../../../utils/file";
 import { Boards } from "../../../backoffice/components/settings/Boards";
 import styled from "@emotion/styled";
@@ -75,173 +75,31 @@ const BackofficeStockList = () => {
     })();
   };
 
-  console.log("boards : ", boards);
   return (
     <BackofficeMain>
       <BackofficeHeader title="Main" />
-      <Table
-        columns={[
-          "Image",
-          "Stock name",
-          "Youtube URL",
-          "Created at",
-          "Updated at",
-        ]}
-        datas={boards.map((board) => {
-          return [
-            `http://img.youtube.com/vi/${board?.youtubeCode}/0.jpg`,
-            board?.stockName,
-            board?.youtubeCode,
-            new Date().toDateString(),
-            new Date().toDateString(),
-          ];
-        })}
-        gridTemplateColumns={["7.2rem", "2fr", "0.8fr", "0.8fr", "0.8fr"]}
-      />
+      <div className="table-wrapper">
+        <Table
+          columns={[
+            "Image",
+            "Stock name",
+            "Youtube URL",
+            "Created at",
+            "Updated at",
+          ]}
+          datas={boards.map((board) => {
+            return [
+              `http://img.youtube.com/vi/${board?.youtubeCode}/0.jpg`,
+              board?.stockName,
+              board?.youtubeCode,
+              getYMD(new Date(), ". "),
+              getYMD(new Date(), ". "),
+            ];
+          })}
+          gridTemplateColumns={["7.2rem", "2fr", "0.8fr", "0.8fr", "0.8fr"]}
+        />
+      </div>
     </BackofficeMain>
-    // <Box>
-    //   <Grid>
-    //     <Typography variant="h3">Banner Image</Typography>
-    //   </Grid>
-    //   <hr></hr>
-    //   <Grid sx={{ marginBottom: 2 }}>
-    //     <Grid>
-    //       <FilePreview file={bannerImage} url={config?.bannerImageUrl} />
-    //     </Grid>
-    //     <Button variant="contained" component="label">
-    //       Upload File
-    //       <input
-    //         type="file"
-    //         id="bannerImage"
-    //         name="bannerImage"
-    //         hidden
-    //         onChange={(e) => {
-    //           setBannerImage(e.target.files[0]);
-    //         }}
-    //       />
-    //     </Button>
-    //   </Grid>
-    //   <Grid>
-    //     <Typography variant="h3">Board</Typography>
-    //   </Grid>
-    //   <hr style={{ marginBottom: 20 }}></hr>
-    //   <Grid container spacing={3}>
-    //     <Grid item xs={4}>
-    //       <Typography varient="h3">board image</Typography>
-    //       <Grid>
-    //         <FilePreview file={boardImage} url={config?.board?.boardImageUrl} />
-    //       </Grid>
-    //       <Button variant="contained" component="label">
-    //         Upload File
-    //         <input
-    //           type="file"
-    //           id="boardImage"
-    //           name="boardImage"
-    //           hidden
-    //           onChange={(e) => {
-    //             setBoardImage(e.target.files[0]);
-    //           }}
-    //         />
-    //       </Button>
-    //     </Grid>
-    //     <Grid item xs={4}>
-    //       <Typography varient="h3">chart image</Typography>
-    //       <Grid>
-    //         <FilePreview file={chartImage} url={config?.board?.chartImageUrl} />
-    //       </Grid>
-    //       <Grid>
-    //         <Button variant="contained" component="label">
-    //           Upload File
-    //           <input
-    //             type="file"
-    //             id="chartImage"
-    //             name="chartImage"
-    //             hidden
-    //             onChange={(e) => {
-    //               setChartImage(e.target.files[0]);
-    //             }}
-    //           />
-    //         </Button>
-    //       </Grid>
-    //     </Grid>
-    //     <Grid item xs={4}>
-    //       <TextField
-    //         id="name"
-    //         name="name"
-    //         value={name}
-    //         onChange={(e) => setName(e.target.value)}
-    //         label="name"
-    //         fullWidth
-    //         InputLabelProps={{ shrink: true }}
-    //         autoComplete="family-name"
-    //         variant="outlined"
-    //         sx={{ marginBottom: 2 }}
-    //       />
-    //       <TextField
-    //         id="ticker"
-    //         name="ticker"
-    //         value={ticker}
-    //         onChange={(e) => setTicker(e.target.value)}
-    //         label="ticker"
-    //         fullWidth
-    //         InputLabelProps={{ shrink: true }}
-    //         autoComplete="family-name"
-    //         variant="outlined"
-    //         sx={{ marginBottom: 2 }}
-    //       />
-    //       <TextField
-    //         id="importantDateString"
-    //         name="importantDateString"
-    //         label="thumbnail date"
-    //         value={getYMD(importantDateString || new Date())}
-    //         onChange={(e) => setImportantDateString(new Date(e.target.value))}
-    //         variant="outlined"
-    //         type="date"
-    //         InputLabelProps={{ shrink: true }}
-    //         sx={{ marginBottom: 2 }}
-    //       />
-    //       <TextField
-    //         id="dotLocation"
-    //         name="dotLocation"
-    //         label="dot location"
-    //         value={dotLocation}
-    //         onChange={(e) => setDotLocation(e.target.value)}
-    //         variant="outlined"
-    //         type="number"
-    //         InputLabelProps={{ shrink: true }}
-    //         sx={{ marginBottom: 2 }}
-    //       />
-    //       <TextField
-    //         id="importantDatePrice"
-    //         name="importantDatePrice"
-    //         label="important date price"
-    //         value={importantDatePrice}
-    //         onChange={(e) => setImportantDatePrice(e.target.value)}
-    //         variant="outlined"
-    //         type="number"
-    //         InputLabelProps={{ shrink: true }}
-    //         sx={{ marginBottom: 2 }}
-    //       />
-    //       <TextField
-    //         id="color"
-    //         name="color"
-    //         label="color"
-    //         value={color}
-    //         onChange={(e) => setColor(e.target.value)}
-    //         variant="outlined"
-    //         InputLabelProps={{ shrink: true }}
-    //         sx={{ marginBottom: 2 }}
-    //       />
-    //     </Grid>
-    //   </Grid>
-    //   <Boards boards={boards} setBoards={setBoards} />
-
-    //   <Grid>
-    //     <Button fullWidth size="large" variant="contained" onClick={save}>
-    //       Save
-    //     </Button>
-    //   </Grid>
-    // </Box>
   );
 };
 
@@ -249,6 +107,10 @@ const BackofficeMain = styled.div`
   h1 {
     font-size: 4.8rem;
     font-weight: 600;
+  }
+
+  .table-wrapper {
+    padding: 2.4rem 3.2rem;
   }
 `;
 

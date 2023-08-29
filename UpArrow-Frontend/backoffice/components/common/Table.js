@@ -1,11 +1,14 @@
 import styled from "@emotion/styled";
+import { Body14Medium, HeadH5Bold } from "../../../styles/typography";
+import color from "../../../styles/color";
 
 const Table = ({ columns, datas, gridTemplateColumns }) => {
-  console.log("datas : ", datas);
   return (
     <TableBlock gridTemplateColumns={gridTemplateColumns}>
       {columns.map((column, idx) => (
-        <div key={idx}>{column}</div>
+        <div className="table-column" key={idx}>
+          {column}
+        </div>
       ))}
       <div></div>
       {datas.map((data, idx1) => {
@@ -15,11 +18,18 @@ const Table = ({ columns, datas, gridTemplateColumns }) => {
               if (idx2 === 0) {
                 return <img className="thumbnail" src={v} />;
               }
-              return <div key={idx1 * data.length + idx2}>{v}</div>;
+              return (
+                <div
+                  className="table-text-item"
+                  key={idx1 * data.length + idx2}
+                >
+                  {v}
+                </div>
+              );
             })}
             <div className="button-wrapper">
               <button>수정</button>
-              <button>삭제</button>
+              <button className="delete">삭제</button>
             </div>
           </>
         );
@@ -33,11 +43,38 @@ export default Table;
 const TableBlock = styled.div`
   display: grid;
   grid-template-columns: ${({ gridTemplateColumns }) =>
-      gridTemplateColumns.join(" ")} 7rem;
+      gridTemplateColumns.join(" ")} 14.8rem;
+  column-gap: 1.6rem;
+
+  .table-column {
+    ${Body14Medium}
+    color: ${color.B40};
+    padding: 1.6rem 0;
+  }
+
+  .table-text-item {
+    display: flex;
+    align-items: center;
+    ${HeadH5Bold}
+  }
 
   .button-wrapper {
     display: flex;
     justify-content: space-between;
+    gap: 1.6rem;
+
+    button {
+      width: 6.6rem;
+      height: 4.8rem;
+      background-color: white;
+      border-radius: 0.8rem;
+      ${HeadH5Bold}
+
+      &.delete {
+        color: ${color.DISAGREE_RED};
+        border: 1px solid ${color.DISAGREE_RED};
+      }
+    }
   }
 
   .thumbnail {

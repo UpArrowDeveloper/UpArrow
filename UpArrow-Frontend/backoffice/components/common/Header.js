@@ -5,9 +5,11 @@ const BackofficeHeader = ({ title, onClick }) => {
   return (
     <HeaderBlock>
       <h1>{title}</h1>
-      <div className="add" onClick={onClick}>
-        <WhitePlusIcon />
-      </div>
+      {onClick && (
+        <div className="add" onClick={onClick}>
+          <WhitePlusIcon />
+        </div>
+      )}
     </HeaderBlock>
   );
 };
@@ -17,6 +19,8 @@ export default BackofficeHeader;
 const HeaderBlock = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 2.4rem 3.2rem;
+  margin-bottom: 1.6rem;
 
   .add {
     display: flex;
