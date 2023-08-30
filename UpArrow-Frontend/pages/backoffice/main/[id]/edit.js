@@ -3,23 +3,38 @@ import { StyledEngineProvider } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
-import api from "../../../apis";
-import BackofficeLayout from "../../../Layouts/Backoffice";
-import { getUploadUrl } from "../../../utils/file";
+import api from "../../../../apis";
+import BackofficeLayout from "../../../../Layouts/Backoffice";
+import { getUploadUrl } from "../../../../utils/file";
 import styled from "@emotion/styled";
-import BackofficeHeader from "../../../backoffice/components/common/Header";
-import { HeadH3Bold, HeadH5Bold } from "../../../styles/typography";
-import TitleInput from "../../../backoffice/components/common/TitleInput";
-import Divider from "../../../components/Divider";
-import color from "../../../styles/color";
+import BackofficeHeader from "../../../../backoffice/components/common/Header";
+import { HeadH3Bold, HeadH5Bold } from "../../../../styles/typography";
+import TitleInput from "../../../../backoffice/components/common/TitleInput";
+import Divider from "../../../../components/Divider";
+import color from "../../../../styles/color";
+import { useRouter } from "next/router";
 
-const BackofficeBannerAdd = () => {
+const BackofficeBannerEdit = () => {
+  const { id } = useRouter().query;
+  console.log("id : ", id);
+  const { data } = useQuery(["banner", id], api.banner.getById(id), {
+    enabled: !!id,
+  });
   const [stockName, setStockName] = useState();
   const [description, setDescription] = useState();
   const [youtubeCode, setYoutubeCode] = useState();
+
+  useEffect(() => {
+    if (data && !stockName) {
+      console.log("data : ", data);
+      setStockName(data.stockName);
+      setDescription(data.description);
+      setYoutubeCode(data.youtubeCode);
+    }
+  }, [data]);
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
   const submit = async () => {
-    await api.banner.post({
+    api.banner.put(id, {
       stockName,
       description,
       youtubeCode,
@@ -33,21 +48,24 @@ const BackofficeBannerAdd = () => {
       <img className="thumbnail" src={getThumbnailUrl(youtubeCode)} />
       <TitleInput
         title="Stock Name"
+        value={stockName}
         onChange={(v) => setStockName(v.target.value)}
       />
       <TitleInput
         title="Description"
+        value={description}
         onChange={(v) => {
           setDescription(v.target.value);
         }}
       />
       <TitleInput
         title="Youtube Code"
+        value={youtubeCode}
         onChange={(e) => setYoutubeCode(e.target.value)}
       />
       <Divider className="divider" />
       <div className="add-button-wrapper">
-        <button onClick={() => submit()}>Add</button>
+        <button onClick={() => submit()}>Edit</button>
       </div>
     </BackofficeMain>
   );
@@ -103,7 +121,7 @@ const App = () => {
     <RecoilRoot>
       <StyledEngineProvider injectFirst>
         <BackofficeLayout>
-          <BackofficeBannerAdd />
+          <BackofficeBannerEdit />
         </BackofficeLayout>
       </StyledEngineProvider>
     </RecoilRoot>

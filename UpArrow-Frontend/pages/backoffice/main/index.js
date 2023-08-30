@@ -14,70 +14,18 @@ import { Boards } from "../../../backoffice/components/settings/Boards";
 import styled from "@emotion/styled";
 import BackofficeHeader from "../../../backoffice/components/common/Header";
 import Table from "../../../backoffice/components/common/Table";
+import { useRouter } from "next/router";
 
-const BackofficeStockList = () => {
-  const { data: config, isLoading } = useQuery(["config"], api.config.get);
-  const [bannerImage, setBannerImage] = useState();
-  const [boardImage, setBoardImage] = useState();
-  const [chartImage, setChartImage] = useState();
-  const [name, setName] = useState(config?.board?.name);
-  const [color, setColor] = useState(config?.board?.color);
-  const [ticker, setTicker] = useState(config?.board?.ticker);
-  const [importantDatePrice, setImportantDatePrice] = useState(
-    config?.board?.importantDatePrice
-  );
-  const [importantDateString, setImportantDateString] = useState(
-    config?.board?.importantDateString
-      ? new Date(config?.board?.importantDateString)
-      : undefined
-  );
-  const [dotLocation, setDotLocation] = useState(
-    config?.board?.dotLocation || 0
-  );
-
-  const [boards, setBoards] = useState(config?.boards || []);
-
-  useEffect(() => {
-    if (!isLoading) {
-      setBoards(config?.boards || []);
-    }
-  }, [isLoading]);
-
-  const save = async () => {
-    // if (!bannerImage || !boardImage || !chartImage) return alert("no image");
-
-    const bannerImageUrl = await getUploadUrl(
-      bannerImage,
-      config?.bannerImageUrl
-    );
-    const boardImageUrl = await getUploadUrl(
-      boardImage,
-      config?.board?.imageUrl
-    );
-    const chartImageUrl = await getUploadUrl(
-      chartImage,
-      config?.board?.chartImageUrl
-    );
-
-    const res = await api.config.put({
-      bannerImageUrl,
-      board: {
-        name,
-        color,
-        ticker,
-        importantDateString,
-        importantDatePrice,
-        dotLocation,
-        imageUrl: boardImageUrl,
-        chartImageUrl,
-      },
-      boards,
-    })();
-  };
+const BackofficeBannerList = () => {
+  const { data: banner, isLoading } = useQuery(["banner"], api.banner.get);
+  const router = useRouter();
 
   return (
     <BackofficeMain>
-      <BackofficeHeader title="Main" />
+      <BackofficeHeader
+        title="Main"
+        onClick={() => router.push("/backoffice/main/add")}
+      />
       <div className="table-wrapper">
         <Table
           columns={[
@@ -87,15 +35,20 @@ const BackofficeStockList = () => {
             "Created at",
             "Updated at",
           ]}
-          datas={boards.map((board) => {
-            return [
-              `http://img.youtube.com/vi/${board?.youtubeCode}/0.jpg`,
-              board?.stockName,
-              board?.youtubeCode,
-              getYMD(new Date(), ". "),
-              getYMD(new Date(), ". "),
-            ];
-          })}
+          datas={
+            banner?.map((banner) => {
+              return {
+                id: banner._id,
+                items: [
+                  `http://img.youtube.com/vi/${banner?.youtubeCode}/0.jpg`,
+                  banner?.stockName,
+                  banner?.youtubeCode,
+                  getYMD(new Date(banner?.createdAt), ". "),
+                  getYMD(new Date(banner?.updatedAt), ". "),
+                ],
+              };
+            }) || []
+          }
           gridTemplateColumns={["7.2rem", "2fr", "0.8fr", "0.8fr", "0.8fr"]}
         />
       </div>
@@ -119,7 +72,7 @@ const App = () => {
     <RecoilRoot>
       <StyledEngineProvider injectFirst>
         <BackofficeLayout>
-          <BackofficeStockList />
+          <BackofficeBannerList />
         </BackofficeLayout>
       </StyledEngineProvider>
     </RecoilRoot>
