@@ -8,10 +8,10 @@ import Youtube from "../Youtube";
 import { navbarHeight } from "../Navbar";
 import { AngleLeftTailLine, ChevronRightIcon } from "../icons";
 import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
 
-const PcBanner = ({ config: initConfig }) => {
-  const { config } = useConfig(initConfig);
-  const stock = config?.board;
+const PcBanner = () => {
+  const { data: banners } = useQuery(["banner"], api.banner.get);
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
   const [currentPlayIndexes, setCurrentPlayIndexes] = useState(
     Array(100).fill(false)
@@ -25,16 +25,6 @@ const PcBanner = ({ config: initConfig }) => {
 
   const windowInnerWidth =
     typeof window !== "undefined" ? window.innerWidth : 500;
-
-  useEffect(() => {
-    const getStockPrice = async () => {
-      const res = await api.stock.getById(stock?.stockId)();
-      setBannerStockPrice(res?.currentPrice);
-    };
-    if (stock?.stockId) {
-      getStockPrice();
-    }
-  }, [stock?.stockId]);
 
   useEffect(() => {
     const handleWindowResize = () => {
@@ -74,21 +64,17 @@ const PcBanner = ({ config: initConfig }) => {
     return 10;
   };
 
-  if (!stock) return null;
-
-  const banners = config?.boards;
+  if (!banners) return null;
 
   return (
     <BannerBlock
       className="banner-block"
       bannerHalfWidthRem={bannerHalfWidthRem}
-      bgUrl={getThumbnailUrl(config.boards[currentBannerIdx].youtubeCode)}
+      bgUrl={getThumbnailUrl(banners[currentBannerIdx].youtubeCode)}
     >
       <BannerWrapper
         className="banner-wrapper"
-        bannerContentIdx={
-          currentBannerIdx - Math.floor(config?.boards.length / 2)
-        }
+        bannerContentIdx={currentBannerIdx - Math.floor(banners.length / 2)}
         bannerWidthRem={bannerWidthRem}
         bannerHeight={bannerHeight}
       >
@@ -146,9 +132,7 @@ const PcBanner = ({ config: initConfig }) => {
           className="angle-right-tail-line"
           onClick={() => {
             setCurrentBannerIdx((prev) =>
-              prev < config.boards.length - 1
-                ? prev + 1
-                : config.boards.length - 1
+              prev < banners.length - 1 ? prev + 1 : banners.length - 1
             );
           }}
         />

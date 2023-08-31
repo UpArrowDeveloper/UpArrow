@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 
 const BackofficeBannerEdit = () => {
   const { id } = useRouter().query;
-  console.log("id : ", id);
+  const router = useRouter();
   const { data } = useQuery(["banner", id], api.banner.getById(id), {
     enabled: !!id,
   });
@@ -34,11 +34,12 @@ const BackofficeBannerEdit = () => {
   }, [data]);
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
   const submit = async () => {
-    api.banner.put(id, {
+    await api.banner.put(id, {
       stockName,
       description,
       youtubeCode,
     });
+    router.push("/backoffice/main");
   };
 
   return (

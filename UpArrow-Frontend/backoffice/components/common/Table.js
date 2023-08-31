@@ -63,6 +63,7 @@ const TableBlock = styled.div`
   grid-template-columns: ${({ gridTemplateColumns }) =>
       gridTemplateColumns.join(" ")} 14.8rem;
   column-gap: 1.6rem;
+  row-gap: 1.6rem;
 
   .table-column {
     ${Body14Medium}

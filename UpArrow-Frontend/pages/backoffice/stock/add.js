@@ -13,13 +13,16 @@ import TitleInput from "../../../backoffice/components/common/TitleInput";
 import Divider from "../../../components/Divider";
 import color from "../../../styles/color";
 import { useRouter } from "next/router";
+import { FileUploader } from "../../../backoffice/components/common/FileUploader";
 
-const BackofficeBannerAdd = () => {
+const BackofficeStockAdd = () => {
   const [stockName, setStockName] = useState();
+  const [ticker, setTicker] = useState();
+  const [currentPrice, setCurrentPrice] = useState();
+  const [targetPrice, setTargetPrice] = useState();
   const [description, setDescription] = useState();
   const [youtubeCode, setYoutubeCode] = useState();
   const router = useRouter();
-  const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
   const submit = async () => {
     await api.banner.post({
       stockName,
@@ -29,14 +32,38 @@ const BackofficeBannerAdd = () => {
     router.push("/backoffice/main");
   };
 
+  const stock = null;
+  const [logoImage, setLogoImage] = useState();
+
   return (
     <BackofficeMain>
-      <BackofficeHeader title="Add banner" />
+      <BackofficeHeader title="Add Stock" />
       <div className="backoffice-sub-title">Stock Info</div>
-      <img className="thumbnail" src={getThumbnailUrl(youtubeCode)} />
+      <FileUploader
+        name="stockImage"
+        file={logoImage}
+        url={stock?.logoUrl}
+        setImage={setLogoImage}
+      />
       <TitleInput
-        title="Stock Name"
+        title="Stock name"
+        value={stockName}
         onChange={(v) => setStockName(v.target.value)}
+      />
+      <TitleInput
+        title="Ticker"
+        value={ticker}
+        onChange={(v) => setTicker(v.target.value)}
+      />
+      <TitleInput
+        title="Current Price"
+        value={currentPrice}
+        onChange={(v) => setCurrentPrice(v.target.value)}
+      />
+      <TitleInput
+        title="Target Price"
+        value={targetPrice}
+        onChange={(v) => setTargetPrice(v.target.value)}
       />
       <TitleInput
         title="Description"
@@ -106,7 +133,7 @@ const App = () => {
     <RecoilRoot>
       <StyledEngineProvider injectFirst>
         <BackofficeLayout>
-          <BackofficeBannerAdd />
+          <BackofficeStockAdd />
         </BackofficeLayout>
       </StyledEngineProvider>
     </RecoilRoot>
