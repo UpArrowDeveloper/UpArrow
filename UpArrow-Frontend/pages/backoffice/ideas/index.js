@@ -1,9 +1,3 @@
-// material-ui
-import { Box, Button, StyledEngineProvider } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-
-import Image from "next/image";
-
 import { useQuery } from "@tanstack/react-query";
 
 import React, { useState } from "react";
@@ -42,6 +36,10 @@ const BackofficeStockList = () => {
               };
             }) || []
           }
+          onDelete={async (id) => {
+            await api.idea.deleteById(id);
+            router.reload();
+          }}
           gridTemplateColumns={["7.2rem", "2fr", "0.8fr", "0.8fr", "0.8fr"]}
         />
       </div>
@@ -52,11 +50,9 @@ const BackofficeStockList = () => {
 const App = () => {
   return (
     <RecoilRoot>
-      <StyledEngineProvider injectFirst>
-        <BackofficeLayout>
-          <BackofficeStockList />
-        </BackofficeLayout>
-      </StyledEngineProvider>
+      <BackofficeLayout>
+        <BackofficeStockList />
+      </BackofficeLayout>
     </RecoilRoot>
   );
 };

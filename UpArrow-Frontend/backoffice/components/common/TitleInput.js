@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 import { HeadH6Bold } from "../../../styles/typography";
 
-const TitleInput = ({ title, value, onChange, placeHolder }) => {
+const TitleInput = ({ title, value, onChange, placeHolder, style }) => {
   return (
-    <TitleInputBlock>
+    <TitleInputBlock style={style}>
       <div className="title">{title}</div>
       <input value={value} onChange={onChange} placeholder={placeHolder} />
     </TitleInputBlock>

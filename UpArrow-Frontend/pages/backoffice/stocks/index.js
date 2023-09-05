@@ -1,17 +1,10 @@
-// material-ui
-import { Box, Button, StyledEngineProvider } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-
-import Image from "next/image";
-
 import { useQuery } from "@tanstack/react-query";
 
-import React, { useState } from "react";
+import React from "react";
 import { RecoilRoot } from "recoil";
 import api from "../../../apis";
 import BackofficeLayout from "../../../Layouts/Backoffice";
 import { useRouter } from "next/router";
-import axios from "axios";
 import styled from "@emotion/styled";
 import BackofficeHeader from "../../../backoffice/components/common/Header";
 import Table from "../../../backoffice/components/common/Table";
@@ -19,7 +12,6 @@ import { getYMD } from "../../../utils/date";
 
 const BackofficeStockList = () => {
   const { data, refetch } = useQuery(["stock list"], api.stock.get);
-  const [selectedIds, setSelectedIds] = useState([]);
   const router = useRouter();
 
   if (!data) return "loading";
@@ -27,7 +19,7 @@ const BackofficeStockList = () => {
     <BackofficeMain>
       <BackofficeHeader
         title="Stock"
-        onClick={() => router.push("/backoffice/stock/new")}
+        onClick={() => router.push("/backoffice/stocks/new")}
       />
       <div className="table-wrapper">
         <Table
@@ -65,6 +57,14 @@ const BackofficeStockList = () => {
             "0.8fr",
             "0.8fr",
           ]}
+          onEdit={(id) => {
+            router.push(`/backoffice/stocks/${id}`);
+            refetch();
+          }}
+          onDelete={async (id) => {
+            await api.stock.deleteById(id);
+            router.reload();
+          }}
         />
       </div>
     </BackofficeMain>
@@ -74,11 +74,9 @@ const BackofficeStockList = () => {
 const App = () => {
   return (
     <RecoilRoot>
-      <StyledEngineProvider injectFirst>
-        <BackofficeLayout>
-          <BackofficeStockList />
-        </BackofficeLayout>
-      </StyledEngineProvider>
+      <BackofficeLayout>
+        <BackofficeStockList />
+      </BackofficeLayout>
     </RecoilRoot>
   );
 };

@@ -5,7 +5,6 @@ const useModal = () => {
   const [modal, setModal] = useRecoilState(modalState);
 
   const openModal = ({ children, onConfirm }) => {
-    console.log("children : ", children);
     setModal({
       visible: true,
       children,

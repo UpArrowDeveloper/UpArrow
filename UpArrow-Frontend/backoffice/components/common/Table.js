@@ -1,14 +1,8 @@
 import styled from "@emotion/styled";
 import { Body14Medium, HeadH5Bold } from "../../../styles/typography";
 import color from "../../../styles/color";
-import { useRouter } from "next/router";
-import api from "../../../apis";
-import { useQueryClient } from "@tanstack/react-query";
 
-const Table = ({ columns, datas, gridTemplateColumns }) => {
-  const queryClient = useQueryClient();
-  const router = useRouter();
-  console.log("datas : ", datas);
+const Table = ({ columns, datas, gridTemplateColumns, onEdit, onDelete }) => {
   return (
     <TableBlock gridTemplateColumns={gridTemplateColumns}>
       {columns.map((column, idx) => (
@@ -34,20 +28,17 @@ const Table = ({ columns, datas, gridTemplateColumns }) => {
               );
             })}
             <div className="button-wrapper">
-              <button
-                onClick={() => router.push(`/backoffice/main/${data.id}/edit`)}
-              >
-                수정
-              </button>
-              <button
-                className="delete"
-                onClick={async () => {
-                  await api.banner.delete(data.id);
-                  queryClient.invalidateQueries("banner");
-                }}
-              >
-                삭제
-              </button>
+              {onEdit && <button onClick={() => onEdit(data.id)}>수정</button>}
+              {onDelete && (
+                <button
+                  className="delete"
+                  onClick={() => {
+                    onDelete(data.id);
+                  }}
+                >
+                  삭제
+                </button>
+              )}
             </div>
           </>
         );
@@ -79,7 +70,7 @@ const TableBlock = styled.div`
 
   .button-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 1.6rem;
 
     button {

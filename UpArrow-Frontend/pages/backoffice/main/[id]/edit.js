@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
 import api from "../../../../apis";
 import BackofficeLayout from "../../../../Layouts/Backoffice";
-import { getUploadUrl } from "../../../../utils/file";
 import styled from "@emotion/styled";
 import BackofficeHeader from "../../../../backoffice/components/common/Header";
 import { HeadH3Bold, HeadH5Bold } from "../../../../styles/typography";
@@ -20,18 +19,18 @@ const BackofficeBannerEdit = () => {
   const { data } = useQuery(["banner", id], api.banner.getById(id), {
     enabled: !!id,
   });
+
   const [stockName, setStockName] = useState();
   const [description, setDescription] = useState();
   const [youtubeCode, setYoutubeCode] = useState();
 
   useEffect(() => {
-    if (data && !stockName) {
-      console.log("data : ", data);
+    if (data) {
       setStockName(data.stockName);
       setDescription(data.description);
       setYoutubeCode(data.youtubeCode);
     }
-  }, [data]);
+  }, [data, id]);
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
   const submit = async () => {
     await api.banner.put(id, {

@@ -8,16 +8,14 @@ import api from "../../../apis";
 import FilePreview from "../../../components/common/FilePreview";
 import { env } from "../../../config";
 import BackofficeLayout from "../../../Layouts/Backoffice";
-import { getBannerYMD, getYMD } from "../../../utils/date";
-import { getUploadUrl } from "../../../utils/file";
-import { Boards } from "../../../backoffice/components/settings/Boards";
+import { getYMD } from "../../../utils/date";
 import styled from "@emotion/styled";
 import BackofficeHeader from "../../../backoffice/components/common/Header";
 import Table from "../../../backoffice/components/common/Table";
 import { useRouter } from "next/router";
 
 const BackofficeBannerList = () => {
-  const { data: banner, isLoading } = useQuery(["banner"], api.banner.get);
+  const { data: banner, refetch } = useQuery(["banner"], api.banner.get);
   const router = useRouter();
 
   return (
@@ -50,6 +48,14 @@ const BackofficeBannerList = () => {
             }) || []
           }
           gridTemplateColumns={["7.2rem", "2fr", "0.8fr", "0.8fr", "0.8fr"]}
+          onEdit={(id) => {
+            router.push(`/backoffice/main/${id}/edit`);
+            refetch();
+          }}
+          onDelete={async (id) => {
+            await api.banner.delete(id);
+            router.reload();
+          }}
         />
       </div>
     </BackofficeMain>

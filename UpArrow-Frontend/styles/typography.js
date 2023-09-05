@@ -1,5 +1,4 @@
 import { css } from "@emotion/react";
-import { mobileWidth } from "./responsive";
 
 export const HeadH1Bold = css`
   line-height: 3.6rem;

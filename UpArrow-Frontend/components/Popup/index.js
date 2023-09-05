@@ -5,10 +5,7 @@ import useModal from "../../hooks/useModal";
 export const Popup = () => {
   const { modal, closeModal } = useModal();
   return (
-    <PopupBlock
-      className={!modal.visible ? "hidden" : ""}
-      onClick={() => closeModal}
-    >
+    <PopupBlock className={!modal.visible ? "hidden" : ""} onClick={closeModal}>
       {modal.children && <modal.children onConfirm={modal.onConfirm} />}
     </PopupBlock>
   );

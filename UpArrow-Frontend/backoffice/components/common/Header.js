@@ -1,15 +1,22 @@
 import styled from "@emotion/styled";
-import { WhitePlusIcon } from "../../../components/icons";
+import { PersonIcon, WhitePlusIcon } from "../../../components/icons";
 
-const BackofficeHeader = ({ title, onClick }) => {
+const BackofficeHeader = ({ title, onClick, onSubClick }) => {
   return (
     <HeaderBlock>
       <h1>{title}</h1>
-      {onClick && (
-        <div className="add" onClick={onClick}>
-          <WhitePlusIcon />
-        </div>
-      )}
+      <div className="header-buttons">
+        {onClick && (
+          <div className="add" onClick={onClick}>
+            <WhitePlusIcon />
+          </div>
+        )}
+        {onSubClick && (
+          <div className="add" onClick={onSubClick}>
+            <PersonIcon />
+          </div>
+        )}
+      </div>
     </HeaderBlock>
   );
 };
@@ -35,5 +42,10 @@ const HeaderBlock = styled.div`
   h1 {
     font-size: 4.8rem;
     font-weight: 600;
+  }
+
+  .header-buttons {
+    display: flex;
+    gap: 1.6rem;
   }
 `;
