@@ -134,6 +134,7 @@ const LoginPopup = ({ closeModal }) => {
           });
           localStorage.setItem("access_token", JSON.stringify(accessToken));
           closeModal();
+          window.location.href = "/";
         }}
       >
         <TitleInput style={{ width: "100%" }} title="Email" />

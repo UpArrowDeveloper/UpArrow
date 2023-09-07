@@ -1,8 +1,22 @@
 import { BackofficeNavbar } from "../backoffice/components/BackofficeNavbar";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "@emotion/styled";
+import api from "../apis";
 
 const BackofficeLayout = ({ children }) => {
+  useEffect(async () => {
+    try {
+      const { user } = await api.user.me();
+      const config = await api.config.get();
+      const adminEmails = config.adminEmails;
+      if (!adminEmails.includes(user.email)) {
+        throw new Error("권한이 없습니다.");
+      }
+    } catch (e) {
+      alert("권한이 없습니다.");
+      window.location.href = "/";
+    }
+  }, []);
   return (
     <Layout>
       <BackofficeNavbar />
