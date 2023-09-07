@@ -5,9 +5,18 @@ import useModal from "../../hooks/useModal";
 export const Popup = () => {
   const { modal, closeModal } = useModal();
   return (
-    <PopupBlock className={!modal.visible ? "hidden" : ""} onClick={closeModal}>
-      {modal.children && <modal.children onConfirm={modal.onConfirm} />}
-    </PopupBlock>
+    <>
+      <PopupBlock
+        className={!modal.visible ? "hidden" : ""}
+        onClick={closeModal}
+      />
+
+      {modal.children && (
+        <PopupWrapper>
+          <modal.children onConfirm={modal.onConfirm} />
+        </PopupWrapper>
+      )}
+    </>
   );
 };
 
@@ -24,4 +33,15 @@ const PopupBlock = styled.div`
   &.hidden {
     display: none;
   }
+`;
+
+const PopupWrapper = styled.div`
+  position: fixed;
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

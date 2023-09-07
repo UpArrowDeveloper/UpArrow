@@ -1,8 +1,8 @@
-const User = require('../../models/User');
-const { getStockPrices } = require('../config');
-const { getCalculatedOrdersByUser } = require('../order');
-const { getStockById } = require('../stock');
-const { UserAlreadyExist } = require('../../error/user');
+const User = require("../../models/User");
+const { getStockPrices } = require("../config");
+const { getCalculatedOrdersByUser } = require("../order");
+const { getStockById } = require("../stock");
+const { UserAlreadyExist } = require("../../error/user");
 
 const getUserById = async (userId) => {
   const user = await User.findById(userId);
@@ -16,7 +16,7 @@ const getUserByEmail = async (email) => {
 
 const changeCash = async ({ userId, cash }) => {
   const user = await getUserById(userId);
-  if (user.cash + cash < 0) throw new Error('more then 0');
+  if (user.cash + cash < 0) throw new Error("more then 0");
   user.cash = user.cash + cash;
   user.save();
 };
@@ -56,16 +56,19 @@ const addOrderById = async (id, orderId) => {
 };
 
 const addUser = async (email, name, profileImageUrl) => {
+  console.log("email : ", email);
+  if (!email) throw "no email";
   const user = await User.findOne({ email });
+  console.log("user : ", user);
   if (user) throw UserAlreadyExist;
 
   const newUser = new User({
     email,
     name,
     profileImageUrl,
-    username: '',
-    investmentPhilosophy: '',
-    websiteUrl: '',
+    username: "",
+    investmentPhilosophy: "",
+    websiteUrl: "",
     isAdmin: false,
     commentIds: [],
     followers: [],

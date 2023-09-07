@@ -14,22 +14,36 @@ import { HeadH3Bold, HeadH5Bold } from "../../../styles/typography";
 import TitleInput from "../../../backoffice/components/common/TitleInput";
 
 const BackofficeBannerList = () => {
-  const { data: users } = useQuery(["users"], api.user.get);
+  const { data: users, refetch } = useQuery(["users"], api.user.get);
   const router = useRouter();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   return (
     <BackofficeMain>
       <BackofficeHeader
         title="User"
         onClick={() => {
           openModal({
-            children: LoginPopup,
+            children: () => (
+              <SignupPopup
+                closeModal={() => {
+                  closeModal();
+                  refetch();
+                }}
+              />
+            ),
             onConfirm: () => {},
           });
         }}
         onSubClick={() => {
           openModal({
-            children: SignupPopup,
+            children: () => (
+              <LoginPopup
+                closeModal={() => {
+                  closeModal();
+                  refetch();
+                }}
+              />
+            ),
             onConfirm: () => {},
           });
         }}
@@ -105,24 +119,48 @@ const LoginPopupBlock = styled.div`
   }
 `;
 
-const LoginPopup = () => {
+const LoginPopup = ({ closeModal }) => {
   return (
     <LoginPopupBlock>
       <h3>Custom Login</h3>
-      <TitleInput style={{ width: "100%" }} title="Email" />
-      <TitleInput style={{ width: "100%" }} title="Password" />
-      <div className="submit-button">Login</div>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const email = e.target[0].value;
+          const password = e.target[1].value;
+          const { accessToken } = await api.auth.customLogin({
+            email,
+            password,
+          });
+          localStorage.setItem("access_token", JSON.stringify(accessToken));
+          closeModal();
+        }}
+      >
+        <TitleInput style={{ width: "100%" }} title="Email" />
+        <TitleInput style={{ width: "100%" }} title="Password" />
+        <button className="submit-button">Login</button>
+      </form>
     </LoginPopupBlock>
   );
 };
 
-const SignupPopup = () => {
+const SignupPopup = ({ closeModal }) => {
   return (
     <LoginPopupBlock>
       <h3>Custom Signup</h3>
-      <TitleInput style={{ width: "100%" }} title="Email" />
-      <TitleInput style={{ width: "100%" }} title="Name" />
-      <div className="submit-button">Custom Sign-up</div>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const email = e.target[0].value;
+          const name = e.target[1].value;
+          await api.auth.customSignup({ email, name });
+          closeModal();
+        }}
+      >
+        <TitleInput style={{ width: "100%" }} title="Email" />
+        <TitleInput style={{ width: "100%" }} title="Name" />
+        <button className="submit-button">Custom Sign-up</button>
+      </form>
     </LoginPopupBlock>
   );
 };

@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
-import React, { useState } from "react";
+import React from "react";
 import { RecoilRoot } from "recoil";
 import api from "../../../apis";
 import BackofficeLayout from "../../../Layouts/Backoffice";
 import { useRouter } from "next/router";
-import axios from "axios";
 import styled from "@emotion/styled";
 import BackofficeHeader from "../../../backoffice/components/common/Header";
 import Table from "../../../backoffice/components/common/Table";
@@ -39,6 +38,9 @@ const BackofficeStockList = () => {
           onDelete={async (id) => {
             await api.idea.deleteById(id);
             router.reload();
+          }}
+          onEdit={(id) => {
+            router.replace(`/editor/${id}`);
           }}
           gridTemplateColumns={["7.2rem", "2fr", "0.8fr", "0.8fr", "0.8fr"]}
         />

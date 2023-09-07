@@ -1,14 +1,13 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const User = require('../../models/User');
-const Stock = require('../../models/Stock');
-const Advertisement = require('../../models/Advertisement');
-const Average = require('../../models/Config');
-const Comment = require('../../models/Comment');
-const Analysis = require('../../models/Analysis');
-const ObjectId = require('mongodb').ObjectId;
+const User = require("../../models/User");
+const Stock = require("../../models/Stock");
+const Average = require("../../models/Config");
+const Comment = require("../../models/Comment");
+const Analysis = require("../../models/Analysis");
+const ObjectId = require("mongodb").ObjectId;
 
-router.post('/register/stock', async (req, res) => {
+router.post("/register/stock", async (req, res) => {
   const existingStockName = await Stock.findOne({ name: req.body.name });
   const existingStockTicker = await Stock.findOne({ ticker: req.body.ticker });
   if (!existingStockName && !existingStockTicker) {
@@ -23,7 +22,7 @@ router.post('/register/stock', async (req, res) => {
 // POST http://localhost:4000/api/v1/admin/register/stock
 // the administrator registering a stock to an app
 
-router.put('/update/stock/:stockObjectId', async (req, res) => {
+router.put("/update/stock/:stockObjectId", async (req, res) => {
   try {
     const stockId = req.params.stockObjectId;
     const objectId = ObjectId(stockId);
@@ -56,7 +55,7 @@ router.put('/update/stock/:stockObjectId', async (req, res) => {
 // PUT http://localhost:4000/api/v1/admin/update/stock/:stockObjectId
 // the administrator is updating the stock profile
 
-router.delete('/delete/stock/:stockId', async (req, res) => {
+router.delete("/delete/stock/:stockId", async (req, res) => {
   try {
     const stockId = req.params.stockId;
     const stockObjectId = ObjectId(stockId);
@@ -109,7 +108,7 @@ router.delete('/delete/stock/:stockId', async (req, res) => {
 // DELETE http://localhost:4000/api/v1/admin/delete/stock/:stockObjectId
 // The administrator is deleting the stock profile
 
-router.post('/register/analysis', async (req, res) => {
+router.post("/register/analysis", async (req, res) => {
   try {
     const analysis = await Analysis.findOne({ ticker: req.body.ticker });
 
@@ -129,7 +128,7 @@ router.post('/register/analysis', async (req, res) => {
 // POST http://localhost:4000/api/v1/admin/register/analysis
 // The administrator is posting a new analysis of a company
 
-router.put('/update/analysis/:ticker', async (req, res) => {
+router.put("/update/analysis/:ticker", async (req, res) => {
   const ticker = req.params.ticker.toUpperCase();
   const analysisDocument = await Analysis.findOne({ ticker: ticker });
 
@@ -165,7 +164,7 @@ router.put('/update/analysis/:ticker', async (req, res) => {
 // PUT http://localhost:4000/api/v1/admin/update/analysis/:ticker
 // The admin is updating an analysis of a company
 
-router.delete('/delete/analysis/:ticker', async (req, res) => {
+router.delete("/delete/analysis/:ticker", async (req, res) => {
   const ticker = req.params.ticker.toUpperCase();
   const deletedAnalysis = await Analysis.findOneAndDelete({ ticker: ticker });
 
@@ -176,20 +175,20 @@ router.delete('/delete/analysis/:ticker', async (req, res) => {
   }
 });
 
-router.post('/create/averages', async (req, res) => {
+router.post("/create/averages", async (req, res) => {
   const newAverage = new Average(req.body);
   newAverage.save().catch((err) => console.error(err));
   return res.status(200).send(newAverage);
 });
 
-router.put('/update/average/:averageObjectId', async (req, res) => {
+router.put("/update/average/:averageObjectId", async (req, res) => {
   try {
     const averageId = req.params.averageObjectId;
     const averageObjectId = ObjectId(averageId);
     const averageDocument = await Average.findById(averageObjectId);
 
     if (!averageDocument) {
-      return res.status(404).send({ message: 'no average document' });
+      return res.status(404).send({ message: "no average document" });
     } else {
       const query = { _id: averageObjectId };
       const updatedValue = {
@@ -207,7 +206,7 @@ router.put('/update/average/:averageObjectId', async (req, res) => {
 // PUT http://localhost:4000/api/v1/admin/update/average/:averageObjectId
 // the administrator is updating a stock price or add new stock
 
-router.get('/fetch/averagestockprice', async (req, res) => {
+router.get("/fetch/averagestockprice", async (req, res) => {
   const averageStockPrice = await Average.find();
   return res.status(200).send(averageStockPrice);
 });

@@ -143,7 +143,6 @@ router.get("/:id/rank", async (req, res) => {
 
     return res.status(200).json({ userId: _id, rank: rank + 1 });
   } catch (error) {
-    console.error("erro : ", error);
     return res.status(500).send({ error });
   }
 });
