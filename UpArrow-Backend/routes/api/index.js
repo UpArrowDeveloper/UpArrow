@@ -3,7 +3,6 @@ const router = express.Router();
 
 const analysis = require("./analysis");
 const idea = require("./idea");
-const admin = require("./admin");
 const user = require("./user");
 const comment = require("./comment");
 const config = require("./config");
@@ -18,7 +17,6 @@ const localAuth = require("./oauth/local");
 
 router.use("/analysis", analysis);
 router.use("/idea", idea);
-router.use("/admin", admin);
 router.use("/user", user);
 router.use("/comment", comment);
 router.use("/config", config);

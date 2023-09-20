@@ -1,11 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { generateToken } = require("../../../lib/token");
-const {
-  getUserByEmail,
-  getUserById,
-  addUser,
-} = require("../../../services/user");
+const { getUserByEmail, addUser } = require("../../../services/user");
 
 // google login 성공과 실패 리다이렉트
 router.post("/auth", async (req, res) => {

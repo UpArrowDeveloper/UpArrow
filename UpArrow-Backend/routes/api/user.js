@@ -13,25 +13,6 @@ const { getIdeasByUserId } = require("../../services/idea");
 const { USER_ALREADY_EXIST, UserAlreadyExist } = require("../../error/user");
 const { validUser } = require("../../middlewares/auth");
 
-// POST http://localhost:4000/api/v1/investor/register/user
-// a user is registering for the first time on UpArrow
-
-// REST API
-
-// GET POST PUT DELETE  http method <- 하려는 동작. (동사)
-// 회원
-// 회원정보 가져오기
-// 회원정보 추가하기 (회원가입)
-// 회원정보 수정하기 (email 변경, nickname 변경)
-// 회원정보 삭제하기 (회원탈퇴)
-
-// ['a', 'b', 'c']
-// POST ('/user') <- 회원가입 API
-// GET ('/user') <- 회원정보 전체 가져오기
-// GET ('/user/:id') <- 회원정보 하나 가져오기
-// PUT ('/user/:id') <- 회원정보 하나 가져오기
-// DELETE ('/user/:id') <- 회원정보 하나 가져오기
-
 router.get("/", async (req, res) => {
   try {
     const userList = await User.find();
@@ -111,7 +92,6 @@ router.put("/:id", async (req, res) => {
     if (error.errorType === USER_ALREADY_EXIST) {
       return UserAlreadyExist.responseError();
     }
-    console.log("error : ", error);
     return res.status(500).json(error);
   }
 });
@@ -157,8 +137,6 @@ router.get("/:email/email", async (req, res) => {
     return res.status(400).send({ message: "no user" });
   }
 });
-
-// a logged user can see other investor’s profile and comments
 
 router.get("/:userId/profile", async (req, res) => {
   try {
@@ -249,9 +227,6 @@ router.get("/:userId/profit-percentage", async (req, res) => {
   }
 });
 
-// GET http://localhost:4000/api/v1/investor/search/user/:email
-// a user can see other user's profile and comments using email address
-
 router.get("/:email/search", async (req, res) => {
   try {
     const userEmail = req.params.email;
@@ -273,7 +248,6 @@ router.get("/:id/ideas", async (req, res) => {
   res.json(ideas);
 });
 
-// TODO: follow 하면 2번 중복 됨
 router.put("/:id/follow", validUser, async (req, res) => {
   console.log("followstart");
   const user = req.user;
@@ -317,8 +291,5 @@ router.delete("/:id", async (req, res) => {
     return res.status(500).send({ error });
   }
 });
-
-// GET http://localhost:4000/api/v1/investor/fetch/userprofiles/
-// a user can get all investors
 
 module.exports = router;

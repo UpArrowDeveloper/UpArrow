@@ -1,15 +1,14 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Order = require('../../models/Order');
-const { getConfig } = require('../../services/config');
-const { getStockById } = require('../../services/stock');
+const Order = require("../../models/Order");
+const { getStockById } = require("../../services/stock");
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   const { userId, stockId } = req.query;
   const stock = await getStockById(stockId);
   const orders = await Order.find({ userId, stockId });
   const stockQuantity = orders.reduce((acc, order) => {
-    if (order.type === 'buy') {
+    if (order.type === "buy") {
       return acc + order.quantity;
     }
     return acc - order.quantity;

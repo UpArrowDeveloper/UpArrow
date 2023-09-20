@@ -5,17 +5,16 @@ const ObjectId = require("mongodb").ObjectId;
 
 router.get("/", async (req, res) => {
   const stocks = await Banner.find();
-
-  return res.status(200).send(stocks);
+  return res.status(200).json(stocks);
 });
 
 router.get("/:id", async (req, res) => {
   const id = ObjectId(req.params.id);
-  console.log("id : ", id);
-  const stock = await Banner.findById(id);
+  const banner = await Banner.findById(id);
 
-  return res.status(200).send(stock);
+  return res.status(200).json(banner);
 });
+
 router.post("/", async (req, res) => {
   try {
     const { stockName, youtubeCode, description } = req.body;
@@ -45,13 +44,13 @@ router.put("/:id", async (req, res) => {
     }
   );
 
-  return res.send("success");
+  return res.json("banner update success");
 });
 
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   await Banner.deleteOne({ _id: id });
-  return res.send("delete success");
+  return res.json("banner delete success");
 });
 
 module.exports = router;

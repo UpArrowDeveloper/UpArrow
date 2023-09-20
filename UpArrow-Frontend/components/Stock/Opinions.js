@@ -12,6 +12,7 @@ import CommentInput from "../CommentInput";
 import { ChevronLeftIcon, ChevronRightIcon } from "../icons";
 import CommentList from "../CommentList";
 import { mobileWidth } from "../../styles/responsive";
+import { useMobile } from "../../hooks/useMobile";
 
 const OpinionCard = ({ authorImageUrl, author, message }) => {
   return (
@@ -37,6 +38,7 @@ const Opinions = ({
   comments,
   ...restProps
 }) => {
+  const { isMobile } = useMobile();
   const opinionCards = analysis.opinions;
   const [index, setIndex] = useState(0);
 
@@ -51,9 +53,11 @@ const Opinions = ({
     <OpinionsBlock {...restProps} index={index} cardWidth={52 + 2.4}>
       <h3>Opinions</h3>
       <div className="opinion-cards">
-        <div className="left-button" onClick={decreaseIndex}>
-          <ChevronLeftIcon />
-        </div>
+        {!isMobile && (
+          <div className="left-button" onClick={decreaseIndex}>
+            <ChevronLeftIcon />
+          </div>
+        )}
         <div className="opinion-cards-outer-wrapper">
           <div className="opinion-cards-wrapper">
             {opinionCards?.map((card) => (
@@ -61,9 +65,11 @@ const Opinions = ({
             ))}
           </div>
         </div>
-        <div className="right-button" onClick={increaseIndex}>
-          <ChevronRightIcon />
-        </div>
+        {!isMobile && (
+          <div className="right-button" onClick={increaseIndex}>
+            <ChevronRightIcon />
+          </div>
+        )}
       </div>
 
       <CommentList className="comment-list" comments={comments} />

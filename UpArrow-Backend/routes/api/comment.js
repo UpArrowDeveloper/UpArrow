@@ -1,26 +1,26 @@
-const express = require('express');
-const { ObjectId } = require('mongodb');
+const express = require("express");
+const { ObjectId } = require("mongodb");
 const router = express.Router();
-const Comment = require('../../models/Comment');
-const commentService = require('../../services/comment');
+const Comment = require("../../models/Comment");
+const commentService = require("../../services/comment");
 
-router.get('/:stockId/stock', async (req, res) => {
+router.get("/:stockId/stock", async (req, res) => {
   const stockStringId = req.params.stockId;
   const allComments = await Comment.find({ stockId: stockStringId });
 
   return res.status(200).send(allComments);
 });
 
-router.get('/:ids/ids', async (req, res) => {
+router.get("/:ids/ids", async (req, res) => {
   const ids = req.params.ids;
-  const idList = ids.split(',');
+  const idList = ids.split(",");
   const comments = await Promise.all(
     idList.map((id) => Comment.findById(ObjectId(id)))
   );
   return res.status(200).json(comments);
 });
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const isStockComment = !!req.body.stockId;
     let newComment;
@@ -45,21 +45,21 @@ router.post('/', async (req, res) => {
     }
     return res.status(200).send(newComment);
   } catch (error) {
-    console.error('error : ', error);
+    console.error("error : ", error);
     return res.status(500).send({ error: error.message });
   }
 });
 
-router.put('/toggle-like', async (req, res) => {
+router.put("/toggle-like", async (req, res) => {
   const { commentId, userId } = req.body;
   const comment = await commentService.getCommentById(commentId);
   const hasComment = comment.likes.includes(userId);
   if (hasComment) {
     await commentService.removeLike(commentId, userId);
-    return res.status(200).send({ message: 'remove like' });
+    return res.status(200).json({ message: "remove like" });
   } else {
     await commentService.addLike(commentId, userId);
-    return res.status(200).send({ message: 'add like' });
+    return res.status(200).json({ message: "add like" });
   }
 });
 

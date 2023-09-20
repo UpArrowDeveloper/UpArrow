@@ -1,27 +1,27 @@
-const express = require('express');
-const Analysis = require('../../models/Analysis');
+const express = require("express");
+const Analysis = require("../../models/Analysis");
 const router = express.Router();
-const Stock = require('../../models/Stock');
-const Order = require('../../models/Order');
-const Idea = require('../../models/Idea');
-const { getStockByIds } = require('../../services/stock');
-const ObjectId = require('mongodb').ObjectId;
+const Stock = require("../../models/Stock");
+const Order = require("../../models/Order");
+const Idea = require("../../models/Idea");
+const { getStockByIds } = require("../../services/stock");
+const ObjectId = require("mongodb").ObjectId;
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   const stocks = await Stock.find();
 
   return res.status(200).send(stocks);
 });
 
-router.get('/search', async (req, res) => {
+router.get("/search", async (req, res) => {
   const query = req.query.name;
-  const regex = (pattern) => new RegExp(`.*${pattern}.*`, 'i');
+  const regex = (pattern) => new RegExp(`.*${pattern}.*`, "i");
   const stocks = await Stock.find({ name: { $regex: regex(query) } });
 
   return res.status(200).send(stocks);
 });
 
-router.get('/latestOrder', async (req, res) => {
+router.get("/latestOrder", async (req, res) => {
   try {
     const stockList = await Stock.find();
     const orderList = await Order.find();
@@ -31,11 +31,11 @@ router.get('/latestOrder', async (req, res) => {
     for await (const stockId of stockIds) {
       const buyerCount = orderList.filter(
         (order) =>
-          String(order.stockId) === String(stockId) && order.type === 'buy'
+          String(order.stockId) === String(stockId) && order.type === "buy"
       ).length;
       const sellerCount = orderList.filter(
         (order) =>
-          String(order.stockId) === String(stockId) && order.type === 'sell'
+          String(order.stockId) === String(stockId) && order.type === "sell"
       ).length;
       await Stock.findOneAndUpdate(
         { _id: stockId },
@@ -43,14 +43,13 @@ router.get('/latestOrder', async (req, res) => {
       );
     }
 
-    return res.status(200).json({ message: 'updated' });
+    return res.status(200).json({ message: "updated" });
   } catch (err) {
-    console.error('err : ', err);
     return res.status(500).json({ error: JSON.stringify(err) });
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const objectId = ObjectId(id);
@@ -66,18 +65,18 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.get('/:ids/ids', async (req, res) => {
+router.get("/:ids/ids", async (req, res) => {
   try {
     const ids = req.params.ids;
-    const stocks = await getStockByIds(ids.split(',') || []);
+    const stocks = await getStockByIds(ids.split(",") || []);
 
     return res.status(200).json(stocks);
   } catch (error) {
-    return res.status(500).json({ message: 'ids error' });
+    return res.status(500).json({ message: "ids error" });
   }
 });
 
-router.get('/:ticker/ticker', async (req, res) => {
+router.get("/:ticker/ticker", async (req, res) => {
   try {
     const ticker = req.params.ticker;
     const stock = await Stock.findOne({ ticker });
@@ -92,17 +91,17 @@ router.get('/:ticker/ticker', async (req, res) => {
   }
 });
 
-router.get('/:id/ideas', async (req, res) => {
+router.get("/:id/ideas", async (req, res) => {
   try {
     const id = req.params.id;
     const ideas = await Idea.find({ stockIds: { $in: [id] } });
     return res.json(ideas);
   } catch (error) {
-    return res.status(500).json({ message: 'id error', error });
+    return res.status(500).json({ message: "id error", error });
   }
 });
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const {
       name,
@@ -153,13 +152,13 @@ router.post('/', async (req, res) => {
       analysisId: newAnalysisId,
     });
 
-    res.json({ message: 'success' });
+    res.json({ message: "success" });
   } catch (error) {
     return res.status(500).json(error);
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const {
     name,
@@ -212,21 +211,21 @@ router.put('/:id', async (req, res) => {
       opinions,
     }
   );
-  return res.send('success');
+  return res.send("success");
 });
 
-router.put('/:id/price', async (req, res) => {
+router.put("/:id/price", async (req, res) => {
   const { id } = req.params;
   const { currentPrice } = req.body;
 
   await Stock.findOneAndUpdate({ _id: id }, { currentPrice });
-  return res.send('success');
+  return res.send("success");
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   await Stock.deleteOne({ _id: id });
-  return res.send('delete success');
+  return res.send("delete success");
 });
 
 module.exports = router;

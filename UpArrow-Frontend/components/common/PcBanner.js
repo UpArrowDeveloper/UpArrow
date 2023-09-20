@@ -160,6 +160,7 @@ const BannerBlock = styled.div`
     left: calc(50% - ${(props) => props.bannerHalfWidthRem} - 5rem);
     transition: left 0.5s ease-in-out;
     z-index: 10;
+    cursor: pointer;
   }
 
   .angle-right-tail-line {
@@ -168,6 +169,7 @@ const BannerBlock = styled.div`
     top: calc(50% - 2.4rem);
     right: calc(50% - ${(props) => props.bannerHalfWidthRem} - 5rem);
     transition: left 0.5s ease-in-out;
+    cursor: pointer;
   }
 
   @media screen and (max-width: ${mobileWidth}) {
