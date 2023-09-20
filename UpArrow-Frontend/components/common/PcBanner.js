@@ -1,4 +1,3 @@
-import { useConfig } from "../../hooks/useConfig";
 import styled from "@emotion/styled";
 import { HeadH1Bold, HeadH3Bold, HeadH4Medium } from "../../styles/typography";
 import { useEffect, useState } from "react";
@@ -56,7 +55,6 @@ const PcBanner = () => {
 
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
   const getLineClamp = () => {
-    const bannerWidth = bannerWidthRem.replace("rem", "");
     if (bannerWidth < 80) return 3;
     if (bannerWidth < 90) return 5;
     if (bannerWidth < 100) return 7;
@@ -76,6 +74,7 @@ const PcBanner = () => {
         className="banner-wrapper"
         bannerContentIdx={currentBannerIdx - Math.floor(banners.length / 2)}
         bannerWidthRem={bannerWidthRem}
+        isEven={banners.length % 2 == 0}
         bannerHeight={bannerHeight}
       >
         <AngleLeftTailLine
@@ -230,7 +229,9 @@ const BannerWrapper = styled.div`
     position: absolute;
     left: calc(
       ${(props) => props.bannerContentIdx || 0} *
-        (-${(props) => props.bannerWidthRem} - 8.2rem)
+        (-${(props) => props.bannerWidthRem} - 8.2rem) -
+        ${(props) =>
+          props.isEven ? props.bannerWidthRem + "/ 2 - 4.1rem" : "0px"}
     );
     transition: left 0.5s ease-in-out;
     display: flex;
