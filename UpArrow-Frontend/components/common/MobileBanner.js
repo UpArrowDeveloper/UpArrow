@@ -6,13 +6,12 @@ import Youtube from "../Youtube";
 import { navbarHeight } from "../Navbar";
 import Link from "next/link";
 
-import { useRouter } from "next/router";
 import { Body14Medium, HeadH5Bold, HeadH6Bold } from "../../styles/typography";
 import { ChevronRightIcon } from "../icons";
+import { useQuery } from "@tanstack/react-query";
 
-const MobileBanner = ({ config: initConfig }) => {
-  const { config, getConfig } = useConfig(initConfig);
-  const stock = config?.board;
+const MobileBanner = () => {
+  const { data: banners } = useQuery(["banner"], api.banner.get);
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
   const [currentMouseX, setCurrentMouseX] = useState(0);
   const [currentPlayIndexes, setCurrentPlayIndexes] = useState(
@@ -37,17 +36,6 @@ const MobileBanner = ({ config: initConfig }) => {
     };
   }, []);
 
-  const router = useRouter();
-  useEffect(() => {
-    const getStockPrice = async () => {
-      const res = await api.stock.getById(stock?.stockId)();
-      setBannerStockPrice(res?.currentPrice);
-    };
-    if (stock?.stockId) {
-      getStockPrice();
-    }
-  }, [stock?.stockId]);
-
   useEffect(() => {
     setTimeout(() => {
       setCurrentPlayIndexes((prev) => {
@@ -62,7 +50,7 @@ const MobileBanner = ({ config: initConfig }) => {
 
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
 
-  if (!stock) return null;
+  if (!banners) return null;
 
   return (
     <BannerWrapperWithText>
@@ -78,27 +66,27 @@ const MobileBanner = ({ config: initConfig }) => {
         onTouchEnd={(e) => {
           if (e.changedTouches[0]?.clientX - currentMouseX > 0) {
             setCurrentBannerIdx((prev) =>
-              prev > 0 ? prev - 1 : config.boards.length - 1
+              prev > 0 ? prev - 1 : banners.length - 1
             );
           } else {
             setCurrentBannerIdx((prev) =>
-              prev < config.boards.length - 1 ? prev + 1 : 0
+              prev < banners.length - 1 ? prev + 1 : 0
             );
           }
         }}
         onMouseUp={(e) => {
           if (e.clientX - currentMouseX > 0) {
             setCurrentBannerIdx((prev) =>
-              prev > 0 ? prev - 1 : config.boards.length - 1
+              prev > 0 ? prev - 1 : banners.length - 1
             );
           } else {
             setCurrentBannerIdx((prev) =>
-              prev < config.boards.length - 1 ? prev + 1 : 0
+              prev < banners.length - 1 ? prev + 1 : 0
             );
           }
         }}
       >
-        {config.boards.map((board, idx) => {
+        {banners.map((board, idx) => {
           if (!currentPlayIndexes[idx]) {
             return (
               <Banner
@@ -120,7 +108,7 @@ const MobileBanner = ({ config: initConfig }) => {
         })}
       </BannerBlock>
       <InfoWrapper>
-        {config.boards.map((board, idx) => {
+        {banners.map((board, idx) => {
           return (
             <Info idx={idx - currentBannerIdx}>
               <div className="info-header">{board.stockName}</div>
