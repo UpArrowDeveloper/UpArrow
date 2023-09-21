@@ -142,6 +142,7 @@ const OverviewBlock = styled.div`
   padding: 3.2rem;
   border: 0.1rem solid rgba(0 0 0 / 10%);
   border-radius: 1.6rem;
+  margin-left: 3.2rem;
 
   .overview-content-wrapper {
     display: flex;
