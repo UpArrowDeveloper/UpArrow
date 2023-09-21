@@ -1,53 +1,53 @@
-import React, { useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import FilePreview from '../../../components/common/FilePreview';
-import axios from 'axios';
-import { env } from '../../../config';
-import { useRouter } from 'next/router';
-import { FileUploader } from '../common/FileUploader';
-import styled from '@emotion/styled';
+import React, { useState } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import FilePreview from "../../../components/common/FilePreview";
+import axios from "axios";
+import { env } from "../../../config";
+import { useRouter } from "next/router";
+import { FileUploader } from "../common/FileUploader";
+import styled from "@emotion/styled";
 import {
   Body12Medium,
   Body16Regular,
   HeadH3Bold,
   HeadH5Bold,
   HeadH6Bold,
-} from '../../../styles/typography';
-import color from '../../../styles/color';
-import Input from '../../../components/common/Input';
-import Button from '../../../components/common/Button';
-import Divider from '../../../components/Divider';
-import Textarea from '../../../components/common/Textarea';
-import { TrashIcon } from '../../../components/icons';
+} from "../../../styles/typography";
+import color from "../../../styles/color";
+import Input from "../../../components/common/Input";
+import Button from "../../../components/common/Button";
+import Divider from "../../../components/Divider";
+import Textarea from "../../../components/common/Textarea";
+import { TrashIcon } from "../../../components/icons";
 
-const flexColumn = { display: 'flex', flexDirection: 'column' };
+const flexColumn = { display: "flex", flexDirection: "column" };
 export const BoStocksMenu = ({ stock, analysis }) => {
   const isEdit = !!stock;
   const router = useRouter();
-  const [name, setName] = useState(stock?.name || '');
-  const [ticker, setTicker] = useState(stock?.ticker || '');
+  const [name, setName] = useState(stock?.name || "");
+  const [ticker, setTicker] = useState(stock?.ticker || "");
   const [currentPrice, setCurrentPrice] = useState(stock?.currentPrice);
   const [marketCap, setMarketCap] = useState(stock?.marketCap);
-  const [youtubeUrl, setYoutubeUrl] = useState(analysis?.youtubeUrl || '');
+  const [youtubeUrl, setYoutubeUrl] = useState(analysis?.youtubeUrl || "");
   const [youtubeTitle, setYoutubeTitle] = useState(
-    analysis?.youtubeTitle || ''
+    analysis?.youtubeTitle || ""
   );
-  const [youtubeDate, setYoutubeDate] = useState(analysis?.youtubeDate || '');
+  const [youtubeDate, setYoutubeDate] = useState(analysis?.youtubeDate || "");
 
   const [missionStatement, setMissionStatement] = useState(
-    analysis?.missionStatement || ''
+    analysis?.missionStatement || ""
   );
   const [businessModel, setBusinessModel] = useState(
-    analysis?.businessModel || ''
+    analysis?.businessModel || ""
   );
   const [competitiveAdvantage, setCompetitiveAdvantage] = useState(
-    analysis?.competitiveAdvantage || ''
+    analysis?.competitiveAdvantage || ""
   );
 
   const [targetPrices, setTargetPrices] = useState(stock?.targetPrices || []);
   const [targetPrice, setTargetPrice] = useState({});
 
-  const [chartName, setChartName] = useState('');
+  const [chartName, setChartName] = useState("");
   const [chartValues, setChartValues] = useState([]);
   const [chartValue, setChartValue] = useState({});
 
@@ -59,17 +59,17 @@ export const BoStocksMenu = ({ stock, analysis }) => {
   const [growthOppertunities, setGrowthOppertunities] = useState(
     analysis?.growthOppertunities || []
   );
-  const [growthOppertunity, setGrowthOppertunity] = useState('');
+  const [growthOppertunity, setGrowthOppertunity] = useState("");
 
   const [potentialRisks, setPotentialRisks] = useState(
     analysis?.potentialRisks || []
   );
-  const [potentialRisk, setPotentialRisk] = useState('');
+  const [potentialRisk, setPotentialRisk] = useState("");
 
   const [insightOfGiantsUrls, setInsightOfGiantsUrls] = useState(
     analysis?.insightOfGiantsUrls || []
   );
-  const [insightOfGiant, setInsightOfGiant] = useState('');
+  const [insightOfGiant, setInsightOfGiant] = useState("");
 
   const [logoImage, setLogoImage] = useState();
   const [backgroundImage, setBackgroundImage] = useState();
@@ -92,17 +92,17 @@ export const BoStocksMenu = ({ stock, analysis }) => {
         continue;
       }
       const imageForm = new FormData();
-      imageForm.append('image', v.file);
+      imageForm.append("image", v.file);
       const { link } = (
         await axios.post(`${env.serverUrl}/file/upload`, imageForm)
       ).data;
       newOpinions.push({ ...v, file: undefined, authorImageUrl: link });
     }
 
-    let logoUrl = '';
+    let logoUrl = "";
     if (logoImage) {
       const logoFormData = new FormData();
-      logoFormData.append('image', logoImage);
+      logoFormData.append("image", logoImage);
       const { link } = (
         await axios.post(`${env.serverUrl}/file/upload`, logoFormData)
       ).data;
@@ -111,10 +111,10 @@ export const BoStocksMenu = ({ stock, analysis }) => {
       logoUrl = stock.logoUrl;
     }
 
-    let backgroundImageUrl = '';
+    let backgroundImageUrl = "";
     if (backgroundImage) {
       const backgroundFormData = new FormData();
-      backgroundFormData.append('image', backgroundImage);
+      backgroundFormData.append("image", backgroundImage);
       const { link } = (
         await axios.post(`${env.serverUrl}/file/upload`, backgroundFormData)
       ).data;
@@ -123,7 +123,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
       backgroundImageUrl = stock.backgroundImageUrl;
     }
 
-    const splitedVideoUrl = youtubeUrl?.split('=')?.[1] || youtubeUrl;
+    const splitedVideoUrl = youtubeUrl?.split("=")?.[1] || youtubeUrl;
     const payload = {
       name,
       ticker,
@@ -151,12 +151,12 @@ export const BoStocksMenu = ({ stock, analysis }) => {
       await axios.post(`${env.serverUrl}/stock`, payload);
     }
     // no async
-    axios.get('/api/revalidate/stock');
+    axios.get("/api/revalidate/stock");
     axios.get(`/api/revalidate/stock/${ticker}`);
-    axios.get('/api/revalidate');
-    axios.get('/api/revalidate/idea');
-    axios.get('/api/revalidate/investor');
-    router.push('/backoffice/stocks');
+    axios.get("/api/revalidate");
+    axios.get("/api/revalidate/idea");
+    axios.get("/api/revalidate/investor");
+    router.push("/backoffice/stocks");
   };
 
   const onDragEndForChart = (result) => {
@@ -185,74 +185,76 @@ export const BoStocksMenu = ({ stock, analysis }) => {
 
   return (
     <BoStocksMenuBlock>
-      <div className='content'>
+      <div className="content">
         <form onSubmit={onSubmit}>
           <h1>Add Stocks</h1>
-          <h3 className='mb-24'>Stock Info</h3>
-          <div className='stock-image-inputs mb-24'>
+          <h3 className="mb-24">Stock Info</h3>
+          <div className="stock-image-inputs mb-24">
             <div>
-              <h6 className='mb-8'>Stock Image</h6>
+              <h6 className="mb-8">Stock Image</h6>
               <FileUploader
-                name='stockImage'
+                name="stockImage"
                 file={logoImage}
                 url={stock?.logoUrl}
                 setImage={setLogoImage}
+                previewStyle={{ width: "10.8rem", height: "10.8rem" }}
               />
-              <p className='image-info'>Image size - 160x160</p>
+              <p className="image-info">Image size - 160x160</p>
             </div>
             <div>
-              <h6 className='mb-8'>Stock Background Image</h6>
+              <h6 className="mb-8">Stock Background Image</h6>
               <FileUploader
-                name='backgroundImage'
+                name="backgroundImage"
                 file={backgroundImage}
                 url={stock?.backgroundImageUrl}
                 setImage={setBackgroundImage}
+                previewStyle={{ width: "49rem", height: "10.8rem" }}
               />
-              <p className='image-info'>Image size - 1280x214</p>
+              <p className="image-info">Image size - 1280x214</p>
             </div>
           </div>
-          <div className='stock-name-values-wrapper'>
+          <div className="stock-name-values-wrapper">
             <div>
               <Input
-                id='name'
-                name='name'
+                id="name"
+                name="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                label='Stock name'
-                className='mb-24'
+                label="Stock name"
+                className="mb-24"
               />
               <Input
-                id='ticker'
-                name='ticker'
+                id="ticker"
+                name="ticker"
                 value={ticker}
                 onChange={(e) => setTicker(e.target.value)}
-                label='Tickername'
-                className='mb-24'
+                label="Tickername"
+                className="mb-24"
               />
               <Input
-                id='currentPrice'
-                name='currentPrice'
-                label='Price'
+                id="currentPrice"
+                name="currentPrice"
+                label="Price"
                 value={currentPrice}
                 onChange={(e) => setCurrentPrice(e.target.value)}
-                type='number'
-                className='mb-24'
+                type="number"
+                className="mb-24"
               />
               <Input
-                id='marketCap'
-                name='marketCap'
+                id="marketCap"
+                name="marketCap"
                 value={marketCap}
                 onChange={(e) => setMarketCap(e.target.value)}
-                label='Market Cap'
-                type='number'
-                className='mb-24'
+                label="Market Cap"
+                type="number"
+                className="mb-24"
               />
             </div>
             <div>
-              <h6 className='mb-8'>Target Price</h6>
-              <div className='target-prices'>
+              <h6 className="mb-8">Target Price</h6>
+              <div className="target-prices">
                 {targetPrices.map((targetPrice, index) => (
-                  <div className='target-price-input-wrapper'>
+                  <div className="target-price-input-wrapper">
                     <Input
                       value={targetPrice.name}
                       onChange={(e) => {
@@ -270,7 +272,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                           const newTargetPrices = [...s];
                           newTargetPrices[index] = {
                             ...newTargetPrices[index],
-                            name: '',
+                            name: "",
                           };
                           return newTargetPrices;
                         })
@@ -300,8 +302,8 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                       }
                     />
                     <Button
-                      className='target-price-button'
-                      theme='danger'
+                      className="target-price-button"
+                      theme="danger"
                       onClick={() =>
                         setTargetPrices((s) =>
                           s.filter((v) => v.name !== targetPrice.name)
@@ -312,24 +314,24 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                     </Button>
                   </div>
                 ))}
-                <div className='target-price-input-wrapper'>
+                <div className="target-price-input-wrapper">
                   <Input
-                    id='targetPriceName'
-                    name='targetPriceName'
-                    placeholder='Institution Name'
-                    value={targetPrice.name || ''}
+                    id="targetPriceName"
+                    name="targetPriceName"
+                    placeholder="Institution Name"
+                    value={targetPrice.name || ""}
                     InputLabelProps={{ shrink: true }}
                     onChange={(e) => {
                       setTargetPrice((s) => ({ ...s, name: e.target.value }));
                     }}
                   />
                   <Input
-                    id='targetPrice'
-                    name='targetPrice'
+                    id="targetPrice"
+                    name="targetPrice"
                     value={targetPrice.price}
-                    placeholder='Target Price'
+                    placeholder="Target Price"
                     sx={{ marginLeft: 2 }}
-                    type='number'
+                    type="number"
                     min={0}
                     onChange={(e) => {
                       if (Number(e.target.value) < 0) return;
@@ -337,8 +339,8 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                     }}
                   />
                   <Button
-                    className='target-price-button'
-                    theme='secondary'
+                    className="target-price-button"
+                    theme="secondary"
                     disabled={!targetPrice.name || !targetPrice.price}
                     onClick={() => {
                       setTargetPrices((s) => [...s, { ...targetPrice }]);
@@ -352,36 +354,36 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             </div>
           </div>
           <Divider />
-          <div className='analysis-wrapper'>
-            <h3 className='mb-24'>Analysis</h3>
+          <div className="analysis-wrapper">
+            <h3 className="mb-24">Analysis</h3>
             <Input
-              className='mb-16'
-              name='youtubeUrl'
-              label='UpArrow Analysis Youtube URL (Code)'
+              className="mb-16"
+              name="youtubeUrl"
+              label="UpArrow Analysis Youtube URL (Code)"
               value={youtubeUrl}
               onChange={(e) => setYoutubeUrl(e.target.value)}
             />
             <Input
-              className='mb-16'
-              name='youtubeTitle'
-              label=''
-              placeholder='Youtube Title'
+              className="mb-16"
+              name="youtubeTitle"
+              label=""
+              placeholder="Youtube Title"
               value={youtubeTitle}
               onChange={(e) => setYoutubeTitle(e.target.value)}
             />
             <Input
-              className='mb-16'
-              name='youtubeDate'
-              label=''
-              placeholder='Youtube Date (ex: 2021. 01. 01)'
+              className="mb-16"
+              name="youtubeDate"
+              label=""
+              placeholder="Youtube Date (ex: 2021. 01. 01)"
               value={youtubeDate}
               onChange={(e) => setYoutubeDate(e.target.value)}
             />
-            <h6 className='mb-8'>Insight of Giants URL</h6>
+            <h6 className="mb-8">Insight of Giants URL</h6>
             <div>
               {insightOfGiantsUrls.map((e, index) => (
                 <Input
-                  className='mb-8'
+                  className="mb-8"
                   value={e}
                   onChange={(event) => {
                     setInsightOfGiantsUrls((s) => {
@@ -397,7 +399,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                     setInsightOfGiantsUrls((s) =>
                       s.map((v) => {
                         if (v === e) {
-                          return '';
+                          return "";
                         }
                         return v;
                       })
@@ -407,19 +409,19 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               ))}
             </div>
             <Input
-              label=''
-              className='mb-16'
+              label=""
+              className="mb-16"
               value={insightOfGiant}
               onChange={(e) => setInsightOfGiant(e.target.value)}
             />
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
-                theme='secondary'
-                className='add-btn'
-                type='button'
+                theme="secondary"
+                className="add-btn"
+                type="button"
                 onClick={() => {
                   setInsightOfGiantsUrls((s) => [...s, insightOfGiant]);
-                  setInsightOfGiant('');
+                  setInsightOfGiant("");
                 }}
               >
                 ADD
@@ -429,34 +431,34 @@ export const BoStocksMenu = ({ stock, analysis }) => {
 
           <Divider />
           <Textarea
-            className='mb-32'
-            id='missionStatement'
-            name='missionStatement'
-            label='Mission Statement'
+            className="mb-32"
+            id="missionStatement"
+            name="missionStatement"
+            label="Mission Statement"
             value={missionStatement}
             onChange={(e) => setMissionStatement(e.target.value)}
-            variant='outlined'
+            variant="outlined"
             multiline
             fullWidth
             rows={6}
           />
           <Textarea
-            className='mb-32'
-            id='businessModel'
-            name='businessModel'
-            label='Business Model'
+            className="mb-32"
+            id="businessModel"
+            name="businessModel"
+            label="Business Model"
             value={businessModel}
             onChange={(e) => setBusinessModel(e.target.value)}
-            variant='outlined'
+            variant="outlined"
             multiline
             fullWidth
             rows={6}
           />
           <Textarea
-            id='competitiveAdvantage'
-            name='competitiveAdvantage'
-            label='Competitive Advantages'
-            variant='outlined'
+            id="competitiveAdvantage"
+            name="competitiveAdvantage"
+            label="Competitive Advantages"
+            variant="outlined"
             value={competitiveAdvantage}
             onChange={(e) => setCompetitiveAdvantage(e.target.value)}
             multiline
@@ -464,21 +466,21 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             rows={6}
           />
           <Divider />
-          <h6 className='mb-8'>Growth Opportunities</h6>
-          <div className='mb-8'>
+          <h6 className="mb-8">Growth Opportunities</h6>
+          <div className="mb-8">
             {growthOppertunities.map((e) => (
               <div
                 style={{
-                  width: '100%',
-                  display: 'flex',
-                  padding: '0.6rem 0',
-                  fontSize: '1.4rem',
-                  gap: '0.8rem',
+                  width: "100%",
+                  display: "flex",
+                  padding: "0.6rem 0",
+                  fontSize: "1.4rem",
+                  gap: "0.8rem",
                 }}
               >
                 <Input style={{ flex: 1 }} value={e} />
                 <Button
-                  theme='danger'
+                  theme="danger"
                   onClick={() =>
                     setGrowthOppertunities((s) => s.filter((v) => v !== e))
                   }
@@ -490,40 +492,40 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           </div>
           <div style={flexColumn}>
             <Input
-              label=''
-              className='mb-16'
-              placeholder='Write Something'
+              label=""
+              className="mb-16"
+              placeholder="Write Something"
               value={growthOppertunity}
               onChange={(e) => setGrowthOppertunity(e.target.value)}
             />
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
-                theme='secondary'
-                className='add-btn'
+                theme="secondary"
+                className="add-btn"
                 onClick={() => {
                   setGrowthOppertunities((s) => [...s, growthOppertunity]);
-                  setGrowthOppertunity('');
+                  setGrowthOppertunity("");
                 }}
               >
                 ADD
               </Button>
             </div>
           </div>
-          <h6 className='mb-8'>Potential Risks</h6>
-          <div className='mb-8'>
+          <h6 className="mb-8">Potential Risks</h6>
+          <div className="mb-8">
             {potentialRisks.map((e) => (
               <div
                 style={{
-                  width: '100%',
-                  display: 'flex',
-                  padding: '0.6rem 0',
-                  fontSize: '1.4rem',
-                  gap: '0.8rem',
+                  width: "100%",
+                  display: "flex",
+                  padding: "0.6rem 0",
+                  fontSize: "1.4rem",
+                  gap: "0.8rem",
                 }}
               >
                 <Input style={{ flex: 1 }} value={e} />
                 <Button
-                  theme='danger'
+                  theme="danger"
                   onClick={() =>
                     setPotentialRisks((s) => s.filter((v) => v !== e))
                   }
@@ -535,39 +537,39 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           </div>
           <div style={flexColumn}>
             <Input
-              label=''
-              className='mb-16'
-              placeholder='Write Something'
+              label=""
+              className="mb-16"
+              placeholder="Write Something"
               value={potentialRisk}
               onChange={(e) => setPotentialRisk(e.target.value)}
             />
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
-                theme='secondary'
-                className='add-btn'
+                theme="secondary"
+                className="add-btn"
                 onClick={() => {
                   setPotentialRisks((s) => [...s, potentialRisk]);
-                  setPotentialRisk('');
+                  setPotentialRisk("");
                 }}
               >
                 ADD
               </Button>
             </div>
           </div>
-          <h3 className='mb-24'>Financials</h3>
-          <div className='financial mb-48'>
-            <div className='financial-left'>
-              <h6 className='mb-8'>Add Chart</h6>
-              <div className='add-chart'>
+          <h3 className="mb-24">Financials</h3>
+          <div className="financial mb-48">
+            <div className="financial-left">
+              <h6 className="mb-8">Add Chart</h6>
+              <div className="add-chart">
                 <Input
                   value={chartName}
-                  placeholder='Chart Name'
+                  placeholder="Chart Name"
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => setChartName(e.target.value)}
                 />
                 <Input
                   value={chartValue.year}
-                  type='number'
+                  type="number"
                   onChange={(e) => {
                     if (Number(e.target.value) < 0) return;
                     setChartValue((s) => ({
@@ -575,14 +577,14 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                       year: e.target.value,
                     }));
                   }}
-                  sx={{ marginLeft: '1rem' }}
+                  sx={{ marginLeft: "1rem" }}
                   InputLabelProps={{ shrink: true }}
                 />
                 <Input
                   value={chartValue.value}
                   sx={{ marginLeft: 2 }}
                   InputLabelProps={{ shrink: true }}
-                  type='number'
+                  type="number"
                   onChange={(e) => {
                     if (Number(e.target.value) < 0) return;
                     setChartValue((s) => ({
@@ -592,9 +594,9 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                   }}
                 />
                 <Button
-                  theme='secondary'
-                  className='add-btn'
-                  component='label'
+                  theme="secondary"
+                  className="add-btn"
+                  component="label"
                   sx={{ marginLeft: 2, marginTop: 2 }}
                   disabled={!chartValue.year || !chartValue.value}
                   onClick={() => {
@@ -606,15 +608,15 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 </Button>
               </div>
               <Divider />
-              <h6 className='mb-8'>Name : Revenue</h6>
-              <div className='chart-value-wrapper'>
+              <h6 className="mb-8">Name : Revenue</h6>
+              <div className="chart-value-wrapper">
                 {chartValues.map((f) => (
-                  <div className='chart-value'>
+                  <div className="chart-value">
                     <p>
                       year : {f.year} / value : {f.value}
                     </p>
                     <TrashIcon
-                      className='trash-icon'
+                      className="trash-icon"
                       onClick={() =>
                         setChartValues((s) =>
                           s.filter(
@@ -627,8 +629,8 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 ))}
               </div>
               <Button
-                className='create-chart'
-                variant='contained'
+                className="create-chart"
+                variant="contained"
                 disabled={!chartName || chartValues.length === 0}
                 onClick={() => {
                   if (!chartName) return;
@@ -637,21 +639,21 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                     { name: chartName, chartValues },
                   ]);
                   setChartValues([]);
-                  setChartName('');
+                  setChartName("");
                 }}
               >
-                Create Chart {'>'}
+                Create Chart {">"}
               </Button>
             </div>
-            <div className='financial-right'>
-              <h6 className='mb-8'>Created Chart</h6>
+            <div className="financial-right">
+              <h6 className="mb-8">Created Chart</h6>
               <DragDropContext onDragEnd={onDragEndForChart}>
-                <Droppable droppableId='chart'>
+                <Droppable droppableId="chart">
                   {(provided) => (
                     <div
                       {...provided.droppableProps}
                       ref={provided.innerRef}
-                      className='created-chart-wrapper'
+                      className="created-chart-wrapper"
                     >
                       {financials.map((cv, index) => (
                         <Draggable
@@ -664,9 +666,9 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                               ref={provided.innerRef}
-                              className='created-chart'
+                              className="created-chart"
                             >
-                              <div className='created-chart-left'>
+                              <div className="created-chart-left">
                                 <h6>{cv.name}</h6>
                                 {cv.chartValues.map((cvv) =>
                                   JSON.stringify(cvv)
@@ -693,43 +695,43 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             </div>
           </div>
 
-          <h3 className='mb-24'>Opinions</h3>
-          <div className='opinion-wrapper mb-48'>
-            <div className='opinion-left'>
-              <h6 className='mb-8'>Profile Image</h6>
+          <h3 className="mb-24">Opinions</h3>
+          <div className="opinion-wrapper mb-48">
+            <div className="opinion-left">
+              <h6 className="mb-8">Profile Image</h6>
               <FileUploader
-                className='mb-32'
-                name='opinion'
+                className="mb-32"
+                name="opinion"
                 file={opinion.file}
                 onChange={(e) =>
                   setOpinion((s) => ({ ...s, file: e.target.files[0] }))
                 }
               />
               <Input
-                value={opinion.author || ''}
-                label='author'
-                variant='outlined'
+                value={opinion.author || ""}
+                label="author"
+                variant="outlined"
                 sx={{ marginLeft: 2, marginBottom: 2 }}
                 InputLabelProps={{ shrink: true }}
                 onChange={(e) => {
                   setOpinion((s) => ({ ...s, author: e.target.value }));
                 }}
-                className='mb-32'
+                className="mb-32"
               />
               <Textarea
-                value={opinion.message || ''}
-                label='message'
-                variant='outlined'
+                value={opinion.message || ""}
+                label="message"
+                variant="outlined"
                 sx={{ marginLeft: 2 }}
                 rows={6}
                 InputLabelProps={{ shrink: true }}
                 onChange={(e) => {
                   setOpinion((s) => ({ ...s, message: e.target.value }));
                 }}
-                className='mb-32'
+                className="mb-32"
               />
               <Button
-                className='add-opinion'
+                className="add-opinion"
                 disabled={!opinion.author || !opinion.message}
                 onClick={() => {
                   setOpinions((s) => [...s, { ...opinion }]);
@@ -739,15 +741,15 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 Add
               </Button>
             </div>
-            <div className='opinion-right'>
-              <h6 className='mb-8'>Created Opinions</h6>
+            <div className="opinion-right">
+              <h6 className="mb-8">Created Opinions</h6>
               <DragDropContext onDragEnd={onDragEndForOpinion}>
-                <Droppable droppableId='opinions'>
+                <Droppable droppableId="opinions">
                   {(provided) => (
                     <div
                       {...provided.droppableProps}
                       ref={provided.innerRef}
-                      className='opinion-block-wrapper'
+                      className="opinion-block-wrapper"
                     >
                       {opinions.map((cv, index) => (
                         <Draggable
@@ -760,16 +762,16 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                               {...provided2.draggableProps}
                               {...provided2.dragHandleProps}
                               ref={provided2.innerRef}
-                              className='opinion-block'
+                              className="opinion-block"
                             >
-                              <div className='opinion-block-left'>
+                              <div className="opinion-block-left">
                                 <FilePreview
-                                  className='opinion-block-image'
+                                  className="opinion-block-image"
                                   file={cv.file}
                                   url={cv.authorImageUrl}
                                 />
                                 <div>
-                                  <h6 clasName='mb-4'>{cv.author}</h6>
+                                  <h6 clasName="mb-4">{cv.author}</h6>
                                   <p>"{cv.message}"</p>
                                 </div>
                               </div>
@@ -797,9 +799,9 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           </div>
 
           <Divider />
-          <div className='submit-button-wrapper'>
-            <Button type='submit' className='submit-button'>
-              {isEdit ? 'Edit' : 'Add'} Stocks
+          <div className="submit-button-wrapper">
+            <Button type="submit" className="submit-button">
+              {isEdit ? "Edit" : "Add"} Stocks
             </Button>
           </div>
         </form>
@@ -817,7 +819,7 @@ const BoStocksMenuBlock = styled.div`
     max-width: 120rem;
 
     h1 {
-      font-family: 'Pretendard';
+      font-family: "Pretendard";
       font-style: normal;
       font-weight: 600;
       font-size: 48px;

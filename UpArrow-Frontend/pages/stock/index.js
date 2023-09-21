@@ -121,9 +121,7 @@ function Home() {
                         <span>{stock.buyerCount.toLocaleString()}</span>
                       </td>
                       <td className="number">
-                        <span className="divider">
-                          {stock.sellerCount.toLocaleString()}
-                        </span>
+                        <span>{stock.sellerCount.toLocaleString()}</span>
                       </td>
                       <td className="divider-wrapper">
                         <span className="divider"></span>
