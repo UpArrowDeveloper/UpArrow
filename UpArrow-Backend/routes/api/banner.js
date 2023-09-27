@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { stockName, youtubeCode, description } = req.body;
+  const { stockName, youtubeCode, description, order } = req.body;
 
   await Banner.findOneAndUpdate(
     { _id: id },
@@ -41,6 +41,7 @@ router.put("/:id", async (req, res) => {
       stockName,
       youtubeCode,
       description,
+      order,
     }
   );
 

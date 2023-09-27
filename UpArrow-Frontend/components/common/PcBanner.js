@@ -10,7 +10,8 @@ import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 
 const PcBanner = () => {
-  const { data: banners } = useQuery(["banner"], api.banner.get);
+  const { data: apiBanners } = useQuery(["banner"], api.banner.get);
+  const banners = apiBanners?.sort((a, b) => a.order - b.order) || [];
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
   const [currentPlayIndexes, setCurrentPlayIndexes] = useState(
     Array(100).fill(false)
@@ -62,7 +63,7 @@ const PcBanner = () => {
     return 10;
   };
 
-  if (!banners) return null;
+  if (!banners || banners.length === 0) return null;
 
   return (
     <BannerBlock

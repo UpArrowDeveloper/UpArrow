@@ -11,7 +11,8 @@ import { ChevronRightIcon } from "../icons";
 import { useQuery } from "@tanstack/react-query";
 
 const MobileBanner = () => {
-  const { data: banners } = useQuery(["banner"], api.banner.get);
+  const { data: apiBanners } = useQuery(["banner"], api.banner.get);
+  const banners = apiBanners?.sort((a, b) => a.order - b.order) || [];
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
   const [currentMouseX, setCurrentMouseX] = useState(0);
   const [currentPlayIndexes, setCurrentPlayIndexes] = useState(

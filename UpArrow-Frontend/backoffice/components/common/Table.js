@@ -5,15 +5,17 @@ import color from "../../../styles/color";
 const Table = ({ columns, datas, gridTemplateColumns, onEdit, onDelete }) => {
   return (
     <TableBlock gridTemplateColumns={gridTemplateColumns}>
-      {columns.map((column, idx) => (
-        <div className="table-column" key={idx}>
-          {column}
-        </div>
-      ))}
+      <div className="table-columns">
+        {columns.map((column, idx) => (
+          <div className="table-column" key={idx}>
+            {column}
+          </div>
+        ))}
+      </div>
       <div></div>
       {datas.map((data, idx1) => {
         return (
-          <>
+          <div className="table-item">
             {data.items.map((v, idx2) => {
               if (idx2 === 0) {
                 return <img className="thumbnail" src={v} />;
@@ -40,7 +42,7 @@ const Table = ({ columns, datas, gridTemplateColumns, onEdit, onDelete }) => {
                 </button>
               )}
             </div>
-          </>
+          </div>
         );
       })}
     </TableBlock>
@@ -50,16 +52,32 @@ const Table = ({ columns, datas, gridTemplateColumns, onEdit, onDelete }) => {
 export default Table;
 
 const TableBlock = styled.div`
-  display: grid;
-  grid-template-columns: ${({ gridTemplateColumns }) =>
-      gridTemplateColumns.join(" ")} 14.8rem;
-  column-gap: 1.6rem;
-  row-gap: 1.6rem;
+  display: flex;
+  flex-direction: column;
 
   .table-column {
     ${Body14Medium}
     color: ${color.B40};
     padding: 1.6rem 0;
+  }
+  .table-columns {
+    display: grid;
+    grid-template-columns: ${({ gridTemplateColumns }) =>
+        gridTemplateColumns.join(" ")} 14.8rem;
+    column-gap: 1.6rem;
+    row-gap: 1.6rem;
+    border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+  }
+  .table-item {
+    display: grid;
+    grid-template-columns: ${({ gridTemplateColumns }) =>
+        gridTemplateColumns.join(" ")} 14.8rem;
+    column-gap: 1.6rem;
+    row-gap: 1.6rem;
+    border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
+    padding: 0 0.8rem 1.2rem 0.8rem;
+    margin-bottom: 2rem;
   }
 
   .table-text-item {

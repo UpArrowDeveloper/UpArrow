@@ -13,6 +13,7 @@ import styled from "@emotion/styled";
 import BackofficeHeader from "../../../backoffice/components/common/Header";
 import Table from "../../../backoffice/components/common/Table";
 import { useRouter } from "next/router";
+import DndTable from "../../../backoffice/components/common/DnDTable";
 
 const BackofficeBannerList = () => {
   const { data: banner, refetch } = useQuery(["banner"], api.banner.get);
@@ -25,7 +26,41 @@ const BackofficeBannerList = () => {
         onClick={() => router.push("/backoffice/main/add")}
       />
       <div className="table-wrapper">
-        <Table
+        <DndTable
+          onDragEnd={async (result) => {
+            const destinationIndex = result.destination?.index;
+            const sourceIndex = result.source?.index;
+            let arr = [];
+            if (destinationIndex === sourceIndex) return;
+            if (destinationIndex > sourceIndex) {
+              for (let i = sourceIndex + 1; i <= destinationIndex; i++) {
+                arr.push(
+                  api.banner.put(banner[i]._id, {
+                    order: i - 1,
+                  })
+                );
+              }
+              await Promise.all(arr);
+              await api.banner.put(banner[sourceIndex]._id, {
+                order: destinationIndex,
+              });
+            } else {
+              for (let i = destinationIndex; i < sourceIndex; i++) {
+                arr.push(
+                  api.banner.put(banner[i]._id, {
+                    order: i + 1,
+                  })
+                );
+              }
+              await Promise.all(arr);
+              await api.banner.put(banner[sourceIndex]._id, {
+                order: destinationIndex,
+              });
+            }
+
+            await refetch();
+            console.log("drag end : ", result);
+          }}
           columns={[
             "Image",
             "Stock name",
@@ -34,18 +69,20 @@ const BackofficeBannerList = () => {
             "Updated at",
           ]}
           datas={
-            banner?.map((banner) => {
-              return {
-                id: banner._id,
-                items: [
-                  `http://img.youtube.com/vi/${banner?.youtubeCode}/0.jpg`,
-                  banner?.stockName,
-                  banner?.youtubeCode,
-                  getYMD(new Date(banner?.createdAt), ". "),
-                  getYMD(new Date(banner?.updatedAt), ". "),
-                ],
-              };
-            }) || []
+            banner
+              ?.sort((a, b) => a.order - b.order)
+              .map((banner) => {
+                return {
+                  id: banner._id,
+                  items: [
+                    `http://img.youtube.com/vi/${banner?.youtubeCode}/0.jpg`,
+                    banner?.stockName,
+                    banner?.youtubeCode,
+                    getYMD(new Date(banner?.createdAt), ". "),
+                    getYMD(new Date(banner?.updatedAt), ". "),
+                  ],
+                };
+              }) || []
           }
           gridTemplateColumns={["7.2rem", "2fr", "0.8fr", "0.8fr", "0.8fr"]}
           onEdit={(id) => {

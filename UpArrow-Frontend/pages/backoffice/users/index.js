@@ -65,7 +65,7 @@ const BackofficeBannerList = () => {
               };
             }) || []
           }
-          gridTemplateColumns={["7.2rem", "2fr", "0.8fr", "0.8fr", "0.8fr"]}
+          gridTemplateColumns={["7.2rem", "2fr", "0.8fr", "1.6fr", "0.8fr"]}
           onDelete={async (id) => {
             await api.user.deleteById(id);
             router.reload();
