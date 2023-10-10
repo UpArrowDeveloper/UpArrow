@@ -63,7 +63,8 @@ const PcBanner = () => {
     return 10;
   };
 
-  if (!banners || banners.length === 0) return null;
+  if (!banners || banners.length === 0)
+    return <div style={{ height: bannerHeight + "rem" }}></div>;
 
   return (
     <BannerBlock

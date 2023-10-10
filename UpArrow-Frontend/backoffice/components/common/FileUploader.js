@@ -29,7 +29,7 @@ export const FileUploader = ({
           file={file}
           url={url}
           hasEmptyImage={hasEmptyImage}
-          style={file ? { ...previewStyle } : {}}
+          style={file || url ? { ...previewStyle } : {}}
         />
       </label>
       <input
