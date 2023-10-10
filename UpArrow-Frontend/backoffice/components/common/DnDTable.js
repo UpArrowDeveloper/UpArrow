@@ -1,12 +1,7 @@
 import styled from "@emotion/styled";
 import { Body14Medium, HeadH5Bold } from "../../../styles/typography";
 import color from "../../../styles/color";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const DndTable = ({
   columns,
@@ -16,7 +11,6 @@ const DndTable = ({
   onDelete,
   onDragEnd,
 }) => {
-  console.log("datas : ", datas);
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">

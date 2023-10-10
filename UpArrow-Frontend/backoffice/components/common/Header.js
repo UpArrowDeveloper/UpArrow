@@ -47,5 +47,11 @@ const HeaderBlock = styled.div`
   .header-buttons {
     display: flex;
     gap: 1.6rem;
+
+    div {
+      :hover {
+        cursor: pointer;
+      }
+    }
   }
 `;

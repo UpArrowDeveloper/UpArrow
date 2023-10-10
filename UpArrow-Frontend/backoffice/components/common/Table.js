@@ -97,6 +97,9 @@ const TableBlock = styled.div`
       background-color: white;
       border-radius: 0.8rem;
       ${HeadH5Bold}
+      :hover {
+        cursor: pointer;
+      }
 
       &.delete {
         color: ${color.DISAGREE_RED};
