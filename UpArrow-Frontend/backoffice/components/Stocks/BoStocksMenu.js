@@ -23,7 +23,6 @@ import { TrashIcon } from "../../../components/icons";
 const flexColumn = { display: "flex", flexDirection: "column" };
 export const BoStocksMenu = ({ stock, analysis }) => {
   const isEdit = !!stock;
-  const router = useRouter();
   const [name, setName] = useState(stock?.name || "");
   const [ticker, setTicker] = useState(stock?.ticker || "");
   const [currentPrice, setCurrentPrice] = useState(stock?.currentPrice);
@@ -73,7 +72,34 @@ export const BoStocksMenu = ({ stock, analysis }) => {
 
   const [logoImage, setLogoImage] = useState();
   const [backgroundImage, setBackgroundImage] = useState();
-
+  const onDragEndForOppertunity = (result) => {
+    if (!result.destination) {
+      return;
+    }
+    setGrowthOppertunities((s) => {
+      const newS = [...s];
+      newS.splice(
+        result.destination.index,
+        0,
+        newS.splice(result.source.index, 1)[0]
+      );
+      return newS;
+    });
+  };
+  const onDragEndForPotentialRisks = (result) => {
+    if (!result.destination) {
+      return;
+    }
+    setPotentialRisks((s) => {
+      const newS = [...s];
+      newS.splice(
+        result.destination.index,
+        0,
+        newS.splice(result.source.index, 1)[0]
+      );
+      return newS;
+    });
+  };
   const onSubmit = async (e) => {
     e.preventDefault();
     const name = e.target.name.value;
@@ -156,7 +182,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
     axios.get("/api/revalidate");
     axios.get("/api/revalidate/idea");
     axios.get("/api/revalidate/investor");
-    router.push("/backoffice/stocks");
+    window.location.href = "/backoffice/stocks";
   };
 
   const onDragEndForChart = (result) => {
@@ -183,6 +209,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
     setOpinions(newItems);
   };
 
+  console.log("growthOppertunities : ", growthOppertunities);
   return (
     <BoStocksMenuBlock>
       <div className="content">
@@ -467,28 +494,41 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           />
           <Divider />
           <h6 className="mb-8">Growth Opportunities</h6>
+
           <div className="mb-8">
-            {growthOppertunities.map((e) => (
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  padding: "0.6rem 0",
-                  fontSize: "1.4rem",
-                  gap: "0.8rem",
-                }}
-              >
-                <Input style={{ flex: 1 }} value={e} />
-                <Button
-                  theme="danger"
-                  onClick={() =>
-                    setGrowthOppertunities((s) => s.filter((v) => v !== e))
-                  }
-                >
-                  DELETE
-                </Button>
-              </div>
-            ))}
+            <DragDropContext onDragEnd={onDragEndForOppertunity}>
+              <Droppable droppableId="oppertunity">
+                {(provided) => (
+                  <div ref={provided.innerRef} {...provided.droppableProps}>
+                    {growthOppertunities.map((e, index) => (
+                      <Draggable key={e} draggableId={e} index={index}>
+                        {(provided2, snapshot) => (
+                          <div
+                            ref={provided2.innerRef}
+                            className="oppertunity-style"
+                            {...provided2.draggableProps}
+                            {...provided2.dragHandleProps}
+                          >
+                            <Input style={{ flex: 1 }} value={e} />
+                            <Button
+                              theme="danger"
+                              onClick={() =>
+                                setGrowthOppertunities((s) =>
+                                  s.filter((v) => v !== e)
+                                )
+                              }
+                            >
+                              DELETE
+                            </Button>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
           </div>
           <div style={flexColumn}>
             <Input
@@ -513,27 +553,39 @@ export const BoStocksMenu = ({ stock, analysis }) => {
           </div>
           <h6 className="mb-8">Potential Risks</h6>
           <div className="mb-8">
-            {potentialRisks.map((e) => (
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  padding: "0.6rem 0",
-                  fontSize: "1.4rem",
-                  gap: "0.8rem",
-                }}
-              >
-                <Input style={{ flex: 1 }} value={e} />
-                <Button
-                  theme="danger"
-                  onClick={() =>
-                    setPotentialRisks((s) => s.filter((v) => v !== e))
-                  }
-                >
-                  DELETE
-                </Button>
-              </div>
-            ))}
+            <DragDropContext onDragEnd={onDragEndForPotentialRisks}>
+              <Droppable droppableId="oppertunity">
+                {(provided) => (
+                  <div ref={provided.innerRef} {...provided.droppableProps}>
+                    {potentialRisks.map((e, index) => (
+                      <Draggable key={e} draggableId={e} index={index}>
+                        {(provided2, snapshot) => (
+                          <div
+                            ref={provided2.innerRef}
+                            className="oppertunity-style"
+                            {...provided2.draggableProps}
+                            {...provided2.dragHandleProps}
+                          >
+                            <Input style={{ flex: 1 }} value={e} />
+                            <Button
+                              theme="danger"
+                              onClick={() =>
+                                setPotentialRisks((s) =>
+                                  s.filter((v) => v !== e)
+                                )
+                              }
+                            >
+                              DELETE
+                            </Button>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
           </div>
           <div style={flexColumn}>
             <Input
@@ -815,6 +867,13 @@ const BoStocksMenuBlock = styled.div`
   display: flex;
   justify-content: center;
 
+  .oppertunity-style {
+    width: 100%;
+    display: flex;
+    padding: 0.6rem 0;
+    font-size: 1.4rem;
+    gap: 0.8rem;
+  }
   .content {
     max-width: 120rem;
 
