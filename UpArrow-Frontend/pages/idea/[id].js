@@ -80,7 +80,16 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
     ["comment", commentIds],
     commentIds.length > 0 ? api.comment.getByIds(commentIds) : []
   );
-  const createVote = useMutation(api.vote.post, { onSuccess: () => refetch() });
+  const createVote = useMutation(api.vote.post, {
+    onMutate: (newVote) => {
+      return { newVote };
+    },
+    onError: (error, newVote, context) => {
+      console.log(error);
+      return { ...newVote, isAgree: !newVote.isAgree };
+    },
+    onSuccess: () => refetch(),
+  });
 
   const onCommentIconClick = () => {
     commentInputRef.current.scrollIntoView({ behavior: "smooth" });
@@ -174,7 +183,24 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
           ))}
         </div>
         <div className="vote-wrapper">
-          <IdeaVote agreeCount={agreeCount} disagreeCount={disagreeCount} />
+          <IdeaVote
+            agreeCount={agreeCount}
+            disagreeCount={disagreeCount}
+            onAgreeClick={() => {
+              createVote.mutate({
+                postId: id,
+                userId: data._id,
+                isAgree: true,
+              });
+            }}
+            onDisagreeClick={() => {
+              createVote.mutate({
+                postId: id,
+                userId: data._id,
+                isAgree: false,
+              });
+            }}
+          />
         </div>
 
         {serverIdea.youtubeCode && (

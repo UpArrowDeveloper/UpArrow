@@ -4,7 +4,12 @@ import color from "../styles/color";
 import { Body12Medium } from "../styles/typography";
 import { mobileWidth } from "../styles/responsive";
 
-const IdeaVote = ({ agreeCount, disagreeCount }) => {
+const IdeaVote = ({
+  agreeCount,
+  disagreeCount,
+  onAgreeClick = null,
+  onDisagreeClick = null,
+}) => {
   const totalCount = agreeCount + disagreeCount;
   const agreePercent =
     disagreeCount === 0 ? "100%" : (agreeCount / totalCount) * 100 + "%";
@@ -16,11 +21,17 @@ const IdeaVote = ({ agreeCount, disagreeCount }) => {
       disagreePercent={disagreePercent}
     >
       <div className="indicator-wrapper">
-        <div className="indicator">
+        <div
+          className={"indicator " + (onAgreeClick ? "clickable" : "")}
+          onClick={onAgreeClick}
+        >
           <ThumbUpIcon className="indicator-icon" width={16} height={16} />
           Agree
         </div>
-        <div className="indicator">
+        <div
+          className={"indicator " + (onDisagreeClick ? "clickable" : "")}
+          onClick={onDisagreeClick}
+        >
           <ThumbDownIcon className="indicator-icon" width={16} height={16} />
           Disagree
         </div>
@@ -36,6 +47,10 @@ const IdeaVote = ({ agreeCount, disagreeCount }) => {
 const IdeaVoteBlock = styled.div`
   display: flex;
   flex-direction: column;
+
+  .clickable {
+    cursor: pointer;
+  }
 
   .indicator {
     display: flex;
