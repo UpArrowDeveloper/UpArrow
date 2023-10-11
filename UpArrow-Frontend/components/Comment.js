@@ -90,18 +90,20 @@ const Comment = ({ comment }) => {
   useEffect(() => {
     const email = user?.email;
     const getUser = async () => {
-      if (!email || !comment.userId) return;
-      const likesList = comment.likes;
+      if (email) {
+        const likesList = comment.likes;
 
-      const user = await api.user.getByEmail(email)();
-      const isLiked = likesList.includes(String(user._id));
+        const user = await api.user.getByEmail(email)();
+        const isLiked = likesList.includes(String(user._id));
 
-      setChecked(isLiked);
-      setLikes(comment.likes.length);
-
-      const data = await api.user.getById(comment.userId)();
-      setUsername(data.username);
-      setInvestorProfilePicture(data.profileImageUrl);
+        setChecked(isLiked);
+        setLikes(comment.likes.length);
+      }
+      if (comment.userId) {
+        const data = await api.user.getById(comment.userId)();
+        setUsername(data.username);
+        setInvestorProfilePicture(data.profileImageUrl);
+      }
     };
     getUser();
   }, [user?.email && comment.userId]);
