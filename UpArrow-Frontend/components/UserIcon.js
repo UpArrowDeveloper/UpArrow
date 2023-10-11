@@ -1,4 +1,5 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
+import Image from "next/image";
 
 const UserIconImg = styled.img`
   width: 6rem;
@@ -7,8 +8,14 @@ const UserIconImg = styled.img`
   object-fit: cover;
 `;
 
-const UserIcon = ({ src }) => {
-  return <UserIconImg src={src} />;
+const UserIcon = ({ src = "" }) => {
+  return src ? (
+    <div style={{ borderRadius: "90px", overflow: "hidden" }}>
+      <Image src={src} width="60px" height="60px" objectFit="cover" />
+    </div>
+  ) : (
+    <UserIconImg src="/images/user.png" />
+  );
 };
 
 export default UserIcon;
