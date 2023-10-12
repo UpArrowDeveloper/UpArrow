@@ -81,16 +81,15 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   const { isMobile } = useMobile();
   const [comment, setComment] = useState("");
   // TODO: comment With UserInfo api 생성해서 이걸로 불러오기 (user정보 따로 불러오니 느림)
-  console.log("comments id : ", commentIds);
   const { data: comments, refetch: refetchCommentCommentIds } = useQuery(
     ["comment-commentIds"],
-    api.comment.getByIds(commentIds),
+    api.comment.getByIdsWithUser(commentIds),
     {
       enabled: commentIds && commentIds.length > 0,
     }
   );
+  console.log("comments : ", comments);
 
-  console.log("idea is refetching : ", ideaIsRefetching);
   useEffect(() => {
     if (ideaIsRefetching || commentIds.length === 0) {
       return;

@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { env } from '../config';
+import axios from "axios";
+import { env } from "../config";
 
 const comment = {
   get: () => axios.get(`${env.serverUrl}/comment`).then((res) => res.data),
@@ -11,6 +11,11 @@ const comment = {
       .then((res) => res.data),
   getByIds: (ids) => () =>
     axios.get(`${env.serverUrl}/comment/${ids}/ids`).then((res) => res.data),
+  getByIdsWithUser: (ids) => () =>
+    axios
+      .get(`${env.serverUrl}/comment/${ids}/idsWithUser`)
+      .then((res) => res.data),
+
   post: (data) => () => axios.post(`${env.serverUrl}/comment`, data),
   toggleLike:
     ({ userId, commentId }) =>

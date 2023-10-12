@@ -1,5 +1,5 @@
-import styled from '@emotion/styled';
-import Comment from './Comment';
+import styled from "@emotion/styled";
+import Comment from "./Comment";
 
 const CommentListBlock = styled.div`
   display: flex;
@@ -11,7 +11,11 @@ const CommentListView = ({ comments, ...props }) => {
   return (
     <CommentListBlock {...props}>
       {comments.map((comment) => (
-        <Comment key={comment._id} comment={comment} />
+        <Comment
+          key={comment._id}
+          comment={comment}
+          commentOwner={comment?.user}
+        />
       ))}
     </CommentListBlock>
   );

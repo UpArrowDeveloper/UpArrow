@@ -67,7 +67,7 @@ const CommentView = ({
   );
 };
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, commentOwner = undefined }) => {
   const router = useRouter();
   const ticker = router.query.ticker;
   const [username, setUsername] = useState("");
@@ -98,6 +98,11 @@ const Comment = ({ comment }) => {
 
         setChecked(isLiked);
         setLikes(comment.likes.length);
+      }
+      if (commentOwner) {
+        setUsername(commentOwner.username);
+        setInvestorProfilePicture(commentOwner.profileImageUrl);
+        return;
       }
       if (comment.userId) {
         const data = await api.user.getById(comment.userId)();
