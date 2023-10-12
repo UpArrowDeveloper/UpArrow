@@ -3,6 +3,7 @@ const { ObjectId } = require("mongodb");
 const router = express.Router();
 const Comment = require("../../models/Comment");
 const userService = require("../../services/user");
+const commentService = require("../../services/comment");
 
 router.get("/:stockId/stock", async (req, res) => {
   const stockStringId = req.params.stockId;

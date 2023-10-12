@@ -13,6 +13,7 @@ import { useAppUser } from "../hooks/useAppUser";
 import { useRouter } from "next/router";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
+import { useQueryClient } from "@tanstack/react-query";
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
@@ -74,16 +75,25 @@ const Comment = ({ comment, commentOwner = undefined }) => {
   const [investorProfilePicture, setInvestorProfilePicture] = useState("");
   const [likes, setLikes] = useState(0);
   const { user } = useAppUser();
+  const queryClient = useQueryClient();
 
   const [checked, setChecked] = useState(false);
 
   const handleChange = (event) => {
     if (checked == false) {
       setChecked(true);
-      setLikes(comment.likes.length);
+      if (comment.likes.includes(String(user._id))) {
+        setLikes(comment.likes.length);
+      } else {
+        setLikes(comment.likes.length + 1);
+      }
     } else {
       setChecked(false);
-      setLikes(comment.likes.length);
+      if (comment.likes.includes(String(user._id))) {
+        setLikes(comment.likes.length - 1);
+      } else {
+        setLikes(comment.likes.length);
+      }
     }
   };
 
@@ -115,8 +125,7 @@ const Comment = ({ comment, commentOwner = undefined }) => {
     const userData = await api.user.getByEmail(user.email)();
     const userId = String(userData._id);
     await api.comment.toggleLike({ commentId, userId })();
-    // TODO: reload 제거, comment 다시 get
-    router.reload();
+    queryClient.invalidateQueries("comment-commentIds");
   };
 
   const onHeartClick = () => {

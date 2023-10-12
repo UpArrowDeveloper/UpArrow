@@ -80,7 +80,6 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   } = useQuery(["voteByIdeaId", id], api.vote.getByIdeaId(id));
   const { isMobile } = useMobile();
   const [comment, setComment] = useState("");
-  // TODO: comment With UserInfo api 생성해서 이걸로 불러오기 (user정보 따로 불러오니 느림)
   const { data: comments, refetch: refetchCommentCommentIds } = useQuery(
     ["comment-commentIds"],
     api.comment.getByIdsWithUser(commentIds),
