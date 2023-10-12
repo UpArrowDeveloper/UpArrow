@@ -113,7 +113,7 @@ const Comment = ({ comment }) => {
     const userData = await api.user.getByEmail(user.email)();
     const userId = String(userData._id);
     await api.comment.toggleLike({ commentId, userId })();
-    await axios.get(`/api/revalidate/stock/${ticker}`);
+    // TODO: reload 제거, comment 다시 get
     router.reload();
   };
 

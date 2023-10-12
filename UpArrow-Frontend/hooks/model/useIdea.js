@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import api from '../../apis';
+import { useQuery } from "@tanstack/react-query";
+import api from "../../apis";
 
 export const useIdea = (id) => {
-  const { data, isLoading, refetch } = useQuery(
-    ['idea', id],
+  const { data, isLoading, refetch, isFetched, isRefetching } = useQuery(
+    ["idea", id],
     api.idea.getById(id)
   );
 
@@ -11,5 +11,7 @@ export const useIdea = (id) => {
     idea: data,
     isLoading,
     refetch,
+    isFetched,
+    isRefetching,
   };
 };

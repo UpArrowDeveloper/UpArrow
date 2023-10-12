@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import dynamic from "next/dynamic";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 const Viewer = dynamic(() => import("../../components/Editor/Viewer"), {
   ssr: false,
 });
@@ -67,7 +67,11 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
     }
   );
   const commentInputRef = useRef();
-  const { idea, refetch: refetchIdea } = useIdea(id);
+  const {
+    idea,
+    refetch: refetchIdea,
+    isRefetching: ideaIsRefetching,
+  } = useIdea(id);
   const commentIds = idea?.commentIds || [];
   const {
     data: voteData,
@@ -76,10 +80,23 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   } = useQuery(["voteByIdeaId", id], api.vote.getByIdeaId(id));
   const { isMobile } = useMobile();
   const [comment, setComment] = useState("");
-  const { data: comments } = useQuery(
-    ["comment", commentIds],
-    commentIds.length > 0 ? api.comment.getByIds(commentIds) : []
+  // TODO: comment With UserInfo api 생성해서 이걸로 불러오기 (user정보 따로 불러오니 느림)
+  console.log("comments id : ", commentIds);
+  const { data: comments, refetch: refetchCommentCommentIds } = useQuery(
+    ["comment-commentIds"],
+    api.comment.getByIds(commentIds),
+    {
+      enabled: commentIds && commentIds.length > 0,
+    }
   );
+
+  console.log("idea is refetching : ", ideaIsRefetching);
+  useEffect(() => {
+    if (ideaIsRefetching || commentIds.length === 0) {
+      return;
+    }
+    refetchCommentCommentIds();
+  }, [ideaIsRefetching]);
   const createVote = useMutation(api.vote.post, {
     onMutate: (newVote) => {
       return { newVote };
