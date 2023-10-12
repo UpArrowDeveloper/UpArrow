@@ -122,9 +122,7 @@ const Comment = ({ comment, commentOwner = undefined }) => {
 
   const callLikesApi = async () => {
     const commentId = String(comment._id);
-    const userData = await api.user.getByEmail(user.email)();
-    const userId = String(userData._id);
-    await api.comment.toggleLike({ commentId, userId })();
+    await api.comment.toggleLike({ commentId, userId: user._id })();
     queryClient.invalidateQueries("comment-commentIds");
   };
 
