@@ -88,12 +88,9 @@ const Comment = ({ comment, commentOwner = undefined }) => {
   };
 
   useEffect(() => {
-    const email = user?.email;
     const getUser = async () => {
-      if (email) {
+      if (user?.email) {
         const likesList = comment.likes;
-
-        const user = await api.user.getByEmail(email)();
         const isLiked = likesList.includes(String(user._id));
 
         setChecked(isLiked);
