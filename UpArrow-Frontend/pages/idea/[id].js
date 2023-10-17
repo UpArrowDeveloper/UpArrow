@@ -39,14 +39,22 @@ TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
 
 export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
+  const [totalInvestment, setTotalInvestment] = useState(0);
+  const [totalProfits, setTotalProfits] = useState(0);
+  const getInvestInfo = async () => {
+    const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
+      serverIdea.userId
+    );
+    setTotalInvestment(totalInvestment);
+    setTotalProfits(totalProfits);
+  };
+
   const {
     _id: investorId,
     description,
     followers,
     followings,
     profileImageUrl,
-    totalInvestment,
-    totalProfits,
     username,
     websiteUrl,
     cash,
@@ -124,6 +132,9 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   };
 
   const [scrollTop, setScrollTop] = useState(0);
+  useEffect(() => {
+    getInvestInfo();
+  }, []);
   useLayoutEffect(() => {
     const event = window.addEventListener("scroll", () => {
       setScrollTop(document.documentElement.scrollTop);
@@ -320,14 +331,11 @@ export const getStaticProps = async (context) => {
       totalValue: stockPurchaseInfos[stock._id]?.quantity * stock.currentPrice,
     };
   });
-  const { totalInvestment, totalProfits } = await getInvestorInvestInfo(
-    idea.userId
-  );
 
   return {
     props: {
       idea,
-      investor: { ...investor, totalInvestment, totalProfits },
+      investor: { ...investor },
       stockPurchaseInfos,
       stocksWithPrices,
       userPosts: userIdeas,
