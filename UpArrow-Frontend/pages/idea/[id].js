@@ -28,6 +28,7 @@ import { useIdea } from "../../hooks/model/useIdea";
 import {
   CommentIcon,
   ThumbDownIcon,
+  ThumbUpFilled,
   ThumbUpIcon,
 } from "../../components/icons";
 import { useAppUser } from "../../hooks/useAppUser";
@@ -86,6 +87,16 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
     isLoading: isVoteDataLoading,
     refetch,
   } = useQuery(["voteByIdeaId", id], api.vote.getByIdeaId(id));
+
+  console.log("voteData : ", voteData);
+  const isLiked = voteData?.data?.some(
+    (vote) => vote.userId === user._id && vote.isAgree
+  );
+  console.log("isLiked : ", isLiked);
+  console.log("user : ", user);
+  const isUnliked = voteData?.data?.some(
+    (vote) => vote.userId === user._id && !vote.isAgree
+  );
   const { isMobile } = useMobile();
   const [comment, setComment] = useState("");
   const { data: comments, refetch: refetchCommentCommentIds } = useQuery(
@@ -95,7 +106,6 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
       enabled: commentIds && commentIds.length > 0,
     }
   );
-  console.log("comments : ", comments);
 
   useEffect(() => {
     if (ideaIsRefetching || commentIds.length === 0) {
@@ -260,13 +270,13 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
                 onClick={() => {
                   createVote.mutate({
                     postId: id,
-                    userId: data._id,
+                    userId: user._id,
                     isAgree: true,
                   });
                 }}
               >
                 <div className="thumb">
-                  <ThumbUpIcon />
+                  {isLiked ? <ThumbUpFilled /> : <ThumbUpIcon />}
                 </div>
                 <span>{agreeCount}</span>
               </div>
@@ -276,13 +286,13 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
                 onClick={() => {
                   createVote.mutate({
                     postId: id,
-                    userId: data._id,
+                    userId: user._id,
                     isAgree: false,
                   });
                 }}
               >
                 <div className="thumb">
-                  <ThumbDownIcon />
+                  <ThumbDownIcon className={isUnliked ? "clicked" : ""} />
                 </div>
                 <span>{disagreeCount}</span>
               </div>
@@ -462,6 +472,12 @@ const FloattingMenu = styled.div`
       width: 2rem;
       height: 2rem;
       fill: #444444;
+
+      &.clicked {
+        path {
+          fill: red;
+        }
+      }
     }
   }
 `;

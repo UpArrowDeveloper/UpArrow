@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { env } from '../config';
+import axios from "axios";
+import { env } from "../config";
 
 const vote = {
   getByIdeaId: (ideaId) => () =>
