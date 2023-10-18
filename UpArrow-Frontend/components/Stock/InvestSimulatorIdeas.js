@@ -94,12 +94,14 @@ const InvestSimulatorIdeas = ({
           <div className="cash-info">
             <div>
               <h4>My UpArrow Cash</h4>
-              <div className="cash">${user?.cash.toLocaleString()}</div>
+              <div className="cash">
+                ${Math.floor(user?.cash).toLocaleString()}
+              </div>
             </div>
             <div>
               <h4>Owned {stock.name} shares </h4>
               <div className="cash">
-                ${currentStockValuation?.toLocaleString()}
+                ${Math.floor(currentStockValuation)?.toLocaleString()}
               </div>
             </div>
           </div>
