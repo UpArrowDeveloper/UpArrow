@@ -141,8 +141,13 @@ export default function Page(props) {
 }
 
 export async function getStaticPaths() {
+  const investorList = await api.user.get();
+  const investorIds = investorList
+    .sort((a, b) => b.totalInvestment - a.totalInvestment)
+    .slice(0, 10)
+    .map((investor) => ({ params: { id: investor._id } }));
   return {
-    paths: [],
+    paths: investorIds,
     fallback: "blocking",
   };
 }

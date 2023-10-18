@@ -32,7 +32,7 @@ function Stock({ stock, analysis }) {
 
   const [stockOrderQuantity, setStockOrderQuantity] = useState(0);
   const { data: currentStockValuationData, refetch } = useQuery(
-    ["currentStockValuation", user._id, stock._id],
+    ["currentStockValuation", user?._id, stock?._id],
     api.price.get(stock?._id, user?._id),
     { enabled: !!(stock?._id && user?._id) }
   );
@@ -75,7 +75,7 @@ function Stock({ stock, analysis }) {
           }
         );
         queryClient.setQueryData(
-          ["currentStockValuation", user._id, stock._id],
+          ["currentStockValuation", user?._id, stock?._id],
           (old) => {
             console.log("old : ", old);
             return {

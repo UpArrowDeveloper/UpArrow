@@ -166,7 +166,6 @@ export async function getStaticProps() {
     else return y - x;
   });
 
-  console.log("build start in index.js 7");
   return {
     props: {
       stockList,
