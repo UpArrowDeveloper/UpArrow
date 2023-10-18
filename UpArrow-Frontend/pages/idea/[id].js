@@ -27,6 +27,7 @@ import CommentList from "../../components/CommentList";
 import { useIdea } from "../../hooks/model/useIdea";
 import {
   CommentIcon,
+  ThumbDownFilled,
   ThumbDownIcon,
   ThumbUpFilled,
   ThumbUpIcon,
@@ -292,7 +293,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
                 }}
               >
                 <div className="thumb">
-                  <ThumbDownIcon className={isUnliked ? "clicked" : ""} />
+                  {isUnliked ? <ThumbDownFilled /> : <ThumbDownIcon />}
                 </div>
                 <span>{disagreeCount}</span>
               </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ThumbUpIcon } from "../components/icons";
+import { ThumbUpFilled, ThumbUpIcon } from "../components/icons";
 import "./Comment.module.css";
 import axios from "axios";
 import styled from "@emotion/styled";
@@ -45,7 +45,7 @@ const CommentView = ({
           {isMobile && (
             <div className="thumb-up" onClick={onHeartClick}>
               {checked ? (
-                <ThumbUpIcon />
+                <ThumbUpFilled />
               ) : (
                 <ThumbUpIcon style={{ fill: color.B40 }} />
               )}
@@ -58,7 +58,7 @@ const CommentView = ({
       {!isMobile && (
         <div className="thumb-up" onClick={onHeartClick}>
           {checked ? (
-            <ThumbUpIcon />
+            <ThumbUpFilled />
           ) : (
             <ThumbUpIcon style={{ fill: color.B40 }} />
           )}
