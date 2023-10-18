@@ -64,7 +64,9 @@ const InvestorProfileView = ({
       </div>
       <hr />
       <div className="description">{description}</div>
-      <div className="website-url">{websiteUrl}</div>
+      <div className="website-url">
+        <a href={websiteUrl}>{websiteUrl}</a>
+      </div>
       <h4 className="financials">Financials</h4>
       <div className="cash-block">
         <div>
