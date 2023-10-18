@@ -7,13 +7,14 @@ import InvestSimulatorIdeas from "../../components/Stock/InvestSimulatorIdeas";
 import Overview from "../../components/Stock/Overview";
 import Opinions from "../../components/Stock/Opinions";
 import { useAppUser } from "../../hooks/useAppUser";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../apis";
 import { MainLayout } from "../../Layouts";
 import useModal from "../../hooks/useModal";
 import { PurchaseModal } from "../../components/Popup/PurchaseModal";
 import { mobileWidth } from "../../styles/responsive";
 import { numberComma } from "../../utils/number";
+import storage from "../../utils/storage";
 
 export default function StockPage(props) {
   return (
@@ -27,10 +28,11 @@ function Stock({ stock, analysis }) {
   const { user, refetch: refetchUser } = useAppUser();
   const [comment, setComment] = useState("");
   const { openModal, closeModal } = useModal();
+  const queryClient = useQueryClient();
 
   const [stockOrderQuantity, setStockOrderQuantity] = useState(0);
   const { data: currentStockValuationData, refetch } = useQuery(
-    ["currentStockValuation", user, stock],
+    ["currentStockValuation", user._id, stock._id],
     api.price.get(stock?._id, user?._id),
     { enabled: !!(stock?._id && user?._id) }
   );
@@ -52,6 +54,61 @@ function Stock({ stock, analysis }) {
       []
   );
   const postOrder = useMutation(api.order.post, {
+    onMutate: (variables) => {
+      const accessToken = storage.get("access_token");
+      console.log("variables : ", variables);
+      if (variables.type === "buy") {
+        queryClient.setQueryData(
+          ["user profile", accessToken || "ac"],
+          ({ user }) => {
+            console.log("user : ", user);
+            console.log(
+              "new cash : ",
+              (user?.cash || 0) - variables.price * variables.quantity
+            );
+            return {
+              user: {
+                ...user,
+                cash: (user?.cash || 0) - variables.price * variables.quantity,
+              },
+            };
+          }
+        );
+        queryClient.setQueryData(
+          ["currentStockValuation", user._id, stock._id],
+          (old) => {
+            console.log("old : ", old);
+            return {
+              ...old,
+              price: old.price + variables.price * variables.quantity,
+            };
+          }
+        );
+      } else {
+        queryClient.setQueryData(
+          ["user profile", accessToken || "ac"],
+          ({ user }) => {
+            console.log("user : ", user);
+            return {
+              user: {
+                ...user,
+                cash: (user?.cash || 0) + variables.price * variables.quantity,
+              },
+            };
+          }
+        );
+        queryClient.setQueryData(
+          ["currentStockValuation", user._id, stock._id],
+          (old) => {
+            console.log("old : ", old);
+            return {
+              ...old,
+              price: old.price - variables.price * variables.quantity,
+            };
+          }
+        );
+      }
+    },
     onSuccess: (_, variables) => {
       if (variables.type === "buy") {
         openModal({
