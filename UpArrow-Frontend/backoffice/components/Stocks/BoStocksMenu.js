@@ -209,7 +209,6 @@ export const BoStocksMenu = ({ stock, analysis }) => {
     setOpinions(newItems);
   };
 
-  console.log("growthOppertunities : ", growthOppertunities);
   return (
     <BoStocksMenuBlock>
       <div className="content">

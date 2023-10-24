@@ -21,12 +21,10 @@ router.post("/auth", async (req, res) => {
 
 router.post("/signup", async (req, res) => {
   const { email, name } = req.body;
-  console.log("email");
   try {
     await addUser(email, name, "");
     return res.send({ success: true });
   } catch (e) {
-    console.log(e);
     return res.status(400).send("already exist");
   }
 });

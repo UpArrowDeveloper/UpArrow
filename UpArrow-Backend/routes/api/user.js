@@ -12,6 +12,7 @@ const {
 const { getIdeasByUserId } = require("../../services/idea");
 const { USER_ALREADY_EXIST, UserAlreadyExist } = require("../../error/user");
 const { validUser } = require("../../middlewares/auth");
+const { getCalculatedOrdersByUser } = require("../../services/order");
 
 router.get("/", async (req, res) => {
   try {
@@ -27,6 +28,18 @@ router.get("/:id/top3stocks", async (req, res) => {
   try {
     const result = await getTop3StocksByUserId(id);
     return res.status(200).json(result);
+  } catch (err) {
+    console.error("error : ", err);
+    return res.status(500).json({ error: err });
+  }
+});
+
+router.get("/:id/stock-info/:stockId", async (req, res) => {
+  const id = req.params.id;
+  const stockId = req.params.stockId;
+  try {
+    const result = await getCalculatedOrdersByUser(id);
+    return res.status(200).json(result[stockId]);
   } catch (err) {
     console.error("error : ", err);
     return res.status(500).json({ error: err });
@@ -249,7 +262,6 @@ router.get("/:id/ideas", async (req, res) => {
 });
 
 router.put("/:id/follow", validUser, async (req, res) => {
-  console.log("followstart");
   const user = req.user;
   const currentUserId = user.id;
   const targetUserId = req.params.id;

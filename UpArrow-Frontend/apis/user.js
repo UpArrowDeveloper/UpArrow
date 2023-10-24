@@ -16,6 +16,8 @@ const user = {
     axios.get(`${url}/${id}/rank`).then((res) => res.data),
   getByEmail: (email) => () =>
     axios.get(`${url}/${email}/email`).then((res) => res.data),
+  getCurrentStock: (id, stockId) => () =>
+    axios.get(`${url}/${id}/stock-info/${stockId}`).then((res) => res.data),
   post: (payload) => axios.post(url, payload).then((res) => res.data),
   updateById: (id, payload) =>
     axios.put(`${url}/${id}`, payload).then((res) => res.data),

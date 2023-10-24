@@ -89,12 +89,9 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
     refetch,
   } = useQuery(["voteByIdeaId", id], api.vote.getByIdeaId(id));
 
-  console.log("voteData : ", voteData);
   const isLiked = voteData?.data?.some(
     (vote) => vote.userId === user._id && vote.isAgree
   );
-  console.log("isLiked : ", isLiked);
-  console.log("user : ", user);
   const isUnliked = voteData?.data?.some(
     (vote) => vote.userId === user._id && !vote.isAgree
   );

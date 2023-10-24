@@ -56,10 +56,8 @@ const addOrderById = async (id, orderId) => {
 };
 
 const addUser = async (email, name, profileImageUrl) => {
-  console.log("email : ", email);
   if (!email) throw "no email";
   const user = await User.findOne({ email });
-  console.log("user : ", user);
   if (user) throw UserAlreadyExist;
 
   const newUser = new User({

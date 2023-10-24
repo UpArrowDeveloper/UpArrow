@@ -59,7 +59,6 @@ const BackofficeBannerList = () => {
             }
 
             await refetch();
-            console.log("drag end : ", result);
           }}
           columns={[
             "Image",

@@ -41,6 +41,12 @@ function Stock({ stock, analysis }) {
     api.stock.getById(stock?._id),
     { enabled: !!stock?.ticker }
   );
+  const { data: userCurrentStock, refetch: userCurrentStockRefetch } = useQuery(
+    ["userCurrentStock", stock?._id, user?._id],
+    api.user.getCurrentStock(user?._id, stock?._id),
+    { enabled: !!stock?._id && !!user?._id }
+  );
+  console.log(userCurrentStock);
 
   const { data: ideaList } = useQuery(
     ["ideaList", stock?._id],
@@ -56,16 +62,10 @@ function Stock({ stock, analysis }) {
   const postOrder = useMutation(api.order.post, {
     onMutate: (variables) => {
       const accessToken = storage.get("access_token");
-      console.log("variables : ", variables);
       if (variables.type === "buy") {
         queryClient.setQueryData(
           ["user profile", accessToken || "ac"],
           ({ user }) => {
-            console.log("user : ", user);
-            console.log(
-              "new cash : ",
-              (user?.cash || 0) - variables.price * variables.quantity
-            );
             return {
               user: {
                 ...user,
@@ -77,7 +77,6 @@ function Stock({ stock, analysis }) {
         queryClient.setQueryData(
           ["currentStockValuation", user?._id, stock?._id],
           (old) => {
-            console.log("old : ", old);
             return {
               ...old,
               price: old.price + variables.price * variables.quantity,
@@ -88,7 +87,6 @@ function Stock({ stock, analysis }) {
         queryClient.setQueryData(
           ["user profile", accessToken || "ac"],
           ({ user }) => {
-            console.log("user : ", user);
             return {
               user: {
                 ...user,
@@ -100,7 +98,6 @@ function Stock({ stock, analysis }) {
         queryClient.setQueryData(
           ["currentStockValuation", user._id, stock._id],
           (old) => {
-            console.log("old : ", old);
             return {
               ...old,
               price: old.price - variables.price * variables.quantity,
@@ -146,6 +143,7 @@ function Stock({ stock, analysis }) {
       refetch();
       refetchUser();
       refetchLiveStock();
+      userCurrentStockRefetch();
     },
     onError: (e) => {
       const message = e.response.data.message;
@@ -231,6 +229,7 @@ function Stock({ stock, analysis }) {
         <InvestSimulatorIdeas
           stock={liveStock || stock}
           user={user}
+          userCurrentStock={userCurrentStock}
           ideaList={
             ideaList
               ?.sort((a, b) => {

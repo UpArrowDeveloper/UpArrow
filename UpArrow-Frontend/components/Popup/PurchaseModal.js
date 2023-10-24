@@ -9,7 +9,6 @@ export const PurchaseModal = ({
   title = "Congraturations!",
   message,
 }) => {
-  console.log("title : ", title);
   return (
     <SignupCelebrateBlock>
       <h1>{title}</h1>

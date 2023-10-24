@@ -1,6 +1,6 @@
-const cheerio = require('cheerio');
-const axios = require('axios');
-require('dotenv').config();
+const cheerio = require("cheerio");
+const axios = require("axios");
+require("dotenv").config();
 
 const httpClient = axios.create({
   baseURL: process.env.API_URI,
@@ -25,19 +25,18 @@ const changePrice = async (id, stock) => {
       ...stock,
     });
   } catch (error) {
-    console.error('change error : ', error);
+    console.error("change error : ", error);
   }
 };
 
 const getPrice = async (ticker) => {
   const $ = cheerio.load(await getPage(ticker));
-  const result = $('#_cs_root .spt_tlt .spt_con > strong');
+  const result = $("#_cs_root .spt_tlt .spt_con > strong");
   return [ticker, [...result][0].children[0].data];
 };
 
 const parseHtml = async () => {
-  const stocks = (await httpClient.get('/api/v1/stock')).data;
-  console.log('stocks : ', stocks);
+  const stocks = (await httpClient.get("/api/v1/stock")).data;
 
   const priceListPromises = [];
 
@@ -47,7 +46,6 @@ const parseHtml = async () => {
 
   try {
     const priceList = await Promise.all(priceListPromises);
-    console.log('priceList : ', priceList);
     const res = priceList.map(([ticker, price], idx) => {
       return changePrice(stocks[idx]._id, {
         currentPrice: Number(price),

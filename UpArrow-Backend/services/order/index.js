@@ -1,5 +1,5 @@
-const Order = require('../../models/Order');
-const User = require('../../models/User');
+const Order = require("../../models/Order");
+const User = require("../../models/User");
 
 const getOrderByIds = async (orderIds) => {
   return Promise.all(orderIds.map((id) => Order.findById(id)));
@@ -12,7 +12,7 @@ const getOrdersByUserAndStock = async (userId, stockId) => {
 
 const getCalculatedOrdersByUser = async (userId) => {
   const user = await User.findOne({ _id: userId });
-  if (!user) throw new Error('no user id');
+  if (!user) throw new Error("no user id");
   const orders = await Promise.all(
     user.orderIds.map((id) => Order.findById(id))
   );
@@ -20,7 +20,7 @@ const getCalculatedOrdersByUser = async (userId) => {
     const orderStockId = order.stockId;
     const currentStockAcc = acc[orderStockId];
     if (currentStockAcc) {
-      if (order.type === 'buy') {
+      if (order.type === "buy") {
         return {
           ...acc,
           [orderStockId]: {
@@ -42,7 +42,7 @@ const getCalculatedOrdersByUser = async (userId) => {
                 currentStockAcc.price * currentStockAcc.quantity -
                   order.price * order.quantity
               ) / Math.abs(currentStockAcc.quantity - order.quantity),
-            quantity: currentStockAcc.quantity + order.quantity,
+            quantity: currentStockAcc.quantity - order.quantity,
           },
         };
       }

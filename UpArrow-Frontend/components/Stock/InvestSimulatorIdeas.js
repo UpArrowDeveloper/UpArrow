@@ -32,6 +32,7 @@ const InvestSimulatorIdeas = ({
   onBuyClick,
   onSellClick,
   currentStockValuation,
+  userCurrentStock,
   ideaList,
   stockOrderQuantity,
   setStockOrderQuantity,
@@ -101,7 +102,7 @@ const InvestSimulatorIdeas = ({
             <div>
               <h4>Owned {stock.name} shares </h4>
               <div className="cash">
-                ${Math.floor(currentStockValuation)?.toLocaleString()}
+                {Math.floor(userCurrentStock?.quantity)?.toLocaleString()}
               </div>
             </div>
           </div>
@@ -145,7 +146,6 @@ const InvestSimulatorIdeas = ({
           <Viewmore
             className="mt-5"
             onClick={() => {
-              console.log("click");
               router.push("/idea");
             }}
           />
