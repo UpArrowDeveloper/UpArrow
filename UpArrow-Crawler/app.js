@@ -31,7 +31,7 @@ const changePrice = async (id, stock) => {
 
 const getPrice = async (ticker) => {
   const $ = cheerio.load(await getPage(ticker));
-  const result = $("#_cs_root .spt_tlt .spt_con > strong");
+  const result = $(".spt_tlt .spt_con > strong");
   return [ticker, [...result][0].children[0].data];
 };
 
