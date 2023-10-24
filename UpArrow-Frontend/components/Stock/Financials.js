@@ -92,7 +92,8 @@ const FinancialsBlock = styled.div`
   .chart-wrapper {
     display: grid;
     width: 100% !important;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 40% 40%;
+    grid-gap: 10rem;
 
     .chart {
       margin: 0.8rem 0;
@@ -100,8 +101,8 @@ const FinancialsBlock = styled.div`
   }
 
   .bar-wrapper {
-    width: 28.2rem;
-    height: 14.6rem;
+    // width: 28.2rem;
+    //height: 14.6rem;
   }
 
   @media screen and (max-width: ${mobileWidth}) {

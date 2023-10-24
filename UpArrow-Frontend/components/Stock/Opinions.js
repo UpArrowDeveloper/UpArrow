@@ -211,8 +211,8 @@ const OpinionCardBlock = styled.div`
 
   .message {
     font-weight: 600;
-    font-size: 2.4rem;
-    line-height: 2.9rem;
+    font-size: 2.2rem;
+    line-height: 2.6rem;
   }
 
   .opinion-author-image {

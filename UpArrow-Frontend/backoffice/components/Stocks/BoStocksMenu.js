@@ -757,6 +757,11 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 onChange={(e) =>
                   setOpinion((s) => ({ ...s, file: e.target.files[0] }))
                 }
+                previewStyle={{
+                  width: "4.8rem",
+                  height: "4.8rem",
+                  borderRadius: "999rem",
+                }}
               />
               <Input
                 value={opinion.author || ""}

@@ -107,7 +107,7 @@ function Home() {
                     </div>
                   </td>
                   <td className="number">
-                    <span>${stock.currentPrice.toLocaleString()}</span>
+                    <span>${stock.currentPrice?.toLocaleString()}</span>
                   </td>
                   {!isMobile && (
                     <>
