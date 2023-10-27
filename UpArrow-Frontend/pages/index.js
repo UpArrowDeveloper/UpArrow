@@ -12,6 +12,7 @@ import { ChevronRightMobileIcon, NextIcon } from "../components/icons";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
 import MobileBanner from "../components/common/MobileBanner";
+import Image from "next/image";
 
 function Home({
   stockList,
