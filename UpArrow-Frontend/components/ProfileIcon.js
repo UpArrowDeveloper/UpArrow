@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { EmptyAvatar } from "./icons";
 import { env } from "../config";
 import { HeadH5Bold } from "../styles/typography";
+import Image from "next/image";
 
 const InvisibleCover = styled.div`
   background-color: rgba(0 0 0 / 10%);
@@ -40,11 +41,14 @@ const ProfileIcon = ({ className, data, logout }) => {
     <>
       <ProfileIconWrapper className={className}>
         {isLogin ? (
-          <img
-            className="profile-icon"
-            src={profileImageUrl}
-            onClick={() => setIsOpen(!isOpen)}
-          />
+          <div className="profile-icon-wrapper">
+            <Image
+              src={profileImageUrl}
+              onClick={() => setIsOpen(!isOpen)}
+              width={48}
+              height={48}
+            />
+          </div>
         ) : (
           <div className="profile-icon no-border">
             <EmptyAvatar onClick={() => setIsOpen(!isOpen)} />
@@ -96,13 +100,12 @@ const ProfileIconWrapper = styled.div`
     text-align: center;
   }
 
-  .profile-icon {
-    width: 4.8rem;
-    height: 4.8rem;
-    border-radius: 9999rem;
-
-    &.no-border {
-      border: none;
+  .profile-icon-wrapper {
+    img {
+      border-radius: 9999rem;
+      &.no-border {
+        border: none;
+      }
     }
   }
 `;
