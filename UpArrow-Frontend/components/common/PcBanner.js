@@ -19,7 +19,7 @@ const PcBanner = ({ initBanner }) => {
     Array(100).fill(false)
   );
   const [bannerWidth, setBannerWidth] = useState(128);
-  const [bannerHeight, setBannerHeight] = useState(64);
+  const [bannerHeight, setBannerHeight] = useState(45);
   const bannerWidthRem = `${bannerWidth}rem`;
   const bannerHalfWidthRem = `${bannerWidth / 2}rem`;
 
