@@ -31,9 +31,9 @@ const getSortAlgorithmByOrderOption = (orderOption) => {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   }
 };
-function Home() {
+function Home({ initStocks }) {
   const [orderOption, setOrderOption] = useState();
-  const [stocks, setStocks] = useState([]);
+  const [stocks, setStocks] = useState(initStocks);
 
   const router = useRouter();
   const { isMobile } = useMobile();
@@ -158,6 +158,15 @@ export default function StockPage(props) {
       <Home {...props} />
     </MainLayout>
   );
+}
+
+export async function getStaticProps() {
+  const stocks = await api.stock.get();
+  return {
+    props: {
+      initStocks: stocks,
+    },
+  };
 }
 
 const StockBlock = styled.div`
