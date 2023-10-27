@@ -21,6 +21,7 @@ export const useMobile = () => {
   useEffect(() => {
     htmlRef.current = document.querySelector("html");
     window.addEventListener("resize", f);
+    f();
   }, []);
 
   return { isMobile };

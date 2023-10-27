@@ -121,7 +121,7 @@ export async function getStaticProps() {
   const stockList = await api.stock.get();
   const investorList = await api.user.get();
   const config = await api.config.get();
-  const bannerImageUrl = config.bannerImageUrl;
+  const banner = await api.banner.get();
   const topSixIdea = await api.idea.get({
     params: {
       order: "desc",
@@ -173,6 +173,7 @@ export async function getStaticProps() {
       topSixIdea: userAddedTopSixIdea,
       investorDataList: percentBindDataList,
       config,
+      banner,
     },
     revalidate: 60 * 10, // In seconds
   };
@@ -183,9 +184,9 @@ export default function MainPage(props) {
   return (
     <>
       {isMobile ? (
-        <MobileBanner config={props.config} />
+        <MobileBanner initBanner={props.banner} />
       ) : (
-        <PcBanner config={props.config} />
+        <PcBanner initBanner={props.banner} />
       )}
       <MainLayout isMain>
         <Home {...props} />

@@ -10,9 +10,11 @@ import { Body14Medium, HeadH5Bold, HeadH6Bold } from "../../styles/typography";
 import { ChevronRightIcon } from "../icons";
 import { useQuery } from "@tanstack/react-query";
 
-const MobileBanner = () => {
+const MobileBanner = ({ initBoard }) => {
   const { data: apiBanners } = useQuery(["banner"], api.banner.get);
-  const banners = apiBanners?.sort((a, b) => a.order - b.order) || [];
+  const banners =
+    apiBanners?.sort((a, b) => a.order - b.order) ||
+    initBoard?.sort((a, b) => a.order - b.order);
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
   const [currentMouseX, setCurrentMouseX] = useState(0);
   const [currentPlayIndexes, setCurrentPlayIndexes] = useState(
