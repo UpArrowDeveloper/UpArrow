@@ -11,6 +11,7 @@ import { Body14Regular, HeadH4Bold, HeadH6Bold } from "../styles/typography";
 import color from "../styles/color";
 import TimeAgo from "javascript-time-ago";
 import { mobileWidth } from "../styles/responsive";
+import Image from "next/image";
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
 
@@ -34,7 +35,16 @@ const IdeaCard = ({
   return (
     <IdeaWrapper theme={theme} onClick={() => router.push(`/idea/${ideaId}`)}>
       <div className="image">
-        {ideaImage ? <Img alt="idea-card-image" src={ideaImage} /> : null}
+        {ideaImage ? (
+          <ImgWrapper>
+            <Image
+              alt="idea-card-image"
+              src={ideaImage}
+              width={120}
+              height={120}
+            />
+          </ImgWrapper>
+        ) : null}
       </div>
 
       <div className="textBlock">
@@ -115,16 +125,19 @@ const IdeaWrapper = styled.div`
   }
 `;
 
-const Img = styled.img`
-  margin: auto;
-  display: block;
+const ImgWrapper = styled.div`
+  position: relative;
   width: 12rem;
   height: 12rem;
-  object-fit: cover;
-  border-radius: 0.8rem;
-
   @media screen and (max-width: ${mobileWidth}) {
     width: 8rem;
     height: 8rem;
+  }
+  img {
+    margin: auto;
+    display: block;
+
+    object-fit: cover;
+    border-radius: 0.8rem;
   }
 `;

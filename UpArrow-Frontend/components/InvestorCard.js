@@ -11,6 +11,7 @@ import Rank from "./common/Rank";
 import { useRouter } from "next/router";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
+import Image from "next/image";
 
 const InvestorCard = ({
   investorId,
@@ -34,7 +35,14 @@ const InvestorCard = ({
         <>
           <div className="investorImg">
             {investorAvatar ? (
-              <img className="avatar" alt={investorName} src={investorAvatar} />
+              <div className="investor-image-wrapper">
+                <Image
+                  alt={investorName}
+                  src={investorAvatar}
+                  width={110}
+                  height={110}
+                />
+              </div>
             ) : (
               <div className="empty"></div>
             )}
@@ -52,7 +60,14 @@ const InvestorCard = ({
         <div className="mobile-investor-wrapper">
           <div className="investorImg">
             {investorAvatar ? (
-              <img className="avatar" alt={investorName} src={investorAvatar} />
+              <div className="investor-image-wrapper">
+                <Image
+                  alt={investorName}
+                  src={investorAvatar}
+                  width={60}
+                  height={60}
+                />
+              </div>
             ) : (
               <div className="empty"></div>
             )}
@@ -100,16 +115,15 @@ const InvestorCardWrapper = styled.div`
     border: 0.1rem solid gray;
   }
 
-  .avatar {
-    width: 11rem;
-    height: 11rem;
-    object-fit: cover;
-    border-radius: 99.9rem;
-    margin-right: 1rem;
-    margin-bottom: 1rem;
-    text-indent: 100%;
-    white-space: nowrap;
-    overflow: hidden;
+  .investor-image-wrapper {
+    img {
+      object-fit: cover;
+      border-radius: 99.9rem;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
+      text-indent: 100%;
+      white-space: nowrap;
+    }
   }
 
   .investorImg {
