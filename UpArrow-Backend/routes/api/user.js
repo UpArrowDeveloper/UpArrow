@@ -39,7 +39,8 @@ router.get("/:id/stock-info/:stockId", async (req, res) => {
   const stockId = req.params.stockId;
   try {
     const result = await getCalculatedOrdersByUser(id);
-    return res.status(200).json(result[stockId]);
+    const emptyResult = { userId: id, stockId, quantity: 0, price: 0 };
+    return res.status(200).json(result[stockId] || emptyResult);
   } catch (err) {
     console.error("error : ", err);
     return res.status(500).json({ error: err });

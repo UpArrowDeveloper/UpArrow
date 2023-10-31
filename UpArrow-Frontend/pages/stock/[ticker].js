@@ -46,7 +46,6 @@ function Stock({ stock, analysis }) {
     api.user.getCurrentStock(user?._id, stock?._id),
     { enabled: !!stock?._id && !!user?._id }
   );
-  console.log(userCurrentStock);
 
   const { data: ideaList } = useQuery(
     ["ideaList", stock?._id],

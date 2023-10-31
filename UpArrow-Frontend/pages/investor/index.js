@@ -75,7 +75,10 @@ function Investors({
       setInvestors(investDataIncludedUsers);
       setTop3Stocks(top3StocksResponse);
     };
-    getDatas();
+    setTimeout(() => {
+      // for image load first
+      getDatas();
+    }, 2000);
   }, []);
 
   return (
