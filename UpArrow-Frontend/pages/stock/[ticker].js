@@ -56,7 +56,8 @@ function Stock({ stock, analysis }) {
     ["stockComments", liveStock?._id],
     (liveStock?.commentIds &&
       api.comment.getByIds(liveStock.commentIds?.join(","))) ||
-      []
+      [],
+    { enabled: liveStock?.commentIds && liveStock?.commentIds?.length > 0 }
   );
   const postOrder = useMutation(api.order.post, {
     onMutate: (variables) => {
