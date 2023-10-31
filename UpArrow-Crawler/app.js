@@ -8,6 +8,7 @@ const httpClient = axios.create({
 
 const getPage = async (ticker) => {
   try {
+    console.log("ticker : ", ticker);
     const pageHtml = (
       await axios.get(
         `https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=${ticker}+주가`
@@ -24,6 +25,7 @@ const changePrice = async (id, stock) => {
     const res = await httpClient.put(`/api/v1/stock/${id}`, {
       ...stock,
     });
+    console.log("stock : ", stock);
   } catch (error) {
     console.error("change error : ", error);
   }
@@ -32,7 +34,8 @@ const changePrice = async (id, stock) => {
 const getPrice = async (ticker) => {
   const $ = cheerio.load(await getPage(ticker));
   const result = $(".spt_tlt .spt_con > strong");
-  return [ticker, [...result][0].children[0].data];
+
+  return [ticker, [...result][0].children[0].data?.replace(",", "")];
 };
 
 const parseHtml = async () => {
@@ -51,7 +54,7 @@ const parseHtml = async () => {
         currentPrice: Number(price),
       });
     });
-    await Promise.all(res);
+    const result = await Promise.all(res);
     // const priceObject = priceList.reduce((acc, [ticker, price]) => {
     //   return {
     //     ...acc,
@@ -59,6 +62,7 @@ const parseHtml = async () => {
     //   };
     // }, {});
     // await changePrice(priceObject);
+    console.log("res : ", result);
   } catch (error) {
     console.error(error);
   }
