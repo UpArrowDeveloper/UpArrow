@@ -257,6 +257,11 @@ const IndexWrapper = styled.div`
           height: 7.2rem;
         }
       }
+
+      &:first-child {
+        border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+      }
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
     }
 
     .investorList {

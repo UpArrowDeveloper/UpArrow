@@ -100,12 +100,12 @@ function Investors({
         <table>
           <thead>
             <tr>
-              <th style={{ paddingLeft: "1rem" }}>Ranks</th>
-              <th style={{ paddingLeft: "0.8rem" }}>Investors</th>
+              <th style={{ paddingLeft: "1rem" }}></th>
+              <th style={{ paddingLeft: "0.8rem" }}></th>
               {!isMobile && <th>Top 3 Stocks</th>}
               <th>Ideas</th>
               {!isMobile && <th>Total Profits</th>}
-              <th>Total Assets</th>
+              <th>{!isMobile ? "Total" : ""} Assets</th>
             </tr>
           </thead>
           <tbody>
