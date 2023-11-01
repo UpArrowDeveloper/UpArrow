@@ -13,6 +13,7 @@ import color from "../../styles/color";
 import { mobileWidth } from "../../styles/responsive";
 import api from "../../apis";
 import { useAppUser } from "../../hooks/useAppUser";
+import { useEffect, useState } from "react";
 
 const InvestorProfileView = ({
   id,
@@ -31,6 +32,13 @@ const InvestorProfileView = ({
   userRefetch,
 }) => {
   const { user, refetch } = useAppUser();
+  const [isFollowed, setIsFollowed] = useState(
+    !!user?.followings?.includes(id)
+  );
+
+  useEffect(() => {
+    setIsFollowed(!!user?.followings?.includes(id));
+  }, [id, user]);
 
   return (
     <InvestorProfileBlock>
@@ -40,16 +48,17 @@ const InvestorProfileView = ({
       <button
         disabled={id === user?._id}
         className={`follow-btn ${id === user?._id ? "disabled" : ""} ${
-          user?.followings?.includes(id) ? "following" : ""
+          isFollowed ? "following" : ""
         }`}
         onClick={async () => {
           if (id === user?._id) return;
+          setIsFollowed((s) => !s);
           await api.user.followUserById(id);
           userRefetch();
           refetch();
         }}
       >
-        {user?.followings?.includes(id) ? "Unfollow" : "Follow"}
+        {isFollowed ? "Unfollow" : "Follow"}
       </button>
       <div className="invest-info">
         <div>
