@@ -32,6 +32,7 @@ const InvestorProfileView = ({
   userRefetch,
 }) => {
   const { user, refetch } = useAppUser();
+  const [isFollowLoading, setIsFolloweLoading] = useState(false);
   const [isFollowed, setIsFollowed] = useState(
     !!user?.followings?.includes(id)
   );
@@ -46,14 +47,16 @@ const InvestorProfileView = ({
       <Avatar className="avatar" src={profileImageUrl} />
       <div className="name">{username}</div>
       <button
-        disabled={id === user?._id}
-        className={`follow-btn ${id === user?._id ? "disabled" : ""} ${
-          isFollowed ? "following" : ""
-        }`}
+        disabled={id === user?._id || isFollowLoading}
+        className={`follow-btn ${isFollowed ? "following" : ""} ${
+          id === user?._id || isFollowLoading ? "disabled" : ""
+        } `}
         onClick={async () => {
-          if (id === user?._id) return;
+          if (id === user?._id || isFollowLoading) return;
           setIsFollowed((s) => !s);
+          setIsFolloweLoading(true);
           await api.user.followUserById(id);
+          setIsFolloweLoading(false);
           userRefetch();
           refetch();
         }}
@@ -132,12 +135,11 @@ const InvestorProfileBlock = styled.div`
     margin-bottom: 1.6rem;
     cursor: pointer;
 
-    &.disabled {
-      background-color: ${color.B40};
-    }
-
     &.following {
       background-color: ${color.DISAGREE_RED};
+    }
+    &.disabled {
+      opacity: 0.7;
     }
   }
 
