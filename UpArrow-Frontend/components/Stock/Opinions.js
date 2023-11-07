@@ -186,6 +186,13 @@ const OpinionsBlock = styled.div`
     h3 {
       ${HeadH5Bold}
     }
+
+    .opinion-cards {
+      .opinion-cards-wrapper {
+        gap: 0.8rem;
+        overflow-x: scroll;
+      }
+    }
   }
 `;
 
@@ -221,7 +228,7 @@ const OpinionCardBlock = styled.div`
   }
 
   @media screen and (max-width: ${mobileWidth}) {
-    width: 100%;
+    min-width: calc(100vw - 6rem);
 
     .author {
       ${Body14Medium}

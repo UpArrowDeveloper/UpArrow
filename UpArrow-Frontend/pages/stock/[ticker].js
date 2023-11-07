@@ -96,7 +96,7 @@ function Stock({ stock, analysis }) {
           }
         );
         queryClient.setQueryData(
-          ["currentStockValuation", user._id, stock._id],
+          ["currentStockValuation", user?._id, stock._id],
           (old) => {
             return {
               ...old,
