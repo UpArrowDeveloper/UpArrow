@@ -24,6 +24,7 @@ const Logo = ({ logoUrl, ...props }) => {
         src={logoUrl}
         width={isMobile ? 72 : 138}
         height={isMobile ? 72 : 138}
+        style={{ borderRadius: "999rem" }}
         {...props}
         objectFit="contain"
       />
