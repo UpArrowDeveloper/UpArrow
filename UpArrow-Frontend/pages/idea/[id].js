@@ -90,10 +90,10 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   } = useQuery(["voteByIdeaId", id], api.vote.getByIdeaId(id));
 
   const isLiked = voteData?.data?.some(
-    (vote) => vote.userId === user._id && vote.isAgree
+    (vote) => vote.userId === user?._id && vote.isAgree
   );
   const isUnliked = voteData?.data?.some(
-    (vote) => vote.userId === user._id && !vote.isAgree
+    (vote) => vote.userId === user?._id && !vote.isAgree
   );
   const { isMobile } = useMobile();
   const [comment, setComment] = useState("");
@@ -130,6 +130,10 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   };
 
   const onCommentButtonClick = async () => {
+    if (!user) {
+      alert("Please login to comment");
+      return;
+    }
     await axios.post(`${env.serverUrl}/comment`, {
       postId: id,
       userId: user._id,
@@ -221,16 +225,24 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
             agreeCount={agreeCount}
             disagreeCount={disagreeCount}
             onAgreeClick={() => {
+              if (!user) {
+                alert("Please login to vote");
+                return;
+              }
               createVote.mutate({
                 postId: id,
-                userId: data._id,
+                userId: user._id,
                 isAgree: true,
               });
             }}
             onDisagreeClick={() => {
+              if (!user) {
+                alert("Please login to vote");
+                return;
+              }
               createVote.mutate({
                 postId: id,
-                userId: data._id,
+                userId: user._id,
                 isAgree: false,
               });
             }}
@@ -266,6 +278,10 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
               <div
                 className="menu"
                 onClick={() => {
+                  if (!user) {
+                    alert("Please login to vote");
+                    return;
+                  }
                   createVote.mutate({
                     postId: id,
                     userId: user._id,
@@ -282,6 +298,10 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
               <div
                 className="menu"
                 onClick={() => {
+                  if (!user) {
+                    alert("Please login to vote");
+                    return;
+                  }
                   createVote.mutate({
                     postId: id,
                     userId: user._id,
