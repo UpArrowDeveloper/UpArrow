@@ -140,7 +140,7 @@ function Investors({
                   </td>
                   {!isMobile && (
                     <td>
-                      <div className="wrapper">
+                      <div className="wrapper top3">
                         <TagGroup
                           tags={
                             top3Stocks?.[index]?.map(({ name, profit }) => ({
@@ -286,6 +286,10 @@ const IdeasBlock = styled.div`
       }
     }
 
+    .top3 {
+      margin-right: 2rem;
+    }
+
     .comments {
       font-style: normal;
       font-weight: 500;
@@ -316,6 +320,9 @@ const IdeasBlock = styled.div`
   }
 
   @media screen and (max-width: ${mobileWidth}) {
+    h1 {
+      margin-top: 2rem;
+    }
     .investors {
       width: auto;
     }
@@ -337,6 +344,13 @@ const IdeasBlock = styled.div`
 
     table td {
       vertical-align: middle;
+    }
+
+    table thead tr th {
+      text-align: center;
+    }
+    .comments {
+      justify-content: center;
     }
   }
 `;

@@ -47,9 +47,9 @@ const InvestorProfileView = ({
       <Avatar className="avatar" src={profileImageUrl} />
       <div className="name">{username}</div>
       <button
-        disabled={id === user?._id || isFollowLoading}
+        disabled={id === user?._id || isFollowLoading || !user}
         className={`follow-btn ${isFollowed ? "following" : ""} ${
-          id === user?._id || isFollowLoading ? "disabled" : ""
+          id === user?._id || isFollowLoading || !user ? "disabled" : ""
         } `}
         onClick={async () => {
           if (id === user?._id || isFollowLoading) return;
@@ -134,6 +134,9 @@ const InvestorProfileBlock = styled.div`
     ${FollowBtn}
     margin-bottom: 1.6rem;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &.following {
       background-color: ${color.DISAGREE_RED};
