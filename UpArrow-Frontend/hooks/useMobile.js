@@ -13,8 +13,9 @@ export const useMobile = () => {
   let mobileWidthNum = Number(mobileWidth.replace("px", ""));
   const htmlRef = useRef();
   const [isMobile, setIsMobile] = useState(
-    mobileWidthNum > htmlRef.current?.clientWidth ||
-      (typeof window !== "undefined" && window.innerWidth < mobileWidthNum)
+    htmlRef.current !== undefined
+      ? mobileWidthNum > htmlRef.current?.clientWidth
+      : typeof window !== "undefined" && window.innerWidth < mobileWidthNum
   );
 
   const f = debounce(() => {
