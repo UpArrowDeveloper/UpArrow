@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
 import Image from "next/image";
-import { useMobile } from "../hooks/useMobile";
 
 const LogoBlock = styled.div`
   img {
@@ -16,16 +15,13 @@ const LogoBlock = styled.div`
   }
 `;
 
-const Logo = ({ logoUrl, ...props }) => {
-  const { isMobile } = useMobile();
+const Logo = ({ logoUrl, isMobile, ...props }) => {
   return (
-    <LogoBlock>
+    <LogoBlock {...props}>
       <Image
         src={logoUrl}
         width={isMobile ? 72 : 138}
         height={isMobile ? 72 : 138}
-        style={{ borderRadius: "999rem" }}
-        {...props}
         objectFit="contain"
       />
     </LogoBlock>

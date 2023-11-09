@@ -1,6 +1,9 @@
-import Logo from "../components/Logo";
+import dynamic from "next/dynamic";
+const Logo = dynamic(() => import("../components/Logo"), { ssr: false });
+const InvestorCard = dynamic(() => import("../components/InvestorCard"), {
+  ssr: false,
+});
 import IdeaCard from "../components/IdeaCard";
-import InvestorCard from "../components/InvestorCard";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import { MainLayout } from "../Layouts";
@@ -12,7 +15,6 @@ import { ChevronRightMobileIcon, NextIcon } from "../components/icons";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
 import MobileBanner from "../components/common/MobileBanner";
-import Image from "next/image";
 
 function Home({
   stockList,
@@ -46,9 +48,10 @@ function Home({
           {stockList.slice(0, 100).map((data) => {
             return (
               <Logo
-                key={data._id}
+                key={data.name}
                 logoUrl={data.logoUrl}
                 onClick={() => router.push(`/stock/${data.ticker}`)}
+                isMobile={isMobile}
               />
             );
           })}
