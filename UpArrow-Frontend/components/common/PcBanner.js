@@ -66,7 +66,13 @@ const PcBanner = ({ initBanner }) => {
   };
 
   if (!banners || banners.length === 0)
-    return <div style={{ height: bannerHeight + "rem" }}></div>;
+    return (
+      <div
+        style={{
+          height: bannerHeight + +navbarHeight.replace("rem", "") + "rem",
+        }}
+      ></div>
+    );
 
   return (
     <BannerBlock

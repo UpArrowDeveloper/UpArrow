@@ -8,13 +8,13 @@ import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import { MainLayout } from "../Layouts";
 import { HeadH2Bold, HeadH5Bold } from "../styles/typography";
-import PcBanner from "../components/common/PcBanner";
+const PcBanner = dynamic(() => import("../components/common/PcBanner"));
+const MobileBanner = dynamic(() => import("../components/common/MobileBanner"));
 import api from "../apis";
 import { getInvestorInvestInfo } from "../utils/investor";
 import { ChevronRightMobileIcon, NextIcon } from "../components/icons";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
-import MobileBanner from "../components/common/MobileBanner";
 
 function Home({
   stockList,
@@ -184,13 +184,10 @@ export async function getStaticProps() {
 
 export default function MainPage(props) {
   const { isMobile } = useMobile();
+  console.log(typeof window === "undefined");
   return (
     <>
-      {isMobile ? (
-        <MobileBanner initBanner={props.banner} />
-      ) : (
-        <PcBanner initBanner={props.banner} />
-      )}
+      {isMobile ? <MobileBanner /> : <PcBanner />}
       <MainLayout isMain>
         <Home {...props} />
       </MainLayout>

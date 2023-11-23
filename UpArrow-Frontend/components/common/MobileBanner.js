@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
 import api from "../../apis";
 import Youtube from "../Youtube";
-import { navbarHeight } from "../Navbar";
+const navbarHeight = "92px";
 import Link from "next/link";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
@@ -11,11 +11,9 @@ import { Body14Medium, HeadH5Bold, HeadH6Bold } from "../../styles/typography";
 import { ChevronRightIcon } from "../icons";
 import { useQuery } from "@tanstack/react-query";
 
-const MobileBanner = ({ initBoard }) => {
+const MobileBanner = () => {
   const { data: apiBanners } = useQuery(["banner"], api.banner.get);
-  const banners =
-    apiBanners?.sort((a, b) => a.order - b.order) ||
-    initBoard?.sort((a, b) => a.order - b.order);
+  const banners = apiBanners?.sort((a, b) => a.order - b.order);
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
   const [currentMouseX, setCurrentMouseX] = useState(0);
   const [currentPlayIndexes, setCurrentPlayIndexes] = useState(
@@ -57,7 +55,7 @@ const MobileBanner = ({ initBoard }) => {
 
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
 
-  if (!banners) return null;
+  if (!banners) return <EmptyBanner className="empty-banner" />;
 
   return (
     <BannerWrapperWithText>
@@ -157,6 +155,11 @@ const MobileBanner = ({ initBoard }) => {
 };
 
 export default MobileBanner;
+
+const EmptyBanner = styled.div`
+  width: 100vw;
+  height: calc(240px + 277px + ${navbarHeight});
+`;
 
 const BannerWrapperWithText = styled.div``;
 

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { mobileWidth } from "../styles/responsive";
 
 const debounce = (callback, delay) => {
@@ -16,6 +16,7 @@ export const useMobile = () => {
     htmlRef.current?.clientWidth || 9999,
     typeof window !== "undefined" ? window.innerWidth : 9999
   );
+
   const condition = smallWidth < mobileWidthNum;
 
   const [isMobile, setIsMobile] = useState(condition);
@@ -31,7 +32,7 @@ export const useMobile = () => {
     setIsMobile(condition);
   }, 100);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     htmlRef.current = document.querySelector("html");
     window.addEventListener("resize", f);
     f();
