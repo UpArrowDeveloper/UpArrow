@@ -10,7 +10,24 @@ import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { Body14Medium, HeadH5Bold, HeadH6Bold } from "../../styles/typography";
 import { ChevronRightIcon } from "../icons";
 import { useQuery } from "@tanstack/react-query";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
+const EmptyBanner = ({ bannerHeight }) => {
+  return (
+    <EmptyBannerWrapper
+      style={{ marginTop: navbarHeight }}
+      bannerHeight={bannerHeight}
+    >
+      <Skeleton height={bannerHeight} />
+      <Skeleton
+        style={{ marginTop: "1.6rem", marginLeft: "1.6rem" }}
+        width={300}
+        height={30}
+      />
+    </EmptyBannerWrapper>
+  );
+};
 const MobileBanner = () => {
   const { data: apiBanners } = useQuery(["banner"], api.banner.get);
   const banners = apiBanners?.sort((a, b) => a.order - b.order);
@@ -55,7 +72,9 @@ const MobileBanner = () => {
 
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
 
-  if (!banners) return <EmptyBanner className="empty-banner" />;
+  console.log("banners : ", banners);
+  if (!banners)
+    return <EmptyBanner bannerHeight={bannerHeight} className="empty-banner" />;
 
   return (
     <BannerWrapperWithText>
@@ -105,7 +124,6 @@ const MobileBanner = () => {
                       style={{
                         position: "absolute",
                         bottom: 15,
-
                         left: 15,
                         zIndex: 1000,
                       }}
@@ -156,9 +174,9 @@ const MobileBanner = () => {
 
 export default MobileBanner;
 
-const EmptyBanner = styled.div`
+const EmptyBannerWrapper = styled.div`
   width: 100vw;
-  height: calc(240px + 277px + ${navbarHeight});
+  height: calc(240px + ${(props) => props.bannerHeight}px);
 `;
 
 const BannerWrapperWithText = styled.div``;

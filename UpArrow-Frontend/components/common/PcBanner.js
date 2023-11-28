@@ -11,9 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const PcBanner = ({ initBanner }) => {
   const { data: apiBanners } = useQuery(["banner"], api.banner.get);
-  const banners =
-    apiBanners?.sort((a, b) => a.order - b.order) ||
-    initBanner?.sort((a, b) => a.order - b.order);
+  const banners = apiBanners?.sort((a, b) => a.order - b.order);
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
   const [currentPlayIndexes, setCurrentPlayIndexes] = useState(
     Array(100).fill(false)

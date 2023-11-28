@@ -15,6 +15,7 @@ import { getInvestorInvestInfo } from "../utils/investor";
 import { ChevronRightMobileIcon, NextIcon } from "../components/icons";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
+import Skeleton from "react-loading-skeleton";
 
 function Home({
   stockList,
@@ -45,7 +46,7 @@ function Home({
           )}
         </div>
         <div className="stockList">
-          {stockList.slice(0, 100).map((data) => {
+          {stockList?.slice(0, 100).map((data) => {
             return (
               <Logo
                 key={data.name}
@@ -54,7 +55,7 @@ function Home({
                 isMobile={isMobile}
               />
             );
-          })}
+          }) || <Skeleton height={72} width={72} />}
         </div>
       </div>
       <div className="main-items">
@@ -184,7 +185,6 @@ export async function getStaticProps() {
 
 export default function MainPage(props) {
   const { isMobile } = useMobile();
-  console.log(typeof window === "undefined");
   return (
     <>
       {isMobile ? <MobileBanner /> : <PcBanner />}
@@ -251,6 +251,7 @@ const IndexWrapper = styled.div`
 
       .stockList {
         gap: 1.6rem;
+        min-height: 10.7rem;
 
         & > img {
           width: 7.2rem;
