@@ -72,7 +72,6 @@ const MobileBanner = () => {
 
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
 
-  console.log("banners : ", banners);
   if (!banners)
     return <EmptyBanner bannerHeight={bannerHeight} className="empty-banner" />;
 
