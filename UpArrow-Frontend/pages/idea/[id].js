@@ -337,8 +337,9 @@ export default function Page(props) {
 }
 
 export async function getStaticPaths() {
+  const idea = await api.idea.get();
   return {
-    paths: [],
+    paths: idea.map((i) => "/idea/" + i._id),
     fallback: "blocking", // can also be true or 'blocking'
   };
 }

@@ -168,11 +168,49 @@ const MobileBanner = () => {
           );
         })}
       </InfoWrapper>
+      <Progress bannerHeight={bannerHeight}>
+        {banners.map((board, idx) => {
+          return (
+            <div
+              className={"bubble " + (idx === currentBannerIdx ? "on" : "")}
+              onClick={() => {
+                setCurrentBannerIdx(idx);
+              }}
+            ></div>
+          );
+        })}
+      </Progress>
     </BannerWrapperWithText>
   );
 };
 
 export default MobileBanner;
+
+const Progress = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: ${(props) =>
+    props.bannerHeight + +navbarHeight.replace("px", "") - 25}px;
+  left: 0;
+  width: 100%;
+  height: 2rem;
+  z-index: 2000;
+
+  .bubble {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 2px solid #eeeeee;
+    margin: 0.1rem 0.1rem;
+    display: inline-block;
+
+    &.on {
+      background-color: #777777;
+    }
+  }
+`;
 
 const EmptyBannerWrapper = styled.div`
   width: 100vw;

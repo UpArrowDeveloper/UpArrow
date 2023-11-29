@@ -96,17 +96,23 @@ const InvestSimulatorIdeas = ({
             <div>
               <h4>My UpArrow Cash</h4>
               <div className="cash">
-                ${Math.floor(user?.cash).toLocaleString()}
+                {user
+                  ? user?.cash !== undefined
+                    ? "$" + Math.floor(user?.cash).toLocaleString()
+                    : "Loading..."
+                  : "$0"}
               </div>
             </div>
             <div>
               <h4>Owned {stock.name} shares </h4>
               <div className="cash">
-                {userCurrentStock?.quantity !== undefined
-                  ? Math.floor(
-                      userCurrentStock?.quantity || 0
-                    )?.toLocaleString()
-                  : "Loading..."}
+                {user
+                  ? userCurrentStock?.quantity !== undefined
+                    ? Math.floor(
+                        userCurrentStock?.quantity || 0
+                      )?.toLocaleString()
+                    : "Loading..."
+                  : 0}
               </div>
             </div>
           </div>
@@ -344,6 +350,7 @@ const InvestSimulatorIdeasBlock = styled.div`
 
     .invest-simulator {
       border-bottom: 0.05rem solid rgba(0, 0, 0, 0.1);
+      padding-left: 0;
     }
 
     .invest-simulator .current-price {
