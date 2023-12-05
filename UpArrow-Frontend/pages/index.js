@@ -128,7 +128,7 @@ function Home({
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const stockList = await api.stock.get();
   const investorList = await api.user.get();
   const config = await api.config.get();
@@ -186,7 +186,7 @@ export async function getStaticProps() {
       config,
       banner,
     },
-    revalidate: 60 * 10, // In seconds
+    //revalidate: 60 * 10, // In seconds
   };
 }
 
