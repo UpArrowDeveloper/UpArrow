@@ -128,7 +128,7 @@ function Home({
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const stockList = await api.stock.get();
   const investorList = await api.user.get();
   const config = await api.config.get();
@@ -139,6 +139,7 @@ export async function getServerSideProps() {
       limit: 6,
     },
   });
+  console.log("api 1");
   const userAddedTopSixIdea = [];
 
   for await (const v of topSixIdea) {
@@ -149,12 +150,15 @@ export async function getServerSideProps() {
     });
   }
 
+  console.log("api 2");
+
   const investorProfitPercentageList = await Promise.all(
     investorList.map((investor) =>
       api.user.getProfitPercentageById(investor._id)
     )
   );
 
+  console.log("api 3");
   const totalProfitAttached = [];
   for await (const v of investorList) {
     totalProfitAttached.push({
@@ -163,6 +167,7 @@ export async function getServerSideProps() {
     });
   }
 
+  console.log("api 4");
   const percentBindDataList = totalProfitAttached.map((investor, index) => {
     return {
       ...investor,
@@ -178,6 +183,7 @@ export async function getServerSideProps() {
     else return y - x;
   });
 
+  console.log("api 5");
   return {
     props: {
       stockList,
@@ -186,7 +192,7 @@ export async function getServerSideProps() {
       config,
       banner,
     },
-    //revalidate: 60 * 10, // In seconds
+    revalidate: 60 * 10, // In seconds
   };
 }
 
