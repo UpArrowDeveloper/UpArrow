@@ -139,7 +139,6 @@ export async function getStaticProps() {
       limit: 6,
     },
   });
-  console.log("api 1");
   const userAddedTopSixIdea = [];
 
   for await (const v of topSixIdea) {
@@ -150,15 +149,12 @@ export async function getStaticProps() {
     });
   }
 
-  console.log("api 2");
-
   const investorProfitPercentageList = await Promise.all(
     investorList.map((investor) =>
       api.user.getProfitPercentageById(investor._id)
     )
   );
 
-  console.log("api 3");
   const totalProfitAttached = [];
   for await (const v of investorList) {
     totalProfitAttached.push({
@@ -167,7 +163,6 @@ export async function getStaticProps() {
     });
   }
 
-  console.log("api 4");
   const percentBindDataList = totalProfitAttached.map((investor, index) => {
     return {
       ...investor,
@@ -183,7 +178,6 @@ export async function getStaticProps() {
     else return y - x;
   });
 
-  console.log("api 5");
   return {
     props: {
       stockList,

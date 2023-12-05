@@ -77,38 +77,7 @@ const MobileBanner = () => {
 
   return (
     <BannerWrapperWithText>
-      <BannerBlock
-        bannerHeight={bannerHeight}
-        className="bannerblock"
-        onTouchStart={(e) => {
-          setCurrentMouseX(e.touches[0]?.clientX);
-        }}
-        onMouseDown={(e) => {
-          setCurrentMouseX(e.clientX);
-        }}
-        onTouchEnd={(e) => {
-          if (e.changedTouches[0]?.clientX - currentMouseX > 0) {
-            setCurrentBannerIdx((prev) =>
-              prev > 0 ? prev - 1 : banners.length - 1
-            );
-          } else {
-            setCurrentBannerIdx((prev) =>
-              prev < banners.length - 1 ? prev + 1 : 0
-            );
-          }
-        }}
-        onMouseUp={(e) => {
-          if (e.clientX - currentMouseX > 0) {
-            setCurrentBannerIdx((prev) =>
-              prev > 0 ? prev - 1 : banners.length - 1
-            );
-          } else {
-            setCurrentBannerIdx((prev) =>
-              prev < banners.length - 1 ? prev + 1 : 0
-            );
-          }
-        }}
-      >
+      <BannerBlock bannerHeight={bannerHeight} className="bannerblock">
         {banners.map((board, idx) => {
           if (!currentPlayIndexes[idx]) {
             return (
@@ -141,9 +110,10 @@ const MobileBanner = () => {
               </>
             );
           }
+          // TODO 이 youtube는 밖으로 빼고 code랑 autoplay state로 index 따라 받기
+          // map으로 youtube 여러개 생겨서 안쪽 클릭이 안먹는 버그가 있는듯
           return (
             <Youtube
-              style={{ zIndex: -1 }}
               youtubeCode={board.youtubeCode}
               width="100%"
               height={bannerHeight}
@@ -152,7 +122,37 @@ const MobileBanner = () => {
           );
         })}
       </BannerBlock>
-      <InfoWrapper>
+      <InfoWrapper
+        onTouchStart={(e) => {
+          setCurrentMouseX(e.touches[0]?.clientX);
+        }}
+        onMouseDown={(e) => {
+          setCurrentMouseX(e.clientX);
+        }}
+        onTouchEnd={(e) => {
+          e.stopPropagation();
+          if (e.changedTouches[0]?.clientX - currentMouseX > 10) {
+            setCurrentBannerIdx((prev) =>
+              prev > 0 ? prev - 1 : banners.length - 1
+            );
+          } else if (e.changedTouches[0]?.clientX - currentMouseX < -10) {
+            setCurrentBannerIdx((prev) =>
+              prev < banners.length - 1 ? prev + 1 : 0
+            );
+          }
+        }}
+        onMouseUp={(e) => {
+          if (e.clientX - currentMouseX > 10) {
+            setCurrentBannerIdx((prev) =>
+              prev > 0 ? prev - 1 : banners.length - 1
+            );
+          } else if (e.clientX - currentMouseX < -10) {
+            setCurrentBannerIdx((prev) =>
+              prev < banners.length - 1 ? prev + 1 : 0
+            );
+          }
+        }}
+      >
         {banners.map((board, idx) => {
           return (
             <Info idx={idx - currentBannerIdx}>
@@ -195,7 +195,7 @@ const Progress = styled.div`
   left: 0;
   width: 100%;
   height: 2rem;
-  z-index: 2000;
+  // z-index: 2000;
 
   .bubble {
     width: 1rem;
@@ -225,6 +225,7 @@ const InfoWrapper = styled.div`
   width: 100vw;
   height: 240px;
 `;
+
 const Info = styled.div`
   display: flex;
   flex-direction: column;
@@ -268,7 +269,6 @@ const BannerBlock = styled.div`
 const Banner = styled.div`
   display: flex;
   position: absolute;
-  top: 0;
   left: ${(props) => props.idx * 100}%;
 
   background-image: url(${(props) => props.bgUrl});
