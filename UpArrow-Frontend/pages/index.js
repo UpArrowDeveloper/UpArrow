@@ -8,14 +8,21 @@ import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import { MainLayout } from "../Layouts";
 import { HeadH2Bold, HeadH5Bold } from "../styles/typography";
-const PcBanner = dynamic(() => import("../components/common/PcBanner"));
-const MobileBanner = dynamic(() => import("../components/common/MobileBanner"));
+const PcBanner = dynamic(() => import("../components/common/PcBanner"), {
+  ssr: false,
+});
+const MobileBanner = dynamic(
+  () => import("../components/common/MobileBanner"),
+  { ssr: false }
+);
 import api from "../apis";
 import { getInvestorInvestInfo } from "../utils/investor";
 import { ChevronRightMobileIcon, NextIcon } from "../components/icons";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
-import Skeleton from "react-loading-skeleton";
+const Skeleton = dynamic(() => import("react-loading-skeleton"), {
+  ssr: false,
+});
 
 function Home({
   stockList,
