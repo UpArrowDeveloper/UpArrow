@@ -76,7 +76,7 @@ const MobileBanner = () => {
 
   return (
     <BannerWrapperWithText className="bwwt">
-      <BannerBlock className="bannerblock">
+      <BannerBlock bannerHeight={bannerHeight} className="bannerblock">
         {banners.map((board, idx) => {
           if (!currentPlayIndexes[idx]) {
             return (
@@ -112,6 +112,16 @@ const MobileBanner = () => {
           return null;
         })}
       </BannerBlock>
+
+      {currentPlayIndexes[currentBannerIdx] && (
+        <Youtube
+          youtubeCode={banners[currentBannerIdx].youtubeCode}
+          width="100%"
+          height={bannerHeight}
+          style={{ position: "absolute", top: 0, left: 0 }}
+          autoplay={currentPlayIndexes[currentBannerIdx]}
+        />
+      )}
       <Progress bannerHeight={bannerHeight}>
         {banners.map((board, idx) => {
           return (
@@ -124,12 +134,6 @@ const MobileBanner = () => {
           );
         })}
       </Progress>
-      <Youtube
-        youtubeCode={banners[currentBannerIdx].youtubeCode}
-        width="100%"
-        height={bannerHeight}
-        autoplay={currentPlayIndexes[currentBannerIdx]}
-      />
       <InfoWrapper
         onTouchStart={(e) => {
           setCurrentMouseX(e.touches[0]?.clientX);
