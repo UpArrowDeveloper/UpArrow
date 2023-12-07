@@ -112,6 +112,18 @@ const MobileBanner = () => {
           return null;
         })}
       </BannerBlock>
+      <Progress bannerHeight={bannerHeight}>
+        {banners.map((board, idx) => {
+          return (
+            <div
+              className={"bubble " + (idx === currentBannerIdx ? "on" : "")}
+              onClick={() => {
+                setCurrentBannerIdx(idx);
+              }}
+            ></div>
+          );
+        })}
+      </Progress>
       <Youtube
         youtubeCode={banners[currentBannerIdx].youtubeCode}
         width="100%"
@@ -163,18 +175,6 @@ const MobileBanner = () => {
           );
         })}
       </InfoWrapper>
-      <Progress bannerHeight={bannerHeight}>
-        {banners.map((board, idx) => {
-          return (
-            <div
-              className={"bubble " + (idx === currentBannerIdx ? "on" : "")}
-              onClick={() => {
-                setCurrentBannerIdx(idx);
-              }}
-            ></div>
-          );
-        })}
-      </Progress>
     </BannerWrapperWithText>
   );
 };
@@ -187,10 +187,9 @@ const Progress = styled.div`
   justify-content: center;
   position: absolute;
   top: ${(props) => props.bannerHeight - 25}px;
-  left: 0;
-  width: 100%;
+  left: 50%;
   height: 2rem;
-  z-index: 2000;
+  transform: translateX(-50%);
 
   .bubble {
     width: 1rem;
