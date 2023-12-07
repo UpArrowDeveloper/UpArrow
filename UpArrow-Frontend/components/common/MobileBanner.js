@@ -1,4 +1,3 @@
-import { useConfig } from "../../hooks/useConfig";
 import styled from "@emotion/styled";
 import { useEffect, useRef, useState } from "react";
 import api from "../../apis";
@@ -34,7 +33,7 @@ const MobileBanner = () => {
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
   const [currentMouseX, setCurrentMouseX] = useState(0);
   const [currentPlayIndexes, setCurrentPlayIndexes] = useState(
-    Array(100).fill(false)
+    Array(20).fill(false)
   );
 
   const [bannerWidth, setBannerWidth] = useState(128);
@@ -76,8 +75,8 @@ const MobileBanner = () => {
     return <EmptyBanner bannerHeight={bannerHeight} className="empty-banner" />;
 
   return (
-    <BannerWrapperWithText>
-      <BannerBlock bannerHeight={bannerHeight} className="bannerblock">
+    <BannerWrapperWithText className="bwwt">
+      <BannerBlock className="bannerblock">
         {banners.map((board, idx) => {
           if (!currentPlayIndexes[idx]) {
             return (
@@ -110,18 +109,15 @@ const MobileBanner = () => {
               </>
             );
           }
-          // TODO 이 youtube는 밖으로 빼고 code랑 autoplay state로 index 따라 받기
-          // map으로 youtube 여러개 생겨서 안쪽 클릭이 안먹는 버그가 있는듯
-          return (
-            <Youtube
-              youtubeCode={board.youtubeCode}
-              width="100%"
-              height={bannerHeight}
-              autoplay={currentPlayIndexes[idx]}
-            />
-          );
+          return null;
         })}
       </BannerBlock>
+      <Youtube
+        youtubeCode={banners[currentBannerIdx].youtubeCode}
+        width="100%"
+        height={bannerHeight}
+        autoplay={currentPlayIndexes[currentBannerIdx]}
+      />
       <InfoWrapper
         onTouchStart={(e) => {
           setCurrentMouseX(e.touches[0]?.clientX);
@@ -190,12 +186,11 @@ const Progress = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: ${(props) =>
-    props.bannerHeight + +navbarHeight.replace("px", "") - 25}px;
+  top: ${(props) => props.bannerHeight - 25}px;
   left: 0;
   width: 100%;
   height: 2rem;
-  // z-index: 2000;
+  z-index: 2000;
 
   .bubble {
     width: 1rem;
@@ -216,7 +211,9 @@ const EmptyBannerWrapper = styled.div`
   height: calc(240px + ${(props) => props.bannerHeight}px);
 `;
 
-const BannerWrapperWithText = styled.div``;
+const BannerWrapperWithText = styled.div`
+  position: relative;
+`;
 
 const InfoWrapper = styled.div`
   display: flex;
@@ -259,7 +256,6 @@ const Info = styled.div`
 
 const BannerBlock = styled.div`
   position: relative;
-  margin-top: ${navbarHeight};
   display: flex;
   align-items: center;
   overflow: hidden;

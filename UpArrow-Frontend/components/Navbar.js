@@ -38,58 +38,56 @@ const Navbar = () => {
   const currentPath = router.asPath.split("/")[1];
 
   return (
-    <>
-      <NavBlock>
-        <div className="nav-wrapper">
-          <div className="left-items">
-            <div className="uparrow-logo" onClick={goToIndex}>
-              <UpArrowLogo />
+    <NavBlock>
+      <div className="nav-wrapper">
+        <div className="left-items">
+          <div className="uparrow-logo" onClick={goToIndex}>
+            <UpArrowLogo />
+          </div>
+
+          {!isMobile && (
+            <div className="buttons">
+              {routes.map((route) => (
+                <div
+                  key={route.path}
+                  onClick={() => router.push(`/${route.path}`)}
+                >
+                  {getFirstCharacterCapitalString(route.name)}
+                </div>
+              ))}
             </div>
-
-            {!isMobile && (
-              <div className="buttons">
-                {routes.map((route) => (
-                  <div
-                    key={route.path}
-                    onClick={() => router.push(`/${route.path}`)}
-                  >
-                    {getFirstCharacterCapitalString(route.name)}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div>
-            {isAdmin ? (
-              <button className="admin-button" onClick={goToAdminPage}>
-                Switch to Admin mode
-              </button>
-            ) : null}
-          </div>
-
-          <div className="right-items">
-            <ProfileIcon data={user} logout={logout} />
-          </div>
-          {router.asPath !== "/signup" && user && !user?.username && (
-            <div className="cover"></div>
           )}
         </div>
-        {isMobile && (
-          <div className="buttons mobile-buttons">
-            {[{ name: "home", path: "" }, ...routes].map((route) => (
-              <div
-                className={currentPath === route.path ? "button-selected" : ""}
-                key={route.path}
-                onClick={() => router.push(`/${route.path}`)}
-              >
-                {getFirstCharacterCapitalString(route.name)}
-              </div>
-            ))}
-          </div>
+
+        <div>
+          {isAdmin ? (
+            <button className="admin-button" onClick={goToAdminPage}>
+              Switch to Admin mode
+            </button>
+          ) : null}
+        </div>
+
+        <div className="right-items">
+          <ProfileIcon data={user} logout={logout} />
+        </div>
+        {router.asPath !== "/signup" && user && !user?.username && (
+          <div className="cover"></div>
         )}
-      </NavBlock>
-    </>
+      </div>
+      {isMobile && (
+        <div className="buttons mobile-buttons">
+          {[{ name: "home", path: "" }, ...routes].map((route) => (
+            <div
+              className={currentPath === route.path ? "button-selected" : ""}
+              key={route.path}
+              onClick={() => router.push(`/${route.path}`)}
+            >
+              {getFirstCharacterCapitalString(route.name)}
+            </div>
+          ))}
+        </div>
+      )}
+    </NavBlock>
   );
 };
 
@@ -104,7 +102,7 @@ const NavBlock = styled.div`
 
   box-shadow: 0rem 0rem 0.7rem #c4c7cc;
   width: 100%;
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   z-index: 1000;

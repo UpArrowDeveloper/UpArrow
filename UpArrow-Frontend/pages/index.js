@@ -194,8 +194,7 @@ export default function MainPage(props) {
   const { isMobile } = useMobile();
   return (
     <>
-      {isMobile ? <MobileBanner /> : <PcBanner />}
-      <MainLayout isMain>
+      <MainLayout isMain Banner={isMobile ? MobileBanner : PcBanner}>
         <Home {...props} />
       </MainLayout>
     </>

@@ -18,12 +18,15 @@ const MainLayoutBlock = styled.main`
   }
 `;
 
-const MainLayout = ({ children, isMain = false }) => {
+const MainLayout = ({ children, isMain = false, Banner }) => {
   return (
-    <MainLayoutBlock className="mainlayout" isMain={isMain}>
+    <>
       <Navbar />
-      <div className="content">{children}</div>
-    </MainLayoutBlock>
+      <Banner />
+      <MainLayoutBlock className="mainlayout" isMain={isMain}>
+        <div className="content">{children}</div>
+      </MainLayoutBlock>
+    </>
   );
 };
 
