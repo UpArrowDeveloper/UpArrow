@@ -9,7 +9,7 @@ import { AngleLeftTailLine, ChevronRightIcon } from "../icons";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 
-const PcBanner = ({ initBanner }) => {
+const PcBanner = () => {
   const { data: apiBanners } = useQuery(["banner"], api.banner.get);
   const banners = apiBanners?.sort((a, b) => a.order - b.order);
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
@@ -43,6 +43,12 @@ const PcBanner = ({ initBanner }) => {
   }, []);
 
   useEffect(() => {
+    setCurrentPlayIndexes((prev) => {
+      const next = prev.map((v, idx) => {
+        return false;
+      });
+      return next;
+    });
     setTimeout(() => {
       setCurrentPlayIndexes((prev) => {
         const next = prev.map((v, idx) => {
