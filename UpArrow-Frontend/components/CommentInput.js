@@ -1,7 +1,8 @@
-import styled from '@emotion/styled';
-import React from 'react';
-import color from '../styles/color';
-import { useAppUser } from '../hooks/useAppUser';
+import styled from "@emotion/styled";
+import React from "react";
+import color from "../styles/color";
+import { useAppUser } from "../hooks/useAppUser";
+import { EmptyAvatar } from "./icons";
 
 const CommentInputBlock = styled.div`
   display: flex;
@@ -14,6 +15,14 @@ const CommentInputBlock = styled.div`
   & > img {
     width: 4.8rem;
     height: 4.8rem;
+    border-radius: 99rem;
+    margin-right: 1.6rem;
+    object-fit: cover;
+  }
+
+  & svg {
+    width: 4.8rem !important;
+    height: 4.8rem !important;
     border-radius: 99rem;
     margin-right: 1.6rem;
     object-fit: cover;
@@ -54,9 +63,9 @@ const CommentInputView = ({
 }) => {
   return (
     <CommentInputBlock {...props}>
-      <img src={userUrl} />
+      {userUrl ? <img src={userUrl} /> : <EmptyAvatar />}
       <textarea
-        placeholder='Add Comments..'
+        placeholder="Add Comments.."
         value={value}
         onChange={(e) => setValue(e.target.value)}
         ref={commentInputRef}
