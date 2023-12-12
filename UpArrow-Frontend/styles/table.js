@@ -10,7 +10,7 @@ import {
 import { mobileWidth } from "./responsive";
 
 export const commonListCss = css`
-  padding-top: 3.2rem;
+  padding-top: 1.2rem;
   header {
     padding: 1.6rem 3.2rem;
   }
