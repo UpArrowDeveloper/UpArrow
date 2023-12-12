@@ -194,6 +194,7 @@ const NavBlock = styled.div`
     .nav-wrapper {
       padding: 1.2rem 1.6rem;
       height: auto;
+      max-width: ${mobileWidth};
     }
 
     & .right-items .profile-icon {
