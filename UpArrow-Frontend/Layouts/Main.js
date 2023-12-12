@@ -3,7 +3,7 @@ import Navbar, { navbarHeight } from "../components/Navbar";
 import { mobileWidth } from "../styles/responsive";
 
 const MainLayoutBlock = styled.main`
-  margin-top: ${({ isMain }) => (isMain ? "3.2rem" : navbarHeight)};
+  margin-top: ${({ isMain }) => (isMain ? "3.2rem" : 0)};
   display: flex;
   justify-content: center;
 
@@ -22,7 +22,7 @@ const MainLayout = ({ children, isMain = false, Banner }) => {
   return (
     <>
       <Navbar />
-      <Banner />
+      {isMain && <Banner />}
       <MainLayoutBlock className="mainlayout" isMain={isMain}>
         <div className="content">{children}</div>
       </MainLayoutBlock>
