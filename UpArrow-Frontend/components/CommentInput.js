@@ -65,8 +65,9 @@ const CommentInputView = ({
     <CommentInputBlock {...props}>
       {userUrl ? <img src={userUrl} /> : <EmptyAvatar />}
       <textarea
-        placeholder="Add Comments.."
+        placeholder={userUrl ? "Add Comments.." : "Please login to comment."}
         value={value}
+        disabled={!userUrl}
         onChange={(e) => setValue(e.target.value)}
         ref={commentInputRef}
       />
