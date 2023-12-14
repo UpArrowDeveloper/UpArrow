@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { HeadH1Bold, HeadH3Bold, HeadH4Medium } from "../../styles/typography";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { mobileWidth } from "../../styles/responsive";
 import api from "../../apis";
 import Youtube from "../Youtube";
@@ -16,6 +16,7 @@ const PcBanner = () => {
   const [currentPlayIndexes, setCurrentPlayIndexes] = useState(
     Array(100).fill(false)
   );
+  const timerRef = useRef(null);
   const [bannerWidth, setBannerWidth] = useState(128);
   const [bannerHeight, setBannerHeight] = useState(45);
   const bannerWidthRem = `${bannerWidth}rem`;
@@ -49,7 +50,7 @@ const PcBanner = () => {
       });
       return next;
     });
-    setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       setCurrentPlayIndexes((prev) => {
         const next = prev.map((v, idx) => {
           if (idx == currentBannerIdx) return true;
@@ -110,6 +111,9 @@ const PcBanner = () => {
               <Youtube
                 youtubeCode={board.youtubeCode}
                 width="711"
+                style={{
+                  pointerEvents: !currentPlayIndexes[idx] ? "none" : "",
+                }}
                 height={
                   bannerHeight > 200
                     ? bannerHeight * 5
@@ -158,7 +162,6 @@ export default PcBanner;
 
 const BannerBlock = styled.div`
   position: relative;
-  margin-top: ${navbarHeight};
   display: flex;
   align-items: center;
 
