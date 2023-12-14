@@ -65,7 +65,7 @@ function Home({ initStocks }) {
         <table>
           <thead>
             <tr>
-              <th>Name/Ticker</th>
+              {!isMobile ? <th>Name/Ticker</th> : <th></th>}
               <th>Price</th>
               {!isMobile && (
                 <>
