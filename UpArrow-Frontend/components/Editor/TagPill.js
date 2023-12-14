@@ -30,9 +30,9 @@ const TagPillBlock = styled.div`
   }
 `;
 
-const TagPill = ({ label, clean, stockImageUrl }) => {
+const TagPill = ({ label, clean, stockImageUrl, onClick = () => {} }) => {
   return (
-    <TagPillBlock>
+    <TagPillBlock onClick={onClick}>
       <img src={stockImageUrl} />
       <span>{label}</span>
       {clean && <XIcon className="x-icon" onClick={() => clean()} />}

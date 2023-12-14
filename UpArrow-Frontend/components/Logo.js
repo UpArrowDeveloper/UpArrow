@@ -12,7 +12,7 @@ const LogoBlock = styled.div`
   box-shadow: 0rem 0rem 0.2rem #c4c7cc;
   border-radius: 999rem;
   :hover {
-    border: 0.1rem solid gray;
+    border: 0.2rem solid gray;
     cursor: pointer;
   }
 `;

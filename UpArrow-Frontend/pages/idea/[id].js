@@ -217,6 +217,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
               key={stock._id}
               stockImageUrl={stock.logoUrl}
               label={stock.name}
+              onClick={() => router.push(`/stock/${stock.ticker}`)}
             />
           ))}
         </div>

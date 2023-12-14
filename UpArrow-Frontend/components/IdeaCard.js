@@ -97,6 +97,10 @@ const IdeaWrapper = styled.div`
 
   @media screen and (max-width: ${mobileWidth}) {
     align-items: flex-start;
+    &:hover {
+      border-radius: 1.6rem;
+      background-color: rgba(5, 5, 5, 0.03);
+    }
 
     .textBlock {
       gap: 0;
