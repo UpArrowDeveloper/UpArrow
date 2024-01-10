@@ -5,9 +5,10 @@ import { mobileWidth } from "../../styles/responsive";
 import api from "../../apis";
 import Youtube from "../Youtube";
 import { navbarHeight } from "../Navbar";
-import { AngleLeftTailLine, ChevronRightIcon } from "../icons";
+import { AngleLeftTailLine, ChevronRightIcon, YoutubeIcon } from "../icons";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
 const PcBanner = () => {
   const { data: apiBanners } = useQuery(["banner"], api.banner.get);
@@ -16,7 +17,6 @@ const PcBanner = () => {
   const [currentPlayIndexes, setCurrentPlayIndexes] = useState(
     Array(100).fill(false)
   );
-  const timerRef = useRef(null);
   const [bannerWidth, setBannerWidth] = useState(128);
   const [bannerHeight, setBannerHeight] = useState(45);
   const bannerWidthRem = `${bannerWidth}rem`;
@@ -43,23 +43,24 @@ const PcBanner = () => {
     };
   }, []);
 
-  useEffect(() => {
-    setCurrentPlayIndexes((prev) => {
-      const next = prev.map((v, idx) => {
-        return false;
-      });
-      return next;
-    });
-    timerRef.current = setTimeout(() => {
-      setCurrentPlayIndexes((prev) => {
-        const next = prev.map((v, idx) => {
-          if (idx == currentBannerIdx) return true;
-          return false;
-        });
-        return next;
-      });
-    }, 3000);
-  }, [currentBannerIdx]);
+  // const timerRef = useRef(null);
+  // useEffect(() => {
+  //   setCurrentPlayIndexes((prev) => {
+  //     const next = prev.map((v, idx) => {
+  //       return false;
+  //     });
+  //     return next;
+  //   });
+  //   timerRef.current = setTimeout(() => {
+  //     setCurrentPlayIndexes((prev) => {
+  //       const next = prev.map((v, idx) => {
+  //         if (idx == currentBannerIdx) return true;
+  //         return false;
+  //       });
+  //       return next;
+  //     });
+  //   }, 3000);
+  // }, [currentBannerIdx]);
 
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
   const getLineClamp = () => {
@@ -108,19 +109,59 @@ const PcBanner = () => {
               lineClamp={getLineClamp()}
               smallPadding={windowInnerWidth < 850}
             >
-              <Youtube
-                youtubeCode={board.youtubeCode}
-                width="711"
-                style={{
-                  pointerEvents: !currentPlayIndexes[idx] ? "none" : "",
+              <div
+                onClick={() => {
+                  setCurrentPlayIndexes((prev) => {
+                    const next = prev.map((v, idx) => {
+                      if (idx == currentBannerIdx) return true;
+                      return false;
+                    });
+                    return next;
+                  });
                 }}
-                height={
-                  bannerHeight > 200
-                    ? bannerHeight * 5
-                    : Math.min(bannerHeight * 6, 448)
-                }
-                autoplay={currentPlayIndexes[idx]}
-              />
+                style={{
+                  position: "relative",
+                  width: 711,
+                  height:
+                    bannerHeight > 200
+                      ? bannerHeight * 5
+                      : Math.min(bannerHeight * 6, 448),
+                }}
+              >
+                <Youtube
+                  youtubeCode={board.youtubeCode}
+                  width="100%"
+                  style={{
+                    pointerEvents: !currentPlayIndexes[idx] ? "none" : "",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                  }}
+                  height="100%"
+                  autoplay={currentPlayIndexes[idx]}
+                />
+                {!currentPlayIndexes[idx] && (
+                  <>
+                    <Image
+                      layout="fill"
+                      src={
+                        board?.thumbnailUrl ||
+                        "/images/test-youtube-thumbnail.png"
+                      }
+                    />
+                    <YoutubeIcon
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        width: "30%",
+                        height: "15%",
+                        transform: "translate(-50%, -50%)",
+                      }}
+                    />
+                  </>
+                )}
+              </div>
               <div className="banner-description">
                 <div>
                   <div className="banner-stock-name">{board.stockName}</div>
@@ -204,6 +245,9 @@ const BannerContent = styled.div`
 
   padding: ${(props) => (props.smallPadding ? "2rem" : "4.8rem")};
 
+  .hidden {
+    display: none;
+  }
   .banner-description {
     width: 44rem;
     display: flex;

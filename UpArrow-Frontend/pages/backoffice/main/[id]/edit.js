@@ -12,6 +12,9 @@ import TitleInput from "../../../../backoffice/components/common/TitleInput";
 import Divider from "../../../../components/Divider";
 import color from "../../../../styles/color";
 import { useRouter } from "next/router";
+import { FileUploader } from "../../../../backoffice/components/common/FileUploader";
+import axios from "axios";
+import { env } from "../../../../config";
 
 const BackofficeBannerEdit = () => {
   const { id } = useRouter().query;
@@ -23,6 +26,7 @@ const BackofficeBannerEdit = () => {
   const [stockName, setStockName] = useState();
   const [description, setDescription] = useState();
   const [youtubeCode, setYoutubeCode] = useState();
+  const [logoImage, setLogoImage] = useState();
 
   useEffect(() => {
     if (data) {
@@ -33,17 +37,29 @@ const BackofficeBannerEdit = () => {
   }, [data, id]);
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
   const submit = async () => {
+    if (!logoImage) {
+      alert("Please upload thumbnail image");
+      return;
+    }
+    const imageForm = new FormData();
+    imageForm.append("image", logoImage);
+    const { link } = (
+      await axios.post(`${env.serverUrl}/file/upload`, imageForm)
+    ).data;
     await api.banner.put(id, {
       stockName,
       description,
       youtubeCode,
+      thumbnailUrl: link,
     });
     router.push("/backoffice/main");
   };
+  console.log("data : ", data);
+  if (!data) return null;
 
   return (
     <BackofficeMain>
-      <BackofficeHeader title="Add banner" />
+      <BackofficeHeader title="Edit banner" />
       <div className="backoffice-sub-title">Stock Info</div>
       <img className="thumbnail" src={getThumbnailUrl(youtubeCode)} />
       <TitleInput
@@ -62,6 +78,16 @@ const BackofficeBannerEdit = () => {
         title="Youtube Code"
         value={youtubeCode}
         onChange={(e) => setYoutubeCode(e.target.value)}
+      />
+      <FileUploader
+        name="thumbnail-image"
+        file={logoImage}
+        url={data?.thumbnailUrl}
+        setImage={setLogoImage}
+        previewStyle={{
+          width: "40rem",
+          height: "20rem",
+        }}
       />
       <Divider className="divider" />
       <div className="add-button-wrapper">

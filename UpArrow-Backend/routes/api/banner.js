@@ -17,12 +17,13 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { stockName, youtubeCode, description } = req.body;
+    const { stockName, youtubeCode, description, thumbnailUrl } = req.body;
 
     await Banner.create({
       stockName,
       youtubeCode,
       description,
+      thumbnailUrl,
     });
 
     res.json({ message: "success" });
@@ -33,7 +34,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { stockName, youtubeCode, description, order } = req.body;
+  const { stockName, youtubeCode, description, order, thumbnailUrl } = req.body;
 
   await Banner.findOneAndUpdate(
     { _id: id },
@@ -42,6 +43,7 @@ router.put("/:id", async (req, res) => {
       youtubeCode,
       description,
       order,
+      thumbnailUrl,
     }
   );
 

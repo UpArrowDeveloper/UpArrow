@@ -6,6 +6,7 @@ const BannerSchema = new Schema(
     stockName: String,
     youtubeCode: String,
     description: String,
+    thumbnailUrl: String,
     order: Number,
   },
   { timestamps: true }

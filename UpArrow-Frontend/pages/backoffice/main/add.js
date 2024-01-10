@@ -13,6 +13,9 @@ import TitleInput from "../../../backoffice/components/common/TitleInput";
 import Divider from "../../../components/Divider";
 import color from "../../../styles/color";
 import { useRouter } from "next/router";
+import { FileUploader } from "../../../backoffice/components/common/FileUploader";
+import axios from "axios";
+import { env } from "../../../config";
 
 const BackofficeBannerAdd = () => {
   const [stockName, setStockName] = useState();
@@ -20,11 +23,23 @@ const BackofficeBannerAdd = () => {
   const [youtubeCode, setYoutubeCode] = useState();
   const router = useRouter();
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
+  const [logoImage, setLogoImage] = useState();
+  console.log("logo image : ", logoImage);
   const submit = async () => {
+    if (!logoImage) {
+      alert("Please upload thumbnail image");
+      return;
+    }
+    const imageForm = new FormData();
+    imageForm.append("image", logoImage);
+    const { link } = (
+      await axios.post(`${env.serverUrl}/file/upload`, imageForm)
+    ).data;
     await api.banner.post({
       stockName,
       description,
       youtubeCode,
+      thumbnailUrl: link,
     });
     router.push("/backoffice/main");
   };
@@ -47,6 +62,16 @@ const BackofficeBannerAdd = () => {
       <TitleInput
         title="Youtube Code"
         onChange={(e) => setYoutubeCode(e.target.value)}
+      />
+      <FileUploader
+        name="thumbnail-image"
+        file={logoImage}
+        // url={stock?.logoUrl}
+        setImage={setLogoImage}
+        previewStyle={{
+          width: "40rem",
+          height: "20rem",
+        }}
       />
       <Divider className="divider" />
       <div className="add-button-wrapper">

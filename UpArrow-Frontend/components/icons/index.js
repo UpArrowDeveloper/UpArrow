@@ -24,3 +24,4 @@ export { default as AngleRightTailLine } from "./AngleRightTail-line-24.svg";
 export { default as PersonIcon } from "./Person.svg";
 export { default as ThumbUpFilled } from "./ThumbUpFilled.svg";
 export { default as ThumbDownFilled } from "./ThumbDownFilled.svg";
+export { default as YoutubeIcon } from "./Youtube.svg";
