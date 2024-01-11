@@ -6,9 +6,20 @@ const httpClient = axios.create({
   baseURL: process.env.API_URI,
 });
 
+const getCurrentExchangeRate = async () => {
+  try {
+    const response = await axios.get(
+      "https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD"
+    );
+    const { basePrice } = response.data[0];
+    return basePrice;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const getPage = async (ticker) => {
   try {
-    console.log("ticker : ", ticker);
     const pageHtml = (
       await axios.get(
         `https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=${ticker}+주가`
@@ -31,27 +42,56 @@ const changePrice = async (id, stock) => {
   }
 };
 
+const parsePrice = (priceString) => {
+  let res = 0;
+  if (priceString.includes("조")) {
+    res += Number(priceString.split("조")[0]) * 1000000000000;
+    priceString = priceString.split("조")[1];
+  }
+  if (priceString.includes("억")) {
+    res += Number(priceString.split("억")[0]) * 100000000;
+    priceString = priceString.split("억")[1];
+  }
+  if (priceString.includes("만")) {
+    res += Number(priceString.split("만")[0]) * 10000;
+    priceString = priceString.split("만")[1];
+  }
+  if (priceString.length > 0) {
+    res += Number(priceString);
+  }
+  return res;
+};
+
 const getPrice = async (ticker) => {
   const $ = cheerio.load(await getPage(ticker));
   const result = $(".spt_tlt .spt_con > strong");
+  const totalPrice = $(".txt_5 dd .text");
+  const total = [...totalPrice][0].children[0].data?.replace(",", "");
+  const parsedTotal = parsePrice(total);
 
-  return [ticker, [...result][0].children[0].data?.replace(",", "")];
+  return [
+    ticker,
+    [...result][0].children[0].data?.replace(",", ""),
+    Math.floor(parsedTotal),
+  ];
 };
 
 const parseHtml = async () => {
   const stocks = (await httpClient.get("/api/v1/stock")).data;
 
   const priceListPromises = [];
-
+  const exchangeRate = await getCurrentExchangeRate();
+  console.log("exchangeRate : ", exchangeRate);
   stocks.forEach((stock) => {
     priceListPromises.push(getPrice(stock.ticker));
   });
 
   try {
     const priceList = await Promise.all(priceListPromises);
-    const res = priceList.map(([ticker, price], idx) => {
+    const res = priceList.map(([ticker, price, totalPrice], idx) => {
       return changePrice(stocks[idx]._id, {
         currentPrice: Number(price),
+        marketCap: Math.floor(totalPrice / exchangeRate),
       });
     });
     const result = await Promise.all(res);
