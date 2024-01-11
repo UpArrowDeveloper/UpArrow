@@ -7,7 +7,7 @@ import Link from "next/link";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 import { Body14Medium, HeadH5Bold, HeadH6Bold } from "../../styles/typography";
-import { ChevronRightIcon } from "../icons";
+import { ChevronRightIcon, YoutubeIcon } from "../icons";
 import { useQuery } from "@tanstack/react-query";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -54,58 +54,44 @@ const MobileBanner = () => {
     };
   }, []);
 
-  const timerRef = useRef(null);
-  useEffect(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      setCurrentPlayIndexes((prev) => {
-        const next = prev.map((v, idx) => {
-          if (idx == currentBannerIdx) return true;
-          return false;
-        });
-        return next;
-      });
-      clearTimeout(timerRef.current);
-    }, 7000);
-  }, [currentBannerIdx]);
-
-  const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
-
   if (!banners)
     return <EmptyBanner bannerHeight={bannerHeight} className="empty-banner" />;
 
   return (
     <BannerWrapperWithText className="bwwt">
-      <BannerBlock bannerHeight={bannerHeight} className="bannerblock">
+      <BannerBlock
+        bannerHeight={bannerHeight}
+        className="bannerblock"
+        onClick={() => {
+          setCurrentPlayIndexes((prev) => {
+            const next = prev.map((v, idx) => {
+              if (idx == currentBannerIdx) return !v;
+              return false;
+            });
+            return next;
+          });
+        }}
+      >
         {banners.map((board, idx) => {
           if (!currentPlayIndexes[idx]) {
             return (
               <>
                 <Banner
-                  bgUrl={getThumbnailUrl(board.youtubeCode)}
+                  bgUrl={board.thumbnailUrl}
                   idx={idx - currentBannerIdx}
                   bannerHeight={bannerHeight}
-                >
-                  {currentBannerIdx === idx && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: 15,
-                        left: 15,
-                        zIndex: 1000,
-                      }}
-                    >
-                      <CountdownCircleTimer
-                        isPlaying={currentBannerIdx === idx}
-                        duration={7}
-                        colors={["#888888"]}
-                        colorsTime={[7]}
-                        size={30}
-                        strokeWidth={3}
-                      ></CountdownCircleTimer>
-                    </div>
-                  )}
-                </Banner>
+                ></Banner>
+                <YoutubeIcon
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: `${50 + 100 * (idx - currentBannerIdx)}%`,
+                    width: "30%",
+                    height: "15%",
+                    transform: "translate(-50%, -50%)",
+                    transition: "left 0.5s ease-in-out",
+                  }}
+                />
               </>
             );
           }

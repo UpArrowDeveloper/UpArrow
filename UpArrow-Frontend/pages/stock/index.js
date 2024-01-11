@@ -65,7 +65,7 @@ function Home({ initStocks }) {
         <table>
           <thead>
             <tr>
-              {!isMobile ? <th>Name/Ticker</th> : <th></th>}
+              {!isMobile ? <th>Name</th> : <th></th>}
               <th>Price</th>
               {!isMobile && (
                 <>
@@ -101,9 +101,7 @@ function Home({ initStocks }) {
                           )}
                         </div>
                       </div>
-                      <p>
-                        {stock.name} / {stock.ticker}
-                      </p>
+                      <p>{stock.name}</p>
                     </div>
                   </td>
                   <td className="number">

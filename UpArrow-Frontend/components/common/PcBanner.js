@@ -177,7 +177,7 @@ const PcBanner = () => {
                 >
                   <span>
                     {windowInnerWidth >= 850
-                      ? `Let's find the next ${board.stockName}`
+                      ? `Let's find the next winner!`
                       : `Next ${board.stockName}`}
                   </span>
                   <ChevronRightIcon />
