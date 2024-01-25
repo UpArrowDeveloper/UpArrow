@@ -126,8 +126,16 @@ function Home({ initStocks }) {
                       </td>
                     </>
                   )}
-                  <td className="number">
-                    <span>{stock.ideaIds?.length.toLocaleString() || 0}</span>
+                  <td
+                    className="number"
+                    style={{
+                      textAlign: "center",
+                      verticalAlign: "middle",
+                    }}
+                  >
+                    <span style={{ padding: 0 }}>
+                      {stock.ideaIds?.length.toLocaleString() || 0}
+                    </span>
                   </td>
                   {!isMobile && (
                     <td className="number">

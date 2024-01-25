@@ -159,7 +159,7 @@ function Investors({
                       </div>
                     </td>
                   )}
-                  <td>
+                  <td className="more-padding">
                     <div className="comments wrapper numbers">
                       {investor.ideas.length?.toLocaleString("en-US")}
                     </div>
@@ -174,7 +174,7 @@ function Investors({
                       </div>
                     </td>
                   )}
-                  <td>
+                  <td className="more-padding">
                     <div className="comments wrapper numbers">
                       $
                       {Math.round(
@@ -329,6 +329,10 @@ const IdeasBlock = styled.div`
     .numbers {
       width: auto;
     }
+
+    .more-padding {
+      padding: 0 1.4rem;
+    }
     table h5 {
       width: auto;
     }
@@ -338,7 +342,7 @@ const IdeasBlock = styled.div`
     }
 
     .index {
-      padding: 0 0.9rem;
+      padding: 0 0.2rem;
       text-align: center;
     }
 
