@@ -74,7 +74,7 @@ const BackofficeBannerList = () => {
                 return {
                   id: banner._id,
                   items: [
-                    `http://img.youtube.com/vi/${banner?.youtubeCode}/0.jpg`,
+                    banner?.thumbnailUrl,
                     banner?.stockName,
                     banner?.youtubeCode,
                     getYMD(new Date(banner?.createdAt), ". "),

@@ -19,7 +19,7 @@ import { env } from "../../../../config";
 const BackofficeBannerEdit = () => {
   const { id } = useRouter().query;
   const router = useRouter();
-  const { data } = useQuery(["banner", id], api.banner.getById(id), {
+  const { data, refetch } = useQuery(["banner", id], api.banner.getById(id), {
     enabled: !!id,
   });
 
@@ -53,6 +53,7 @@ const BackofficeBannerEdit = () => {
       thumbnailUrl: link,
     });
     router.push("/backoffice/main");
+    refetch();
   };
   console.log("data : ", data);
   if (!data) return null;
