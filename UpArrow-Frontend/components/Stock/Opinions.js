@@ -53,11 +53,12 @@ const Opinions = ({
     <OpinionsBlock {...restProps} index={index} cardWidth={52 + 2.4}>
       <h3>Opinions</h3>
       <div className="opinion-cards">
-        {!isMobile && (
-          <div className="left-button" onClick={decreaseIndex}>
-            <ChevronLeftIcon />
-          </div>
-        )}
+        <div
+          className={`left-button ${isMobile ? "hide" : ""}`}
+          onClick={decreaseIndex}
+        >
+          <ChevronLeftIcon />
+        </div>
         <div className="opinion-cards-outer-wrapper">
           <div className="opinion-cards-wrapper">
             {opinionCards?.map((card) => (
@@ -65,11 +66,13 @@ const Opinions = ({
             ))}
           </div>
         </div>
-        {!isMobile && (
-          <div className="right-button" onClick={increaseIndex}>
-            <ChevronRightIcon />
-          </div>
-        )}
+        <div
+          className={`right-button ${isMobile ? "hide" : ""}`}
+          style={{ display: isMobile ? "none" : undefined }}
+          onClick={increaseIndex}
+        >
+          <ChevronRightIcon />
+        </div>
       </div>
 
       <CommentList className="comment-list" comments={comments} />
@@ -125,6 +128,9 @@ const OpinionsBlock = styled.div`
     }
 
     .left-button {
+      &.hide {
+        display: none;
+      }
       cursor: pointer;
       position: absolute;
       top: calc(50% - 2.4rem);
@@ -137,6 +143,9 @@ const OpinionsBlock = styled.div`
     }
 
     .right-button {
+      &.hide {
+        display: none;
+      }
       cursor: pointer;
       position: absolute;
       top: calc(50% - 2.4rem);

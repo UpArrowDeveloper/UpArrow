@@ -5,7 +5,11 @@ import StockCover from "../../components/StockCover";
 import Financials from "../../components/Stock/Financials";
 import InvestSimulatorIdeas from "../../components/Stock/InvestSimulatorIdeas";
 import Overview from "../../components/Stock/Overview";
-import Opinions from "../../components/Stock/Opinions";
+// client side renderting
+import dynamic from "next/dynamic";
+const Opinions = dynamic(() => import("../../components/Stock/Opinions"), {
+  ssr: false,
+});
 import { useAppUser } from "../../hooks/useAppUser";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../apis";
