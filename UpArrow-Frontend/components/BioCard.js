@@ -52,15 +52,6 @@ const BiocardBlock = styled.div`
   }
 `;
 
-//clean code =>
-// function 1개 => 기능 1개
-// 컴포넌트 : 함수 => UI 기능
-
-// 부품 :
-// UI <- Best
-// UI + data fetching <= 컴포넌트 기능이 너무 커짐.
-// page: data fetching => 필요한 데이터는 UI (component)
-
 const BioCard = ({
   investor,
   currentUserJSON,
