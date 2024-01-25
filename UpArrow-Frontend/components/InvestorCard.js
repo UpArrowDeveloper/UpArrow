@@ -189,8 +189,13 @@ const InvestorCardWrapper = styled.div`
 
       .investorImg,
       .avatar {
+        .investor-image-wrapper {
+          flex: 1;
+        }
         width: 6rem;
+        min-width: 6rem;
         height: 6rem;
+        min-height: 6rem;
       }
 
       .investorImg {
@@ -200,6 +205,10 @@ const InvestorCardWrapper = styled.div`
       .totalProfits {
         align-items: flex-start;
       }
+    }
+
+    .investorName {
+      padding-right: 6rem;
     }
   }
 `;
