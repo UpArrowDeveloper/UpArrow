@@ -14,6 +14,7 @@ import { mobileWidth } from "../../styles/responsive";
 import api from "../../apis";
 import { useAppUser } from "../../hooks/useAppUser";
 import { useEffect, useState } from "react";
+import { moveToLogin } from "../../utils/url";
 
 const InvestorProfileView = ({
   id,
@@ -47,12 +48,18 @@ const InvestorProfileView = ({
       <Avatar className="avatar" src={profileImageUrl} />
       <div className="name">{username}</div>
       <button
-        disabled={id === user?._id || isFollowLoading || !user}
         className={`follow-btn ${isFollowed ? "following" : ""} ${
           id === user?._id || isFollowLoading || !user ? "disabled" : ""
         } `}
         onClick={async () => {
-          if (id === user?._id || isFollowLoading) return;
+          console.log("click");
+          if (!user) {
+            return moveToLogin();
+          }
+          if (id === user?._id) {
+            return moveToLogin();
+          }
+          if (isFollowLoading) return;
           setIsFollowed((s) => !s);
           setIsFolloweLoading(true);
           await api.user.followUserById(id);

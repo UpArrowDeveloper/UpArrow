@@ -67,15 +67,6 @@ const BioCard = ({
     setFollowText(toggleFollow ? "Unfollow" : "Follow");
   }, [toggleFollow]);
 
-  const enableFollow = async () => {
-    var currentUserStrId = String(props.currentUserJSON._id);
-    var investorStrId = localStorage.getItem("investorStrId");
-    await axios.put(
-      `http://localhost:4000/api/v1/investor/following/${currentUserStrId}/${investorStrId}`
-    ); //  api call to follow/unfollow an investor
-    await props.getInvestor(investorStrId); // calling getInvestor function from investor.js
-  };
-
   const totalProfitArrow =
     totalProfits >= 0 ? (
       <ArrowUpwardRoundedIcon color="success" />

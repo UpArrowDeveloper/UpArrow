@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
 import { useQueryClient } from "@tanstack/react-query";
+import { moveToLogin } from "../utils/url";
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
@@ -80,6 +81,10 @@ const Comment = ({ comment, commentOwner = undefined }) => {
   const [checked, setChecked] = useState(false);
 
   const handleChange = (event) => {
+    if (!user) {
+      moveToLogin();
+      return false;
+    }
     if (checked == false) {
       setChecked(true);
       if (comment.likes.includes(String(user._id))) {
@@ -95,6 +100,7 @@ const Comment = ({ comment, commentOwner = undefined }) => {
         setLikes(comment.likes.length);
       }
     }
+    return true;
   };
 
   useEffect(() => {
@@ -127,8 +133,9 @@ const Comment = ({ comment, commentOwner = undefined }) => {
   };
 
   const onHeartClick = () => {
-    handleChange();
-    callLikesApi();
+    if (handleChange()) {
+      callLikesApi();
+    }
   };
 
   return (

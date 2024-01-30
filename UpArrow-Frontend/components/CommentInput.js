@@ -3,7 +3,7 @@ import React from "react";
 import color from "../styles/color";
 import { useAppUser } from "../hooks/useAppUser";
 import { EmptyAvatar } from "./icons";
-import { env } from "../config";
+import { moveToLogin } from "../utils/url";
 
 const CommentInputBlock = styled.div`
   display: flex;
@@ -66,9 +66,7 @@ const CommentInputView = ({
     <CommentInputBlock
       {...props}
       onClick={() => {
-        !userUrl &&
-          typeof window !== "undefined" &&
-          (window.location.href = `${env.serverUrl}/oauth/auth/google`);
+        !userUrl && moveToLogin();
       }}
     >
       {userUrl ? <img src={userUrl} /> : <EmptyAvatar />}

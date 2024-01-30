@@ -36,6 +36,7 @@ import { useAppUser } from "../../hooks/useAppUser";
 import { MainLayout } from "../../Layouts";
 import { useMobile } from "../../hooks/useMobile";
 import { mobileWidth } from "../../styles/responsive";
+import { moveToLogin } from "../../utils/url";
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
@@ -131,7 +132,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
 
   const onCommentButtonClick = async () => {
     if (!user) {
-      alert("Please login to comment");
+      moveToLogin();
       return;
     }
     await axios.post(`${env.serverUrl}/comment`, {
@@ -227,7 +228,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
             disagreeCount={disagreeCount}
             onAgreeClick={() => {
               if (!user) {
-                alert("Please login to vote");
+                moveToLogin();
                 return;
               }
               createVote.mutate({
@@ -238,7 +239,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
             }}
             onDisagreeClick={() => {
               if (!user) {
-                alert("Please login to vote");
+                moveToLogin();
                 return;
               }
               createVote.mutate({
@@ -280,7 +281,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
                 className="menu"
                 onClick={() => {
                   if (!user) {
-                    alert("Please login to vote");
+                    moveToLogin();
                     return;
                   }
                   createVote.mutate({
@@ -300,7 +301,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
                 className="menu"
                 onClick={() => {
                   if (!user) {
-                    alert("Please login to vote");
+                    moveToLogin();
                     return;
                   }
                   createVote.mutate({
