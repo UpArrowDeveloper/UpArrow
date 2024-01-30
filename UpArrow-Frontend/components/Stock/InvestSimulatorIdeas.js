@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { isNumber, numberComma } from "../../utils/number";
 import { mobileWidth } from "../../styles/responsive";
 import { useRouter } from "next/router";
+import { env } from "../../config";
 
 const getProfitPercent = (currentPrice, targetPrice) => {
   const sign = targetPrice - currentPrice >= 0 ? "+" : "";
@@ -119,13 +120,27 @@ const InvestSimulatorIdeas = ({
           <div className="button-group">
             <button
               className="sell"
-              onClick={() => onSellClick(stockOrderQuantity)}
+              onClick={() => {
+                if (!user) {
+                  typeof window !== "undefined" &&
+                    (window.location.href = `${env.serverUrl}/oauth/auth/google`);
+                  return;
+                }
+                onSellClick(stockOrderQuantity);
+              }}
             >
               Sell
             </button>
             <button
               className="buy"
-              onClick={() => onBuyClick(stockOrderQuantity)}
+              onClick={() => {
+                if (!user) {
+                  typeof window !== "undefined" &&
+                    (window.location.href = `${env.serverUrl}/oauth/auth/google`);
+                  return;
+                }
+                onBuyClick(stockOrderQuantity);
+              }}
             >
               Buy
             </button>
