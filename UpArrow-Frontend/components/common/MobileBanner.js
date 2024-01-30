@@ -58,7 +58,38 @@ const MobileBanner = () => {
     return <EmptyBanner bannerHeight={bannerHeight} className="empty-banner" />;
 
   return (
-    <BannerWrapperWithText className="bwwt">
+    <BannerWrapperWithText
+      className="bwwt"
+      onTouchStart={(e) => {
+        setCurrentMouseX(e.touches[0]?.clientX);
+      }}
+      onMouseDown={(e) => {
+        setCurrentMouseX(e.clientX);
+      }}
+      onTouchEnd={(e) => {
+        e.stopPropagation();
+        if (e.changedTouches[0]?.clientX - currentMouseX > 10) {
+          setCurrentBannerIdx((prev) =>
+            prev > 0 ? prev - 1 : banners.length - 1
+          );
+        } else if (e.changedTouches[0]?.clientX - currentMouseX < -10) {
+          setCurrentBannerIdx((prev) =>
+            prev < banners.length - 1 ? prev + 1 : 0
+          );
+        }
+      }}
+      onMouseUp={(e) => {
+        if (e.clientX - currentMouseX > 10) {
+          setCurrentBannerIdx((prev) =>
+            prev > 0 ? prev - 1 : banners.length - 1
+          );
+        } else if (e.clientX - currentMouseX < -10) {
+          setCurrentBannerIdx((prev) =>
+            prev < banners.length - 1 ? prev + 1 : 0
+          );
+        }
+      }}
+    >
       <BannerBlock
         bannerHeight={bannerHeight}
         className="bannerblock"
@@ -120,37 +151,7 @@ const MobileBanner = () => {
           );
         })}
       </Progress>
-      <InfoWrapper
-        onTouchStart={(e) => {
-          setCurrentMouseX(e.touches[0]?.clientX);
-        }}
-        onMouseDown={(e) => {
-          setCurrentMouseX(e.clientX);
-        }}
-        onTouchEnd={(e) => {
-          e.stopPropagation();
-          if (e.changedTouches[0]?.clientX - currentMouseX > 10) {
-            setCurrentBannerIdx((prev) =>
-              prev > 0 ? prev - 1 : banners.length - 1
-            );
-          } else if (e.changedTouches[0]?.clientX - currentMouseX < -10) {
-            setCurrentBannerIdx((prev) =>
-              prev < banners.length - 1 ? prev + 1 : 0
-            );
-          }
-        }}
-        onMouseUp={(e) => {
-          if (e.clientX - currentMouseX > 10) {
-            setCurrentBannerIdx((prev) =>
-              prev > 0 ? prev - 1 : banners.length - 1
-            );
-          } else if (e.clientX - currentMouseX < -10) {
-            setCurrentBannerIdx((prev) =>
-              prev < banners.length - 1 ? prev + 1 : 0
-            );
-          }
-        }}
-      >
+      <InfoWrapper>
         {banners.map((board, idx) => {
           return (
             <Info idx={idx - currentBannerIdx}>
