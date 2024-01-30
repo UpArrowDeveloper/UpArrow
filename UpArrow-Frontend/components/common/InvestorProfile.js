@@ -156,15 +156,20 @@ const InvestorProfileBlock = styled.div`
     padding-bottom: 1.6rem;
     margin-bottom: 1.6rem;
     border-bottom: 0.1rem solid #d9d9d9;
+    & > div {
+      text-align: center;
+    }
   }
 
   .description,
   .website-url {
     ${Body14Regular}
-    color: ${color.B27}
+    color: ${color.B27};
+    overflow-wrap: break-word;
   }
 
   .website-url {
+    width: 100%;
     margin-bottom: 4.8rem;
   }
 
@@ -186,9 +191,9 @@ const InvestorProfileBlock = styled.div`
       justify-content: center;
       gap: 0.8rem;
       align-items: center;
-      padding: 3.6rem 2rem;
       border: 1px solid ${color.B93};
       color: ${color.B13};
+      height: 12rem;
     }
 
     .earned {
