@@ -73,7 +73,10 @@ const CommentInputView = ({
       <textarea
         placeholder={userUrl ? "Add Comments.." : "Please login to comment."}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => {
+          if (!userUrl) return;
+          setValue(e.target.value);
+        }}
         ref={commentInputRef}
       />
     </CommentInputBlock>
