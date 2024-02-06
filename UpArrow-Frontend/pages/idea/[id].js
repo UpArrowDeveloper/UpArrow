@@ -401,7 +401,8 @@ const IdeasBlock = styled.div`
   .sub-header {
     ${HeadH3Bold}
 
-    margin-bottom: 5.6rem;
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
   }
 
   .comment-submit-button {
@@ -414,7 +415,7 @@ const IdeasBlock = styled.div`
 
   .comment-list {
     border-top: 0.1rem solid rgba(0, 0, 0, 0.04);
-    padding-top: 3.2rem;
+    padding-top: 2rem;
     margin-bottom: 3.2rem;
   }
 
