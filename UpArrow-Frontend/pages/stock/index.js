@@ -65,15 +65,13 @@ function Home({ initStocks }) {
         <table>
           <thead>
             <tr>
-              {!isMobile ? <th>Name</th> : <th></th>}
+              {!isMobile ? <th>Name</th> : <th> </th>}
               <th>Price</th>
               {!isMobile && (
                 <>
                   <th>Market Cap</th>
-                  <th></th>
                   <th>Buyer</th>
                   <th>Seller</th>
-                  <th></th>
                 </>
               )}
               <th>Ideas</th>
@@ -112,17 +110,12 @@ function Home({ initStocks }) {
                       <td className="number">
                         <span>${getNumberUnit(stock.marketCap)}</span>
                       </td>
-                      <td className="divider-wrapper">
-                        <span className="divider"></span>
-                      </td>
+
                       <td className="number">
                         <span>{stock.buyerCount.toLocaleString()}</span>
                       </td>
                       <td className="number">
                         <span>{stock.sellerCount.toLocaleString()}</span>
-                      </td>
-                      <td className="divider-wrapper">
-                        <span className="divider"></span>
                       </td>
                     </>
                   )}
@@ -196,9 +189,7 @@ const StockBlock = styled.div`
   table {
     thead {
       th {
-        &:not(:first-child) {
-          padding-left: 2.5rem;
-        }
+        text-align: center;
       }
     }
 
@@ -221,9 +212,9 @@ const StockBlock = styled.div`
           font-size: 1.8rem;
           line-height: 2.2rem;
         }
-        span {
-          padding-left: 2.5rem;
-        }
+      }
+      td {
+        text-align: center;
       }
     }
 

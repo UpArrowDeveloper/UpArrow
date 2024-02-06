@@ -177,103 +177,87 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
 
   return (
     <IdeasBlock>
-      {!isMobile && (
-        <div>
-          <InvestorProfile
-            id={investorId}
-            profileImageUrl={profileImageUrl}
-            username={username}
-            investedCompanies={stocksWithPrices}
-            followers={data?.followers || followers}
-            followings={data?.followings || followings}
-            description={description}
-            websiteUrl={websiteUrl}
-            cash={data?.cash || cash}
-            totalInvestment={data?.totalInvestment || totalInvestment}
-            totalProfits={data?.totalProfits || totalProfits}
-            totalAssets={
-              data?.totalInvestment
-                ? data?.totalInvestment + data?.cash + data?.totalProfits
-                : totalInvestment + cash + totalProfits
-            }
-            rank={rank}
-            userRefetch={userRefetch}
-          />
-        </div>
-      )}
       <PostBlock>
-        <h1 className="idea-title">{serverIdea.title}</h1>
-        <div className="idea-info">
-          <span
-            style={{ textDecorationLine: "underline" }}
-            onClick={() => router.push(`/investor/${investorId}`)}
-          >
-            by {username}
-          </span>{" "}
-          · {timeAgo.format(new Date(serverIdea.date))}
-        </div>
-        <div className="tag-pill-wrapper">
-          {stocksWithPrices.map((stock) => (
-            <TagPill
-              key={stock._id}
-              stockImageUrl={stock.logoUrl}
-              label={stock.name}
-              onClick={() => router.push(`/stock/${stock.ticker}`)}
+        {!isMobile && (
+          <div>
+            <InvestorProfile
+              id={investorId}
+              profileImageUrl={profileImageUrl}
+              username={username}
+              investedCompanies={stocksWithPrices}
+              followers={data?.followers || followers}
+              followings={data?.followings || followings}
+              description={description}
+              websiteUrl={websiteUrl}
+              cash={data?.cash || cash}
+              totalInvestment={data?.totalInvestment || totalInvestment}
+              totalProfits={data?.totalProfits || totalProfits}
+              totalAssets={
+                data?.totalInvestment
+                  ? data?.totalInvestment + data?.cash + data?.totalProfits
+                  : totalInvestment + cash + totalProfits
+              }
+              rank={rank}
+              userRefetch={userRefetch}
             />
-          ))}
-        </div>
-        <div className="vote-wrapper">
-          <IdeaVote
-            agreeCount={agreeCount}
-            disagreeCount={disagreeCount}
-            onAgreeClick={() => {
-              if (!user) {
-                moveToLogin();
-                return;
-              }
-              createVote.mutate({
-                postId: id,
-                userId: user._id,
-                isAgree: true,
-              });
-            }}
-            onDisagreeClick={() => {
-              if (!user) {
-                moveToLogin();
-                return;
-              }
-              createVote.mutate({
-                postId: id,
-                userId: user._id,
-                isAgree: false,
-              });
-            }}
-          />
-        </div>
-
-        {serverIdea.youtubeCode && (
-          <Youtube youtubeCode={serverIdea.youtubeCode} />
+          </div>
         )}
+        <div className="post-area">
+          <h1 className="idea-title">{serverIdea.title}</h1>
+          <div className="idea-info">
+            <span
+              style={{ textDecorationLine: "underline" }}
+              onClick={() => router.push(`/investor/${investorId}`)}
+            >
+              by {username}
+            </span>{" "}
+            · {timeAgo.format(new Date(serverIdea.date))}
+          </div>
+          <div className="tag-pill-wrapper">
+            {stocksWithPrices.map((stock) => (
+              <TagPill
+                key={stock._id}
+                stockImageUrl={stock.logoUrl}
+                label={stock.name}
+                onClick={() => router.push(`/stock/${stock.ticker}`)}
+              />
+            ))}
+          </div>
+          <div className="vote-wrapper">
+            <IdeaVote
+              agreeCount={agreeCount}
+              disagreeCount={disagreeCount}
+              onAgreeClick={() => {
+                if (!user) {
+                  moveToLogin();
+                  return;
+                }
+                createVote.mutate({
+                  postId: id,
+                  userId: user._id,
+                  isAgree: true,
+                });
+              }}
+              onDisagreeClick={() => {
+                if (!user) {
+                  moveToLogin();
+                  return;
+                }
+                createVote.mutate({
+                  postId: id,
+                  userId: user._id,
+                  isAgree: false,
+                });
+              }}
+            />
+          </div>
 
-        <Viewer initialValue={serverIdea.content} />
+          {serverIdea.youtubeCode && (
+            <Youtube youtubeCode={serverIdea.youtubeCode} />
+          )}
 
-        <h2 className="sub-header">Comments</h2>
-        {comments && (
-          <CommentList className="comment-list" comments={comments} />
-        )}
-
-        <CommentInput
-          className="comment-input-wrapper"
-          value={comment}
-          setValue={setComment}
-          commentInputRef={commentInputRef}
-        />
-        <Button
-          className="comment-submit-button"
-          onClick={onCommentButtonClick}
-        >
-          Comment
-        </Button>
+          <Viewer initialValue={serverIdea.content} />
+        </div>
         {!isMobile && (
           <FloattingMenu scrollTop={scrollTop}>
             <div className="menu-wrapper">
@@ -326,6 +310,26 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
           </FloattingMenu>
         )}
       </PostBlock>
+
+      <CommentBlock>
+        <h2 className="sub-header">Comments</h2>
+        {comments && (
+          <CommentList className="comment-list" comments={comments} />
+        )}
+
+        <CommentInput
+          className="comment-input-wrapper"
+          value={comment}
+          setValue={setComment}
+          commentInputRef={commentInputRef}
+        />
+        <Button
+          className="comment-submit-button"
+          onClick={onCommentButtonClick}
+        >
+          Comment
+        </Button>
+      </CommentBlock>
     </IdeasBlock>
   );
 }
@@ -379,6 +383,7 @@ export const getStaticProps = async (context) => {
 
 const IdeasBlock = styled.div`
   display: flex;
+  flex-direction: column;
 
   .tag-pill-wrapper {
     display: flex;
@@ -430,11 +435,9 @@ const IdeasBlock = styled.div`
 
 const PostBlock = styled.div`
   position: relative;
-  max-width: 72rem;
   width: 100%;
-  padding: 3.2rem 1.2rem;
+  padding: 3.2rem 1.2rem 1.2rem;
   display: flex;
-  flex-direction: column;
 
   .idea-title {
     ${HeadH1Bold}
@@ -458,12 +461,19 @@ const FloattingMenu = styled.div`
   align-items: center;
   gap: 2rem;
 
+  @media screen and (max-width: 1500px) {
+    position: fixed;
+    top: 11rem;
+    right: 0;
+  }
+
   .menu-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     border: 0.1rem solid rgba(0, 0, 0, 0.1);
     border-radius: 0.8rem;
+    background-color: white;
 
     & > .line {
       width: 5.6rem;
@@ -513,5 +523,22 @@ const IdeaContent = styled.div`
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
+  }
+`;
+
+const CommentBlock = styled.div`
+  width: 100%;
+  padding: 1.2rem 6.4rem;
+  display: flex;
+  flex-direction: column;
+
+  .sub-header {
+    ${HeadH3Bold}
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+
+  @media screen and (max-width: ${mobileWidth}) {
+    padding: 3.2rem 1.2rem;
   }
 `;

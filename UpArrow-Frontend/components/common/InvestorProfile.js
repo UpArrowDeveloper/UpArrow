@@ -187,6 +187,7 @@ const InvestorProfileBlock = styled.div`
   }
 
   .cash-block {
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
     border: 1px solid ${color.B93};
@@ -216,7 +217,7 @@ const InvestorProfileBlock = styled.div`
     }
 
     .cash {
-      font-size: 2.4rem;
+      font-size: 2rem;
     }
   }
 
