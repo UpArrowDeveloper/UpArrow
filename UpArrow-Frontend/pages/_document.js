@@ -32,7 +32,6 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Merriweather&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300&family=Sacramento&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
             rel="stylesheet"
           ></link>
-          disabled={!userUrl}
           <link rel="apple-touch-icon" href="/static/favicon.ico"></link>
           {this.props.emotionStyleTags}
         </Head>

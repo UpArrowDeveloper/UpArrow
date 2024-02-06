@@ -91,7 +91,7 @@ const InvestorCard = ({
           .map(({ stockName, ticker, percent }, index) => {
             return (
               <div className="stock" key={index}>
-                {stockName} {percent}%
+                {stockName} {new Intl.NumberFormat().format(percent)}%
               </div>
             );
           })}
