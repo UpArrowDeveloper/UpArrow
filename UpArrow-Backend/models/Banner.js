@@ -8,6 +8,7 @@ const BannerSchema = new Schema(
     description: String,
     thumbnailUrl: String,
     order: Number,
+    ticker: String,
   },
   { timestamps: true }
 );
