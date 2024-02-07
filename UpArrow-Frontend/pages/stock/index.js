@@ -177,6 +177,11 @@ const StockBlock = styled.div`
     align-items: center;
     gap: 2.4rem;
     ${HeadH5Bold}
+
+    & > p {
+      width: 100%;
+      text-align: left;
+    }
   }
   ${commonTableCss};
 
