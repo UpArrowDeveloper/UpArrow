@@ -70,6 +70,7 @@ export const commonListCss = css`
 export const commonTableCss = css`
   .table-wrapper {
     padding: 0 3.2rem;
+    overflow: scroll;
 
     tr {
       cursor: pointer;

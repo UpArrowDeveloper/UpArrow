@@ -128,7 +128,7 @@ const FinancialsBlock = styled.div`
 
     .bar-wrapper {
       width: 100%;
-      height: 18rem;
+      max-height: 18rem;
     }
   }
 `;

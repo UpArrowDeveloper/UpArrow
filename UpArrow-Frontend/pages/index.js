@@ -227,6 +227,10 @@ const IndexWrapper = styled.div`
     gap: 3.6rem;
     row-gap: 2.4rem;
 
+    & > div:active {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
     /* & > div {
       &:not(
           :nth-last-child(-n + ${({ postLength }) => (postLength % 2 ? 1 : 2)})

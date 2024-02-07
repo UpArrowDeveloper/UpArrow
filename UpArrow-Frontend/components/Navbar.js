@@ -205,6 +205,12 @@ const NavBlock = styled.div`
     .mobile-buttons {
       height: 4rem;
       margin-left: 1.2rem;
+      overflow: scroll;
+      -ms-overflow-style: none; /* Internet Explorer 10+ */
+      scrollbar-width: none; /* Firefox */
+      &::-webkit-scrollbar {
+        display: none; /* Safari and Chrome */
+      }
 
       gap: 1.6rem;
       & > div {

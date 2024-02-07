@@ -64,10 +64,12 @@ const PcBanner = () => {
 
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
   const getLineClamp = () => {
-    if (bannerWidth < 80) return 3;
-    if (bannerWidth < 90) return 5;
-    if (bannerWidth < 100) return 7;
-    if (bannerWidth < 110) return 8;
+    if (bannerWidth < 55) return 3;
+    if (bannerWidth < 65) return 5;
+    if (bannerWidth < 75) return 6;
+    if (bannerWidth < 85) return 7;
+    if (bannerWidth < 95) return 8;
+    if (bannerWidth < 105) return 9;
     return 10;
   };
 
@@ -162,7 +164,15 @@ const PcBanner = () => {
                   </>
                 )}
               </div>
-              <div className="banner-description">
+              <div
+                className="banner-description"
+                onClick={() => {
+                  if (!board.ticker) {
+                    return router.push(`/stock`);
+                  }
+                  router.push(`/stock/${board.ticker}`);
+                }}
+              >
                 <div>
                   <div className="banner-stock-name">{board.stockName}</div>
                   <div className="banner-stock-content">
@@ -174,14 +184,7 @@ const PcBanner = () => {
                   onClick={() => {
                     router.push(`/stock`);
                   }}
-                >
-                  <span>
-                    {windowInnerWidth >= 850
-                      ? `Let's find the next winner!`
-                      : `Next ${board.stockName}`}
-                  </span>
-                  <ChevronRightIcon />
-                </div>
+                ></div>
               </div>
             </BannerContent>
           ))}
