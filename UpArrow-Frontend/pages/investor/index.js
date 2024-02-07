@@ -102,7 +102,9 @@ function Investors({
             <tr>
               <th style={{ paddingLeft: "1rem" }}></th>
               <th style={{ paddingLeft: "0.8rem" }}></th>
-              {!isMobile && <th>Top 3 Stocks</th>}
+              {!isMobile && (
+                <th style={{ textAlign: "center" }}>Top 3 Stocks</th>
+              )}
               <th>Ideas</th>
               {!isMobile && <th>Total Profits</th>}
               <th>{!isMobile ? "Total" : ""} Assets</th>
@@ -145,7 +147,9 @@ function Investors({
                           tags={
                             top3Stocks?.[index]?.map(({ name, profit }) => ({
                               name: `${name} ${
-                                profit?.toLocaleString("en-US") || 0
+                                (profit && Math.round(profit))?.toLocaleString(
+                                  "en-US"
+                                ) || 0
                               }%`,
                               type:
                                 profit > 0

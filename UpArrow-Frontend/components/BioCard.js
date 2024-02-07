@@ -117,10 +117,12 @@ const BioCard = ({
 
       <div class="investor-financials">
         <div>
-          Total Investment: ${new Intl.NumberFormat().format(totalInvestment)}
+          Total Investment: $
+          {new Intl.NumberFormat().format(Math.round(totalInvestment))}
         </div>
         <div>
-          Total Profits: ${new Intl.NumberFormat().format(totalProfits)} (
+          Total Profits: $
+          {new Intl.NumberFormat().format(Math.round(totalProfits))} (
           {totalProfitArrow}{" "}
           {new Intl.NumberFormat().format(
             Math.floor((totalProfits / totalInvestment) * 100)
@@ -129,13 +131,13 @@ const BioCard = ({
         </div>
         <div>
           Available Cash: $
-          {new Intl.NumberFormat().format(investor.availableCash)}
+          {new Intl.NumberFormat().format(Math.round(investor.availableCash))}
         </div>
 
         <div>
           Total Assets: $
           {new Intl.NumberFormat().format(
-            totalInvestment + totalProfits + investor.availableCash
+            Math.round(totalInvestment + totalProfits + investor.availableCash)
           )}
         </div>
       </div>

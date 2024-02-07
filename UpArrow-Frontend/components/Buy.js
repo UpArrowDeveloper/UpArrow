@@ -1,15 +1,15 @@
-import styled from '@emotion/styled';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import axios from 'axios';
-import { numberComma } from '../utils/number';
+import styled from "@emotion/styled";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import axios from "axios";
+import { numberComma } from "../utils/number";
 
 const BuyWrapper = styled.div`
   font-family: sans-serif;
   font-size: 25px;
   color: white;
-  border: 1px ${({ isSale }) => (isSale ? '#ef4232' : '#34aa52')};
-  background-color: ${({ isSale }) => (isSale ? '#ef4232' : '#34aa52')};
+  border: 1px ${({ isSale }) => (isSale ? "#ef4232" : "#34aa52")};
+  background-color: ${({ isSale }) => (isSale ? "#ef4232" : "#34aa52")};
   width: 260px;
   height: 94.25px;
   border-radius: 5px;
@@ -68,8 +68,8 @@ const ModalWrapper = styled.div`
     width: 200px;
     height: 70px;
     border-radius: 5px;
-    background-color: ${({ isSale }) => (isSale ? '#ef4232' : '#34aa52')};
-    border: 1px ${({ isSale }) => (isSale ? '#ef4232' : '#34aa52')};
+    background-color: ${({ isSale }) => (isSale ? "#ef4232" : "#34aa52")};
+    border: 1px ${({ isSale }) => (isSale ? "#ef4232" : "#34aa52")};
     margin-bottom: 15px;
   }
 
@@ -96,14 +96,14 @@ function Buy({ stockJSON, isSale }) {
   const [user, setUser] = useState(null);
   const [totalInvestment, setTotalInvestment] = useState(0);
   const [buy, setBuy] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
   const [userCurrentStockCount, setUserCurrentStockCount] = useState(0);
 
   const router = useRouter();
 
   useEffect(() => {
     const getUser = async () => {
-      const userEmail = localStorage.getItem('email');
+      const userEmail = localStorage.getItem("email");
       const response = await axios(
         `http://localhost:4000/api/v1/user/${userEmail}/email`
       );
@@ -120,7 +120,7 @@ function Buy({ stockJSON, isSale }) {
   }, [stock]);
 
   const getAverageStockPrice = async () => {
-    const response = await axios.get('http://localhost:4000/api/v1/config');
+    const response = await axios.get("http://localhost:4000/api/v1/config");
     const currentStockPrices = response.data.prices;
     const currentPrice = currentStockPrices[stockJSON.ticker];
     setCurrentPrice(currentPrice);
@@ -148,14 +148,14 @@ function Buy({ stockJSON, isSale }) {
   const purchaseStock = async () => {
     try {
       if (isSale) {
-        await axios.put('http://localhost:4000/api/v1/investor/sell', {
+        await axios.put("http://localhost:4000/api/v1/investor/sell", {
           userId: String(user._id),
           stockId: String(stock._id),
           quantity: quantity,
           price: currentPrice,
         });
       } else {
-        await axios.post('http://localhost:4000/api/v1/investor/purchase', {
+        await axios.post("http://localhost:4000/api/v1/investor/purchase", {
           userId: String(user._id),
           stockId: String(stock._id),
           quantity: quantity,
@@ -164,12 +164,12 @@ function Buy({ stockJSON, isSale }) {
       }
 
       setBuy(true);
-      localStorage.setItem('investorStrId', user._id);
+      localStorage.setItem("investorStrId", user._id);
       setTimeout(() => {
-        router.push('/investor');
+        router.push("/investor");
       }, 5000);
     } catch (error) {
-      console.error('redirect error : ', error);
+      console.error("redirect error : ", error);
       setErrorMsg(JSON.stringify(error.message));
       return;
     }
@@ -184,7 +184,7 @@ function Buy({ stockJSON, isSale }) {
   return (
     <>
       <BuyWrapper onClick={showModal} isSale={isSale}>
-        {isSale ? 'Sale' : 'Buy'}
+        {isSale ? "Sale" : "Buy"}
       </BuyWrapper>
 
       {open ? (
@@ -192,76 +192,76 @@ function Buy({ stockJSON, isSale }) {
           <ModalWrapper isSale={isSale}>
             {!buy ? (
               <>
-                <img className='stockLogo' src={stock?.logoUrl} />
+                <img className="stockLogo" src={stock?.logoUrl} />
                 <p>
-                  Stock Name: <div className='boldText'>{stock?.name}</div>
+                  Stock Name: <div className="boldText">{stock?.name}</div>
                 </p>
                 <p>
-                  Available stocks to sell :{' '}
-                  <div className='boldText'>{userCurrentStockCount}</div>
+                  Available stocks to sell :{" "}
+                  <div className="boldText">{userCurrentStockCount}</div>
                 </p>
                 <p>
-                  Current Price:{' '}
-                  <div className='boldText'>${numberComma(currentPrice)}</div>
+                  Current Price:{" "}
+                  <div className="boldText">${numberComma(currentPrice)}</div>
                 </p>
-                <p className='boldText'>
-                  How many shares would you like to {isSale ? 'sell' : 'buy'}
+                <p className="boldText">
+                  How many shares would you like to {isSale ? "sell" : "buy"}
                 </p>
 
                 <input
-                  type='number'
-                  id='quantity'
-                  className='quantity'
-                  name='quantity'
+                  type="number"
+                  id="quantity"
+                  className="quantity"
+                  name="quantity"
                   onChange={(e) => setQuantity(Number(e.target.value))}
                 />
-                <button className='button' onClick={calculateTotalInvestment}>
+                <button className="button" onClick={calculateTotalInvestment}>
                   Calculate
                 </button>
 
                 <p>
-                  Total {isSale ? 'Sale' : 'Investment'}:{' '}
-                  <div className='boldText'>
+                  Total {isSale ? "Sale" : "Investment"}:{" "}
+                  <div className="boldText">
                     ${numberComma(totalInvestment)}
                   </div>
                 </p>
                 <p>
-                  Available Cash:{' '}
-                  <div className='boldText'>
+                  Available Cash:{" "}
+                  <div className="boldText">
                     ${numberComma(user?.availableCash)}
                   </div>
                 </p>
 
-                <button className='button' onClick={purchaseStock}>
-                  {isSale ? 'Sell' : 'Buy'}
+                <button className="button" onClick={purchaseStock}>
+                  {isSale ? "Sell" : "Buy"}
                 </button>
-                <p className='error-message'>{errorMsg}</p>
-                <p className='stock-price-disclaimer'>
-                  * Current price is the estimated price of the {stock?.name}{' '}
+                <p className="error-message">{errorMsg}</p>
+                <p className="stock-price-disclaimer">
+                  * Current price is the estimated price of the {stock?.name}{" "}
                   stock
                 </p>
-                <p className='simulation-disclaimer'>
-                  * UpArrow is an investment simulator, you are not{' '}
-                  {isSale ? 'selling' : 'buying'} the actual {stock?.name} stock
+                <p className="simulation-disclaimer">
+                  * UpArrow is an investment simulator, you are not{" "}
+                  {isSale ? "selling" : "buying"} the actual {stock?.name} stock
                 </p>
               </>
             ) : (
               <ConfirmationWrapper>
-                <p className='congratulations'>Congratulations!</p>
-                <p className='confirmation-message'>
-                  You {isSale ? 'sold ' : 'bought'}{' '}
-                  <span className='boldText'>
+                <p className="congratulations">Congratulations!</p>
+                <p className="confirmation-message">
+                  You {isSale ? "sold " : "bought"}{" "}
+                  <span className="boldText">
                     {numberComma(Number(quantity))} shares
-                  </span>{' '}
-                  of <span className='boldText'>{user.stockName} </span>
-                  at{' '}
-                  <span className='boldText'>
+                  </span>{" "}
+                  of <span className="boldText">{user.stockName} </span>
+                  at{" "}
+                  <span className="boldText">
                     ${numberComma(Number(currentPrice))}!
                   </span>
                 </p>
-                <p className='remaining-cash'>
-                  Remaining Cash:{' '}
-                  <span className='boldText'>
+                <p className="remaining-cash">
+                  Remaining Cash:{" "}
+                  <span className="boldText">
                     $
                     {numberComma(
                       isSale
@@ -270,7 +270,7 @@ function Buy({ stockJSON, isSale }) {
                     )}
                   </span>
                 </p>
-                <p className='loading-message'>
+                <p className="loading-message">
                   Redirecting you to your portfolio...
                 </p>
               </ConfirmationWrapper>

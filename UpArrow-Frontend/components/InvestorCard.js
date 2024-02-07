@@ -52,7 +52,7 @@ const InvestorCard = ({
           <div className="totalProfits">
             <div className="label">Total Profits</div>
             <div className="amount">
-              ${new Intl.NumberFormat().format(totalProfits)}
+              ${new Intl.NumberFormat().format(Math.round(totalProfits))}
             </div>
           </div>
         </>
@@ -78,7 +78,7 @@ const InvestorCard = ({
             <div className="totalProfits">
               <div className="label">Total Profits</div>
               <div className="amount">
-                ${new Intl.NumberFormat().format(totalProfits)}
+                ${new Intl.NumberFormat().format(Math.round(totalProfits))}
               </div>
             </div>
           </div>
@@ -91,7 +91,8 @@ const InvestorCard = ({
           .map(({ stockName, ticker, percent }, index) => {
             return (
               <div className="stock" key={index}>
-                {stockName} {new Intl.NumberFormat().format(percent)}%
+                {stockName}{" "}
+                {new Intl.NumberFormat().format(Math.round(percent))}%
               </div>
             );
           })}

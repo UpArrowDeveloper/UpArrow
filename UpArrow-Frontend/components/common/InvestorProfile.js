@@ -90,19 +90,21 @@ const InvestorProfileView = ({
       <div className="cash-block">
         <div>
           <div className="label">Available Cash</div>
-          <div className="cash">${numberComma(cash)}</div>
+          <div className="cash">${numberComma(Math.round(cash))}</div>
         </div>
         <div>
           <div className="label">Total Investment</div>
-          <div className="cash">${numberComma(totalInvestment)}</div>
+          <div className="cash">
+            ${numberComma(Math.round(totalInvestment))}
+          </div>
         </div>
         <div className={totalProfits >= 0 ? "earned" : "lost"}>
           <div className="label">Total Profits</div>
-          <div className="cash">${numberComma(totalProfits)}</div>
+          <div className="cash">${numberComma(Math.round(totalProfits))}</div>
         </div>
         <div className={totalAssets >= 0 ? "earned" : "lost"}>
           <div className="label">Total Assets</div>
-          <div className="cash">${numberComma(totalAssets)}</div>
+          <div className="cash">${numberComma(Math.round(totalAssets))}</div>
         </div>
       </div>
     </InvestorProfileBlock>
@@ -177,6 +179,7 @@ const InvestorProfileBlock = styled.div`
 
   .website-url {
     width: 100%;
+    text-align: center;
     margin-bottom: 4.8rem;
   }
 
