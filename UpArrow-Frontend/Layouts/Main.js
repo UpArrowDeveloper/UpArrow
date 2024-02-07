@@ -8,7 +8,8 @@ const MainLayoutBlock = styled.main`
   justify-content: center;
 
   .content {
-    width: 128rem;
+    width: 100%;
+    max-width: 128rem;
   }
 
   @media screen and (max-width: ${mobileWidth}) {

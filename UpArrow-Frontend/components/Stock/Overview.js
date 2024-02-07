@@ -161,6 +161,7 @@ const OverviewBlock = styled.div`
 
     .insights-of-giants {
       width: 100%;
+      min-width: 50%;
 
       .item-list {
         margin-bottom: 1.6rem;
