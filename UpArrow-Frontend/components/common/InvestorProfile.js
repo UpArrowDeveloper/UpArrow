@@ -81,7 +81,6 @@ const InvestorProfileView = ({
           <span>{followings.length}</span> Following
         </div>
       </div>
-      <hr />
       <div className="description">{description}</div>
       <div className="website-url">
         <a href={websiteUrl}>{websiteUrl}</a>
