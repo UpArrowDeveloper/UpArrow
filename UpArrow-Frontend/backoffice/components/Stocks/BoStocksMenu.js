@@ -19,8 +19,8 @@ import Button from "../../../components/common/Button";
 import Divider from "../../../components/Divider";
 import Textarea from "../../../components/common/Textarea";
 import { TrashIcon } from "../../../components/icons";
+import DraggableItems from "./DraggableItems";
 
-const flexColumn = { display: "flex", flexDirection: "column" };
 export const BoStocksMenu = ({ stock, analysis }) => {
   const isEdit = !!stock;
   const [name, setName] = useState(stock?.name || "");
@@ -55,6 +55,10 @@ export const BoStocksMenu = ({ stock, analysis }) => {
 
   const [financials, setFinancials] = useState(analysis?.financials || []);
 
+  const [strengths, setStrengths] = useState(analysis?.strengths || []);
+  const [strength, setStrength] = useState("");
+  const [weaknessList, setWeaknessList] = useState(analysis?.weaknesses || []);
+  const [weakness, setWeakness] = useState("");
   const [growthOppertunities, setGrowthOppertunities] = useState(
     analysis?.growthOppertunities || []
   );
@@ -68,7 +72,10 @@ export const BoStocksMenu = ({ stock, analysis }) => {
   const [insightOfGiantsUrls, setInsightOfGiantsUrls] = useState(
     analysis?.insightOfGiantsUrls || []
   );
-  const [insightOfGiant, setInsightOfGiant] = useState("");
+  const [insightOfGiant, setInsightOfGiant] = useState({
+    summary: "",
+    link: "",
+  });
 
   const [logoImage, setLogoImage] = useState();
   const [backgroundImage, setBackgroundImage] = useState();
@@ -100,6 +107,35 @@ export const BoStocksMenu = ({ stock, analysis }) => {
       return newS;
     });
   };
+  const onDragEndForStrength = (result) => {
+    if (!result.destination) {
+      return;
+    }
+    setStrengths((s) => {
+      const newS = [...s];
+      newS.splice(
+        result.destination.index,
+        0,
+        newS.splice(result.source.index, 1)[0]
+      );
+      return newS;
+    });
+  };
+  const onDragEndForWeakness = (result) => {
+    if (!result.destination) {
+      return;
+    }
+    setWeaknessList((s) => {
+      const newS = [...s];
+      newS.splice(
+        result.destination.index,
+        0,
+        newS.splice(result.source.index, 1)[0]
+      );
+      return newS;
+    });
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const name = e.target.name.value;
@@ -163,11 +199,13 @@ export const BoStocksMenu = ({ stock, analysis }) => {
       youtubeTitle,
       youtubeDate,
       insightOfGiantsUrls,
+      strengths,
+      weaknesses: weaknessList,
       competitiveAdvantage,
       growthOppertunities,
       potentialRisks,
       financials,
-      ideaIds: insightOfGiantsUrls,
+      ideaIds: stock?.ideaIds || [],
       marketCap,
       opinions: newOpinions,
     };
@@ -408,53 +446,99 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             <h6 className="mb-8">Insight of Giants URL</h6>
             <div>
               {insightOfGiantsUrls.map((e, index) => (
-                <Input
-                  className="mb-8"
-                  value={e}
-                  onChange={(event) => {
-                    setInsightOfGiantsUrls((s) => {
-                      const insightOfGiantsUrls = [...s];
-                      insightOfGiantsUrls[index] = event.target.value;
-                      return insightOfGiantsUrls;
-                    });
-                  }}
-                  onClose={() =>
-                    setInsightOfGiantsUrls((s) => s.filter((v) => v !== e))
-                  }
-                  onCancel={() =>
-                    setInsightOfGiantsUrls((s) =>
-                      s.map((v) => {
-                        if (v === e) {
-                          return "";
-                        }
-                        return v;
-                      })
-                    )
-                  }
-                />
+                <div key={e.summary} style={{ display: "flex", gap: "0.8rem" }}>
+                  <Input
+                    wrapperStyle={{ width: "40%" }}
+                    className="mb-8"
+                    value={e.summary}
+                    onChange={(event) => {
+                      setInsightOfGiantsUrls((s) => {
+                        const insightOfGiantsUrls = [...s];
+                        insightOfGiantsUrls[index] = {
+                          ...insightOfGiantsUrls[index],
+                          summary: event.target.value,
+                        };
+                        return insightOfGiantsUrls;
+                      });
+                    }}
+                  />
+                  <Input
+                    wrapperStyle={{ width: "60%" }}
+                    className="mb-8"
+                    value={e.link}
+                    onChange={(event) => {
+                      setInsightOfGiantsUrls((s) => {
+                        const insightOfGiantsUrls = [...s];
+                        insightOfGiantsUrls[index] = {
+                          ...insightOfGiantsUrls[index],
+                          link: event.target.value,
+                        };
+                        return insightOfGiantsUrls;
+                      });
+                    }}
+                    onClose={() =>
+                      setInsightOfGiantsUrls((s) =>
+                        s.filter((v) => v.link !== e.link)
+                      )
+                    }
+                    onCancel={() =>
+                      setInsightOfGiantsUrls((s) =>
+                        s.map((v) => {
+                          if (v.link === e.link) {
+                            return { summary: "", link: "" };
+                          }
+                          return v;
+                        })
+                      )
+                    }
+                  />
+                </div>
               ))}
             </div>
-            <Input
-              label=""
-              className="mb-16"
-              value={insightOfGiant}
-              onChange={(e) => setInsightOfGiant(e.target.value)}
-            />
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                theme="secondary"
-                className="add-btn"
-                type="button"
-                onClick={() => {
-                  setInsightOfGiantsUrls((s) => [...s, insightOfGiant]);
-                  setInsightOfGiant("");
-                }}
-              >
-                ADD
-              </Button>
+
+            <div style={{ display: "flex", gap: "0.8rem" }}>
+              <Input
+                wrapperStyle={{ width: "40%" }}
+                label=""
+                className="mb-16"
+                value={insightOfGiant.summary}
+                onChange={(e) =>
+                  setInsightOfGiant((s) => ({
+                    ...s,
+                    summary: e.target.value,
+                  }))
+                }
+              />
+              <Input
+                wrapperStyle={{ width: "60%" }}
+                label=""
+                className="mb-16"
+                value={insightOfGiant.link}
+                onChange={(e) =>
+                  setInsightOfGiant((s) => ({
+                    ...s,
+                    link: e.target.value,
+                  }))
+                }
+              />
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button
+                  theme="secondary"
+                  className="add-btn"
+                  type="button"
+                  onClick={() => {
+                    setInsightOfGiantsUrls((s) => [...s, insightOfGiant]);
+                    setInsightOfGiant({
+                      summary: "",
+                      link: "",
+                    });
+                  }}
+                >
+                  ADD
+                </Button>
+              </div>
             </div>
           </div>
-
           <Divider />
           <Textarea
             className="mb-32"
@@ -492,121 +576,39 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             rows={6}
           />
           <Divider />
-          <h6 className="mb-8">Growth Opportunities</h6>
+          <DraggableItems
+            title="Strengths"
+            onDragEnd={onDragEndForStrength}
+            datas={strengths}
+            setDatas={setStrengths}
+            data={strength}
+            setData={setStrength}
+          />
+          <DraggableItems
+            title="Weakness"
+            onDragEnd={onDragEndForWeakness}
+            datas={weaknessList}
+            setDatas={setWeaknessList}
+            data={weakness}
+            setData={setWeakness}
+          />
+          <DraggableItems
+            title="Growth Opportunities"
+            onDragEnd={onDragEndForOppertunity}
+            datas={growthOppertunities}
+            setDatas={setGrowthOppertunities}
+            data={growthOppertunity}
+            setData={setGrowthOppertunity}
+          />
+          <DraggableItems
+            title="Potential Risks"
+            onDragEnd={onDragEndForPotentialRisks}
+            datas={potentialRisks}
+            setDatas={setPotentialRisks}
+            data={potentialRisk}
+            setData={setPotentialRisk}
+          />
 
-          <div className="mb-8">
-            <DragDropContext onDragEnd={onDragEndForOppertunity}>
-              <Droppable droppableId="oppertunity">
-                {(provided) => (
-                  <div ref={provided.innerRef} {...provided.droppableProps}>
-                    {growthOppertunities.map((e, index) => (
-                      <Draggable key={e} draggableId={e} index={index}>
-                        {(provided2, snapshot) => (
-                          <div
-                            ref={provided2.innerRef}
-                            className="oppertunity-style"
-                            {...provided2.draggableProps}
-                            {...provided2.dragHandleProps}
-                          >
-                            <Input style={{ flex: 1 }} value={e} />
-                            <Button
-                              theme="danger"
-                              onClick={() =>
-                                setGrowthOppertunities((s) =>
-                                  s.filter((v) => v !== e)
-                                )
-                              }
-                            >
-                              DELETE
-                            </Button>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
-          </div>
-          <div style={flexColumn}>
-            <Input
-              label=""
-              className="mb-16"
-              placeholder="Write Something"
-              value={growthOppertunity}
-              onChange={(e) => setGrowthOppertunity(e.target.value)}
-            />
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                theme="secondary"
-                className="add-btn"
-                onClick={() => {
-                  setGrowthOppertunities((s) => [...s, growthOppertunity]);
-                  setGrowthOppertunity("");
-                }}
-              >
-                ADD
-              </Button>
-            </div>
-          </div>
-          <h6 className="mb-8">Potential Risks</h6>
-          <div className="mb-8">
-            <DragDropContext onDragEnd={onDragEndForPotentialRisks}>
-              <Droppable droppableId="oppertunity">
-                {(provided) => (
-                  <div ref={provided.innerRef} {...provided.droppableProps}>
-                    {potentialRisks.map((e, index) => (
-                      <Draggable key={e} draggableId={e} index={index}>
-                        {(provided2, snapshot) => (
-                          <div
-                            ref={provided2.innerRef}
-                            className="oppertunity-style"
-                            {...provided2.draggableProps}
-                            {...provided2.dragHandleProps}
-                          >
-                            <Input style={{ flex: 1 }} value={e} />
-                            <Button
-                              theme="danger"
-                              onClick={() =>
-                                setPotentialRisks((s) =>
-                                  s.filter((v) => v !== e)
-                                )
-                              }
-                            >
-                              DELETE
-                            </Button>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
-          </div>
-          <div style={flexColumn}>
-            <Input
-              label=""
-              className="mb-16"
-              placeholder="Write Something"
-              value={potentialRisk}
-              onChange={(e) => setPotentialRisk(e.target.value)}
-            />
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                theme="secondary"
-                className="add-btn"
-                onClick={() => {
-                  setPotentialRisks((s) => [...s, potentialRisk]);
-                  setPotentialRisk("");
-                }}
-              >
-                ADD
-              </Button>
-            </div>
-          </div>
           <h3 className="mb-24">Financials</h3>
           <div className="financial mb-48">
             <div className="financial-left">
@@ -745,7 +747,6 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               </DragDropContext>
             </div>
           </div>
-
           <h3 className="mb-24">Opinions</h3>
           <div className="opinion-wrapper mb-48">
             <div className="opinion-left">
@@ -853,7 +854,6 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               </DragDropContext>
             </div>
           </div>
-
           <Divider />
           <div className="submit-button-wrapper">
             <Button type="submit" className="submit-button">

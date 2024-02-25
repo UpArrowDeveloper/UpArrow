@@ -276,12 +276,18 @@ const BannerContent = styled.div`
 
   .banner-stock-content {
     ${HeadH4Medium}
+    line-height: 3.2rem;
+    font-size: 2.8rem;
     margin-bottom: 1.2rem;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box; // 얘네를 추가히준다
     -webkit-line-clamp: ${(props) => props.lineClamp};
     -webkit-box-orient: vertical;
+
+    @media screen and (max-width: ${mobileWidth}) {
+      ${HeadH4Medium}
+    }
   }
 `;
 

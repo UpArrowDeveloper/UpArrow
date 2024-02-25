@@ -17,17 +17,29 @@ const OpinionSchema = new Schema({
   message: String,
 });
 
+const SWOTSchema = new Schema({
+  summary: String,
+  detail: String,
+});
+
+const InsightOfGiantsUrlSchema = new Schema({
+  summary: String,
+  link: String,
+});
+
 const AnalysisSchema = new Schema(
   {
     youtubeUrl: String,
     youtubeTitle: String,
     youtubeDate: String,
-    insightOfGiantsUrls: [String],
+    insightOfGiantsUrls: [InsightOfGiantsUrlSchema],
     missionStatement: String,
     businessModel: String,
     competitiveAdvantage: String,
-    growthOppertunities: [String],
-    potentialRisks: [String],
+    strengths: [SWOTSchema],
+    weaknesses: [SWOTSchema],
+    growthOppertunities: [SWOTSchema],
+    potentialRisks: [SWOTSchema],
     financials: [FinancialsSchema],
     opinions: [OpinionSchema],
   },

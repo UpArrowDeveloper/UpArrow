@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
-import React from 'react';
-import { Body16Regular, HeadH6Bold } from '../../styles/typography';
-import { TrashIcon, FillXIcon } from '../icons';
+import styled from "@emotion/styled";
+import React from "react";
+import { Body16Regular, HeadH6Bold } from "../../styles/typography";
+import { TrashIcon, FillXIcon } from "../icons";
 
 export default function Input({
   className,
@@ -11,18 +11,18 @@ export default function Input({
   ...props
 }) {
   return (
-    <InputBlock>
+    <InputBlock style={props.wrapperStyle}>
       {!!label && <label htmlFor={props.id}>{label}</label>}
-      <div className='input-wrapper'>
-        <input className={`${className || ''}`} {...props} />
+      <div className="input-wrapper">
+        <input className={`${className || ""}`} {...props} />
         {onCancel && (
           <FillXIcon
-            className={`fill-icon ${!!onClose ? 'trash-exist' : ''}`}
+            className={`fill-icon ${!!onClose ? "trash-exist" : ""}`}
             onClick={() => onCancel()}
           />
         )}
         {onClose && (
-          <TrashIcon className='trash-icon' onClick={() => onClose()} />
+          <TrashIcon className="trash-icon" onClick={() => onClose()} />
         )}
       </div>
     </InputBlock>
@@ -70,8 +70,8 @@ const InputBlock = styled.div`
     }
   }
 
-  input[type='number']::-webkit-inner-spin-button,
-  input[type='number']::-webkit-outer-spin-button {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }

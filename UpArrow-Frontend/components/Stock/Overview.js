@@ -19,10 +19,10 @@ import { mobileWidth } from "../../styles/responsive";
 const Layer1 = ({ analysis, ideaList }) => {
   return (
     <div className="layer-1">
-      <div>
+      <div style={{ flex: 1 }}>
         <h6>Analyses</h6>
         <Card>
-          <div className="image-wrapper">
+          <div className="youtube-image-wrapper">
             <iframe
               style={{
                 borderRadius: "0.8rem",
@@ -41,11 +41,11 @@ const Layer1 = ({ analysis, ideaList }) => {
         </Card>
       </div>
       <div className="insights-of-giants">
-        <h6>Insights of Giants URL</h6>
+        <h6>Updates</h6>
         <div className="item-list">
-          {ideaList.map((link, index) => (
-            <a className="item" key={index} href={link}>
-              <h4 className="bold">{link}</h4>
+          {ideaList.map((item, index) => (
+            <a className="item" key={index} href={item.link} target="_blank">
+              <h4 className="bold">{item.summary}</h4>
               <div className="item-date">2023. 01. 02</div>
             </a>
           ))}
@@ -81,7 +81,7 @@ const Layer2 = ({ analysis }) => {
 
 const IconMessage = ({ isRisk = false, message }) => {
   return (
-    <div className="icon-message">
+    <IconMessageBlock detail={message.detail}>
       <div className="icon-wrapper">
         {isRisk ? (
           <RiskIcon className="icon" />
@@ -89,25 +89,47 @@ const IconMessage = ({ isRisk = false, message }) => {
           <GrowthIcon className="icon" />
         )}
       </div>
-      <p>{message}</p>
-    </div>
+      <p>{message.summary}</p>
+    </IconMessageBlock>
   );
 };
 
-const Layer3 = ({ growthMessages, riskMessages }) => {
+const Layer3 = ({ strengths, weaknesses, growthMessages, riskMessages }) => {
   return (
-    <div className="layer-3">
-      <div className="message">
-        <h6>Growth Opportunities</h6>
-        {growthMessages.map((message) => (
-          <IconMessage message={message} />
-        ))}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        rowGap: "3.2rem",
+      }}
+    >
+      <div className="layer-3">
+        <div className="message">
+          <h6>Strengths</h6>
+          {strengths.map((message) => (
+            <IconMessage message={message} />
+          ))}
+        </div>
+        <div className="message">
+          <h6>Potential Risks</h6>
+          {weaknesses.map((message) => (
+            <IconMessage isRisk={true} message={message} />
+          ))}
+        </div>
       </div>
-      <div className="message">
-        <h6>Potential Risks</h6>
-        {riskMessages.map((message) => (
-          <IconMessage isRisk={true} message={message} />
-        ))}
+      <div className="layer-3">
+        <div className="message">
+          <h6>Growth Opportunities</h6>
+          {growthMessages.map((message) => (
+            <IconMessage message={message} />
+          ))}
+        </div>
+        <div className="message">
+          <h6>Potential Risks</h6>
+          {riskMessages.map((message) => (
+            <IconMessage isRisk={true} message={message} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -121,6 +143,8 @@ const Overview = ({ analysis, analysisIdeaList, ...rest }) => {
         <Layer1 analysis={analysis} ideaList={analysisIdeaList} />
         <Layer2 analysis={analysis} />
         <Layer3
+          strengths={analysis.strengths || []}
+          weaknesses={analysis.weaknesses || []}
           growthMessages={analysis.growthOppertunities || []}
           riskMessages={analysis.potentialRisks || []}
         />
@@ -133,6 +157,27 @@ const bottomBorder = css`
   padding-bottom: 2.4rem;
   margin-bottom: 2.4rem;
   border-bottom: 0.1rem solid #d9d9d9;
+`;
+
+const IconMessageBlock = styled.div`
+  position: relative;
+  display: flex;
+  gap: 0.8rem;
+  ${Body16Regular}
+  cursor: pointer;
+
+  &:hover {
+    &::after {
+      position: absolute;
+      bottom: -2.4rem;
+      left: 0.4rem;
+      border: 0.1rem solid #d9d9d9;
+      background-color: white;
+      padding: 0.8rem 1.6rem;
+      border-radius: 0.8rem;
+      content: "${(props) => props.detail}";
+    }
+  }
 `;
 
 const OverviewBlock = styled.div`
@@ -155,13 +200,31 @@ const OverviewBlock = styled.div`
   .layer-1 {
     width: 100%;
     display: flex;
+    justify-content: space-between;
     gap: 8rem;
 
     ${bottomBorder}
 
-    .insights-of-giants {
+    .youtube-image-wrapper {
       width: 100%;
-      min-width: 50%;
+      height: 100%;
+      min-height: 40rem;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0.8rem;
+      box-shadow: 0 0 0.8rem 0.1rem rgba(0 0 0 / 10%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.6rem;
+      iframe {
+        flex: 1;
+      }
+    }
+
+    .insights-of-giants {
+      width: 50%;
+      min-width: 20%;
 
       .item-list {
         margin-bottom: 1.6rem;
@@ -198,12 +261,6 @@ const OverviewBlock = styled.div`
     pre {
       flex: 1;
       white-space: pre-wrap;
-      ${Body16Regular}
-    }
-
-    .icon-message {
-      display: flex;
-      gap: 0.8rem;
       ${Body16Regular}
     }
   }
@@ -325,7 +382,8 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.6rem;
-  width: 32rem;
+  width: 100%;
+  flex: 1;
 
   .card-content {
     .date {
