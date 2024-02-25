@@ -276,7 +276,7 @@ const BannerContent = styled.div`
 
   .banner-stock-content {
     ${HeadH4Medium}
-    line-height: 3.2rem;
+    line-height: 3.4rem;
     font-size: 2.8rem;
     margin-bottom: 1.2rem;
     overflow: hidden;
