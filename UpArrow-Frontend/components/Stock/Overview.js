@@ -44,17 +44,11 @@ const Layer1 = ({ stock, analysis, ideaList }) => {
         <h6>Updates on {stock?.name}</h6>
         <div className="item-list">
           {ideaList.map((item, index) => {
-            const youtubeLink = item.link.split("?v=")[1];
             return (
               <a className="item" key={index} href={item.link} target="_blank">
                 <h4 className="bold">{item.summary}</h4>
-                {youtubeLink && (
-                  <img
-                    className="youtube-image"
-                    src={`https://img.youtube.com/vi/${
-                      item.link.split("?v=")[1]
-                    }/0.jpg`}
-                  />
+                {item.thumbnailLink && (
+                  <img className="youtube-image" src={item.thumbnailLink} />
                 )}
               </a>
             );

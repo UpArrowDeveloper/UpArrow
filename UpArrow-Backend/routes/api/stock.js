@@ -201,6 +201,8 @@ router.put("/:id", async (req, res) => {
     }
   );
 
+  console.log("insightOfGiantsUrls", insightOfGiantsUrls);
+
   await Analysis.findOneAndUpdate(
     { _id: stock.analysisId },
     {

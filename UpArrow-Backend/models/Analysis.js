@@ -22,10 +22,14 @@ const SWOTSchema = new Schema({
   detail: String,
 });
 
-const InsightOfGiantsUrlSchema = new Schema({
-  summary: String,
-  link: String,
-});
+const InsightOfGiantsUrlSchema = new Schema(
+  {
+    summary: String,
+    link: String,
+    thumbnailLink: String,
+  },
+  { timestamps: true }
+);
 
 const AnalysisSchema = new Schema(
   {

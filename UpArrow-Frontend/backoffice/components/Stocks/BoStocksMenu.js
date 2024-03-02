@@ -33,6 +33,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
   );
   const [youtubeDate, setYoutubeDate] = useState(analysis?.youtubeDate || "");
 
+  const [giantImage, setGiantImage] = useState();
   const [missionStatement, setMissionStatement] = useState(
     analysis?.missionStatement || ""
   );
@@ -492,6 +493,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                       )
                     }
                   />
+                  <img height="46px" src={e.thumbnailLink} />
                 </div>
               ))}
             </div>
@@ -521,13 +523,32 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                   }))
                 }
               />
+              <FileUploader
+                file={giantImage}
+                setImage={setGiantImage}
+                name="file-image"
+                url="/images/apple.png"
+                previewStyle={{ width: "40px", height: "40px" }}
+              />
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
                   theme="secondary"
                   className="add-btn"
                   type="button"
-                  onClick={() => {
-                    setInsightOfGiantsUrls((s) => [...s, insightOfGiant]);
+                  onClick={async () => {
+                    const giantFormData = new FormData();
+                    if (!giantImage) return alert("Please upload image");
+                    giantFormData.append("image", giantImage);
+                    const { link } = (
+                      await axios.post(
+                        `${env.serverUrl}/file/upload`,
+                        giantFormData
+                      )
+                    ).data;
+                    setInsightOfGiantsUrls((s) => [
+                      ...s,
+                      { ...insightOfGiant, thumbnailLink: link },
+                    ]);
                     setInsightOfGiant({
                       summary: "",
                       link: "",
