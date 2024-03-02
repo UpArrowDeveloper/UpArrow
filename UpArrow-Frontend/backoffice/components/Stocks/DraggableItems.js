@@ -17,16 +17,21 @@ const DraggableItems = ({
   data,
   setData,
 }) => {
+  console.log("title : ", title);
   return (
     <>
       <h6 className="mb-8">{title}</h6>
       <div className="mb-8">
         <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="oppertunity">
+          <Droppable droppableId={title}>
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {datas.map((e, index) => (
-                  <Draggable key={e} draggableId={e} index={index}>
+                  <Draggable
+                    key={e.summary}
+                    draggableId={e.summary}
+                    index={index}
+                  >
                     {(provided2, snapshot) => (
                       <div
                         style={{

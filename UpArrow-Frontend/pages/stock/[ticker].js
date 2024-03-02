@@ -250,6 +250,7 @@ function Stock({ stock, analysis }) {
         />
         <Overview
           className="section"
+          stock={stock}
           analysis={analysis}
           analysisIdeaList={analysis.insightOfGiantsUrls || []}
         />

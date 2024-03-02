@@ -16,7 +16,7 @@ import Viewmore from "../common/Viewmore";
 import { GrowthIcon, RiskIcon } from "../icons";
 import { mobileWidth } from "../../styles/responsive";
 
-const Layer1 = ({ analysis, ideaList }) => {
+const Layer1 = ({ stock, analysis, ideaList }) => {
   return (
     <div className="layer-1">
       <div style={{ flex: 1 }}>
@@ -41,14 +41,24 @@ const Layer1 = ({ analysis, ideaList }) => {
         </Card>
       </div>
       <div className="insights-of-giants">
-        <h6>Updates</h6>
+        <h6>Updates on {stock?.name}</h6>
         <div className="item-list">
-          {ideaList.map((item, index) => (
-            <a className="item" key={index} href={item.link} target="_blank">
-              <h4 className="bold">{item.summary}</h4>
-              <div className="item-date">2023. 01. 02</div>
-            </a>
-          ))}
+          {ideaList.map((item, index) => {
+            const youtubeLink = item.link.split("?v=")[1];
+            return (
+              <a className="item" key={index} href={item.link} target="_blank">
+                <h4 className="bold">{item.summary}</h4>
+                {youtubeLink && (
+                  <img
+                    className="youtube-image"
+                    src={`https://img.youtube.com/vi/${
+                      item.link.split("?v=")[1]
+                    }/0.jpg`}
+                  />
+                )}
+              </a>
+            );
+          })}
         </div>
         <Viewmore />
       </div>
@@ -135,12 +145,12 @@ const Layer3 = ({ strengths, weaknesses, growthMessages, riskMessages }) => {
   );
 };
 
-const Overview = ({ analysis, analysisIdeaList, ...rest }) => {
+const Overview = ({ stock, analysis, analysisIdeaList, ...rest }) => {
   return (
     <OverviewBlock {...rest}>
       <h3>Overview</h3>
       <div className="overview-content-wrapper">
-        <Layer1 analysis={analysis} ideaList={analysisIdeaList} />
+        <Layer1 stock={stock} analysis={analysis} ideaList={analysisIdeaList} />
         <Layer2 analysis={analysis} />
         <Layer3
           strengths={analysis.strengths || []}
@@ -169,13 +179,13 @@ const IconMessageBlock = styled.div`
   &:hover {
     &::after {
       position: absolute;
-      bottom: -2.4rem;
-      left: 0.4rem;
+      top: -6.8rem;
       border: 0.1rem solid #d9d9d9;
       background-color: white;
       padding: 0.8rem 1.6rem;
       border-radius: 0.8rem;
       content: "${(props) => props.detail}";
+      z-index: 10;
     }
   }
 `;
@@ -228,6 +238,9 @@ const OverviewBlock = styled.div`
 
       .item-list {
         margin-bottom: 1.6rem;
+        .youtube-image {
+          width: 50px;
+        }
         .item {
           cursor: pointer;
           h4 {
