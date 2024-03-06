@@ -51,7 +51,7 @@ const DndTable = ({
                         <div className="button-wrapper">
                           {onEdit && (
                             <button onClick={() => onEdit(item.id)}>
-                              수정
+                              Edit
                             </button>
                           )}
                           {onDelete && (
@@ -61,7 +61,7 @@ const DndTable = ({
                                 onDelete(item.id);
                               }}
                             >
-                              삭제
+                              Delete
                             </button>
                           )}
                         </div>

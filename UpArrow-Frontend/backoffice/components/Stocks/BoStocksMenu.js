@@ -444,7 +444,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
               value={youtubeDate}
               onChange={(e) => setYoutubeDate(e.target.value)}
             />
-            <h6 className="mb-8">Insight of Giants URL</h6>
+            <h6 className="mb-8">Updates on {name}</h6>
             <div>
               {insightOfGiantsUrls.map((e, index) => (
                 <div key={e.summary} style={{ display: "flex", gap: "0.8rem" }}>

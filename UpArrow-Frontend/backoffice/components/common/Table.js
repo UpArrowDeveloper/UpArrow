@@ -30,7 +30,7 @@ const Table = ({ columns, datas, gridTemplateColumns, onEdit, onDelete }) => {
               );
             })}
             <div className="button-wrapper">
-              {onEdit && <button onClick={() => onEdit(data.id)}>수정</button>}
+              {onEdit && <button onClick={() => onEdit(data.id)}>Edit</button>}
               {onDelete && (
                 <button
                   className="delete"
@@ -38,7 +38,7 @@ const Table = ({ columns, datas, gridTemplateColumns, onEdit, onDelete }) => {
                     onDelete(data.id);
                   }}
                 >
-                  삭제
+                  Delete
                 </button>
               )}
             </div>

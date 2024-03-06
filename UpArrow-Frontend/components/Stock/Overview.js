@@ -15,6 +15,10 @@ import {
 import Viewmore from "../common/Viewmore";
 import { GrowthIcon, RiskIcon } from "../icons";
 import { mobileWidth } from "../../styles/responsive";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+TimeAgo.addDefaultLocale(en);
+const timeAgo = new TimeAgo("en-US");
 
 const Layer1 = ({ stock, analysis, ideaList }) => {
   return (
@@ -43,10 +47,15 @@ const Layer1 = ({ stock, analysis, ideaList }) => {
       <div className="insights-of-giants">
         <h6>Updates on {stock?.name}</h6>
         <div className="item-list">
-          {ideaList.map((item, index) => {
+          {ideaList.reverse().map((item, index) => {
             return (
               <a className="item" key={index} href={item.link} target="_blank">
-                <h4 className="bold">{item.summary}</h4>
+                <div style={{ width: "100%" }}>
+                  <h4 className="bold">{item.summary}</h4>
+                  <div style={{ fontSize: 14 }}>
+                    {timeAgo.format(new Date(item.updatedAt))}
+                  </div>
+                </div>
                 {item.thumbnailLink && (
                   <img className="youtube-image" src={item.thumbnailLink} />
                 )}
@@ -233,7 +242,8 @@ const OverviewBlock = styled.div`
       .item-list {
         margin-bottom: 1.6rem;
         .youtube-image {
-          width: 50px;
+          width: 100px;
+          border-radius: 0.8rem;
         }
         .item {
           cursor: pointer;

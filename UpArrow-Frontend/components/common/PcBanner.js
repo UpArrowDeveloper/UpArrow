@@ -173,7 +173,7 @@ const PcBanner = () => {
                   router.push(`/stock/${board.ticker}`);
                 }}
               >
-                <div>
+                <div style={{ cursor: "pointer" }}>
                   <div className="banner-stock-name">{board.stockName}</div>
                   <div className="banner-stock-content">
                     {board.description}
@@ -198,6 +198,18 @@ const PcBanner = () => {
           }}
         />
       </BannerWrapper>
+      <Progress bannerHeight={bannerHeight}>
+        {banners.map((board, idx) => {
+          return (
+            <div
+              className={"bubble " + (idx === currentBannerIdx ? "on" : "")}
+              onClick={() => {
+                setCurrentBannerIdx(idx);
+              }}
+            ></div>
+          );
+        })}
+      </Progress>
     </BannerBlock>
   );
 };
@@ -277,7 +289,8 @@ const BannerContent = styled.div`
   .banner-stock-content {
     ${HeadH4Medium}
     line-height: 3.4rem;
-    font-size: 2.8rem;
+    font-size: 2rem;
+    line-height: 2.6rem;
     margin-bottom: 1.2rem;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -312,5 +325,30 @@ const BannerWrapper = styled.div`
     gap: 8.2rem;
     width: 100vw;
     height: 100%;
+  }
+`;
+
+const Progress = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  height: 2rem;
+  transform: translateX(-50%);
+
+  .bubble {
+    cursor: pointer;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    border: 2px solid #eeeeee;
+    margin: 0.2rem 0.2rem;
+    display: inline-block;
+
+    &.on {
+      background-color: #777777;
+    }
   }
 `;

@@ -94,6 +94,7 @@ const FinancialsBlock = styled.div`
     width: 100% !important;
     grid-template-columns: 40% 40%;
     grid-gap: 10rem;
+    grid-row-gap: 2rem;
 
     .chart {
       margin: 0.8rem 0;

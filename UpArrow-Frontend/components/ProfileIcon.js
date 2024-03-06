@@ -84,7 +84,7 @@ const ProfileIconWrapper = styled.div`
     position: absolute;
     border-radius: 0.8rem;
     top: 6rem;
-    right: 0.2rem;
+    right: 2.2rem;
     width: 20rem;
     background-color: white;
     border-radius: 0.6rem;

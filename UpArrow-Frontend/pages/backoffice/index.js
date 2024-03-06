@@ -1,14 +1,10 @@
-// material-ui
-import { Box, StyledEngineProvider, useTheme } from '@mui/material';
-
-// sales report status
-
-// ==============================|| DASHBOARD - DEFAULT ||============================== //
-
-import React from 'react';
-import BackofficeLayout from '../../Layouts/Backoffice';
+import React from "react";
+import BackofficeLayout from "../../Layouts/Backoffice";
 
 const BackofficeApp = () => {
+  useEffec(() => {
+    window.location.href = "/backoffice/stocks";
+  }, []);
   return <div>main</div>;
 };
 

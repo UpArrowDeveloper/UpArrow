@@ -1,10 +1,9 @@
 import styled from "@emotion/styled";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../apis";
 import Youtube from "../Youtube";
 const navbarHeight = "92px";
 import Link from "next/link";
-import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 import { Body14Medium, HeadH5Bold, HeadH6Bold } from "../../styles/typography";
 import { ChevronRightIcon, YoutubeIcon } from "../icons";
@@ -183,6 +182,7 @@ const Progress = styled.div`
   transform: translateX(-50%);
 
   .bubble {
+    cursor: pointer;
     width: 1rem;
     height: 1rem;
     border-radius: 50%;
