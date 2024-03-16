@@ -512,7 +512,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 }
               />
               <Input
-                wrapperStyle={{ width: "60%" }}
+                wrapperStyle={{ width: "40%" }}
                 label=""
                 className="mb-16"
                 value={insightOfGiant.link}
@@ -523,6 +523,17 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                   }))
                 }
               />
+              <Input
+                wrapperStyle={{ width: "20%" }}
+                placeholder="youtube code (optional)"
+                value={insightOfGiant.youtubeCode}
+                onChange={(e) =>
+                  setInsightOfGiant((s) => ({
+                    ...s,
+                    youtubeCode: e.target.value,
+                  }))
+                }
+              ></Input>
               <FileUploader
                 file={giantImage}
                 setImage={setGiantImage}
@@ -537,21 +548,30 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                   type="button"
                   onClick={async () => {
                     const giantFormData = new FormData();
-                    if (!giantImage) return alert("Please upload image");
-                    giantFormData.append("image", giantImage);
-                    const { link } = (
-                      await axios.post(
-                        `${env.serverUrl}/file/upload`,
-                        giantFormData
-                      )
-                    ).data;
+                    if (!giantImage && !insightOfGiant.youtubeCode)
+                      return alert("Please upload image or set youtube code.");
+                    let thumbnailLink;
+                    if (giantImage) {
+                      giantFormData.append("image", giantImage);
+                      let { link } = (
+                        await axios.post(
+                          `${env.serverUrl}/file/upload`,
+                          giantFormData
+                        )
+                      ).data;
+                      thumbnailLink = link;
+                    } else if (insightOfGiant.youtubeCode) {
+                      thumbnailLink = `https://img.youtube.com/vi/${insightOfGiant.youtubeCode}/0.jpg`;
+                    }
+
                     setInsightOfGiantsUrls((s) => [
                       ...s,
-                      { ...insightOfGiant, thumbnailLink: link },
+                      { ...insightOfGiant, thumbnailLink },
                     ]);
                     setInsightOfGiant({
                       summary: "",
                       link: "",
+                      youtubeCode: "",
                     });
                   }}
                 >

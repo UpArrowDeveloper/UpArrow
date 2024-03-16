@@ -53,7 +53,7 @@ const Layer1 = ({ stock, analysis, ideaList }) => {
                 <div style={{ width: "100%" }}>
                   <h4 className="bold">{item.summary}</h4>
                   <div style={{ fontSize: 14 }}>
-                    {timeAgo.format(new Date(item.updatedAt))}
+                    {timeAgo.format(new Date(item.createdAt))}
                   </div>
                 </div>
                 {item.thumbnailLink && (
@@ -242,7 +242,7 @@ const OverviewBlock = styled.div`
       .item-list {
         margin-bottom: 1.6rem;
         .youtube-image {
-          width: 100px;
+          width: 180px;
           border-radius: 0.8rem;
         }
         .item {
