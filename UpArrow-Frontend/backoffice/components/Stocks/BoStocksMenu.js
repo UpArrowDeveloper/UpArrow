@@ -682,7 +682,6 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 </Button>
               </div>
               <Divider />
-              <h6 className="mb-8">Name : Revenue</h6>
               <div className="chart-value-wrapper">
                 {chartValues.map((f) => (
                   <div className="chart-value">
@@ -708,10 +707,16 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                 disabled={!chartName || chartValues.length === 0}
                 onClick={() => {
                   if (!chartName) return;
-                  setFinancials((s) => [
-                    ...s,
-                    { name: chartName, chartValues },
-                  ]);
+                  setFinancials((s) => {
+                    const equalIndex = s.findIndex((v) => v.name === chartName);
+                    if (equalIndex === -1) {
+                      return [...s, { name: chartName, chartValues }];
+                    }
+
+                    const newS = [...s];
+                    newS[equalIndex] = { name: chartName, chartValues };
+                    return newS;
+                  });
                   setChartValues([]);
                   setChartName("");
                 }}
@@ -741,12 +746,20 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                               {...provided.dragHandleProps}
                               ref={provided.innerRef}
                               className="created-chart"
+                              onClick={() => {
+                                setChartName(cv.name);
+                                setChartValues(cv.chartValues);
+                              }}
                             >
                               <div className="created-chart-left">
                                 <h6>{cv.name}</h6>
-                                {cv.chartValues.map((cvv) =>
-                                  JSON.stringify(cvv)
-                                )}
+                                {cv.chartValues.map((cvv) => (
+                                  <div key={cvv.year}>
+                                    <div>
+                                      year : {cvv.year} / value : {cvv.value}
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
                               <TrashIcon
                                 onClick={() =>

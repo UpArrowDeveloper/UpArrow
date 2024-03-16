@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { StyledEngineProvider } from "@mui/material";
 import BackofficeLayout from "../../Layouts/Backoffice";
 
 const BackofficeApp = () => {
-  useEffec(() => {
+  useEffect(() => {
     window.location.href = "/backoffice/stocks";
   }, []);
   return <div>main</div>;
