@@ -626,7 +626,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             setData={setStrength}
           />
           <DraggableItems
-            title="Weakness"
+            title="Weaknesses"
             onDragEnd={onDragEndForWeakness}
             datas={weaknessList}
             setDatas={setWeaknessList}

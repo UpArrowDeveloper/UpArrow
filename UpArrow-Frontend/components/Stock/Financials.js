@@ -120,11 +120,15 @@ const FinancialsBlock = styled.div`
     }
 
     .chart-wrapper {
-      grid-template-columns: 80%;
+      grid-template-columns: 100%;
       border-bottom: 0.05rem solid rgba(0 0 0 / 10%);
       margin-bottom: 2rem;
       grid-gap: 1.6rem;
       padding-bottom: 1rem;
+    }
+
+    .chart {
+      width: 100%;
     }
 
     .bar-wrapper {

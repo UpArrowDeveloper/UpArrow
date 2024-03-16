@@ -89,7 +89,7 @@ const DraggableItems = ({
           wrapperStyle={{ width: "60%" }}
           label=""
           className="mb-16"
-          placeholder="Write Something Detail"
+          placeholder="Write Somethings"
           value={data.detail}
           onChange={(e) =>
             setData((s) => ({

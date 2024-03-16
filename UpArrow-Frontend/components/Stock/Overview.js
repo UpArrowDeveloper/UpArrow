@@ -50,7 +50,7 @@ const Layer1 = ({ stock, analysis, ideaList }) => {
           {ideaList.reverse().map((item, index) => {
             return (
               <a className="item" key={index} href={item.link} target="_blank">
-                <div style={{ width: "100%" }}>
+                <div className="font-item" style={{ width: "100%" }}>
                   <h4 className="bold">{item.summary}</h4>
                   <div style={{ fontSize: 14 }}>
                     {timeAgo.format(new Date(item.createdAt))}
@@ -233,6 +233,10 @@ const OverviewBlock = styled.div`
       iframe {
         flex: 1;
       }
+
+      @media screen and (max-width: ${mobileWidth}) {
+        min-height: 22rem;
+      }
     }
 
     .insights-of-giants {
@@ -242,7 +246,13 @@ const OverviewBlock = styled.div`
       .item-list {
         margin-bottom: 1.6rem;
         .youtube-image {
+          max-width: 180px;
+          min-width: 180px;
+          max-height: 180px;
+          min-height: 100px;
           width: 180px;
+          height: 100px;
+          object-fit: cover;
           border-radius: 0.8rem;
         }
         .item {
@@ -390,6 +400,22 @@ const OverviewBlock = styled.div`
 
       p {
         ${Body14Regular}
+      }
+    }
+
+    .layer-1 .insights-of-giants {
+      width: 100%;
+    }
+    .item-list {
+      width: 100%;
+      .font-item {
+        height: 100%;
+      }
+      .item {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start !important;
       }
     }
   }
