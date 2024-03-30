@@ -51,7 +51,10 @@ const ProfileIcon = ({ className, data, logout }) => {
           </div>
         ) : (
           <div className="profile-icon no-border">
-            <EmptyAvatar onClick={() => setIsOpen(!isOpen)} />
+            <EmptyAvatar
+              onClick={() => setIsOpen(!isOpen)}
+              style={{ width: "48px", height: "48px" }}
+            />
           </div>
         )}
 

@@ -198,8 +198,8 @@ const NavBlock = styled.div`
     }
 
     & .right-items .profile-icon {
-      width: 2.8rem;
-      height: 2.8rem;
+      width: 4.8rem;
+      height: 4.8rem;
     }
 
     .mobile-buttons {
