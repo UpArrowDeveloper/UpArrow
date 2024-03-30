@@ -132,7 +132,7 @@ function Ideas({ ideas }) {
                 ideaId={idea._id}
                 ideaImage={idea.thumbnailImageUrl}
                 ideaTitle={idea.title}
-                ideaAuthor={idea.username}
+                ideaAuthor={idea.user.username}
                 ideaDate={idea.date}
                 ideaLikes={idea.likes?.length || 0}
                 ideaStockIds={idea.stockIds}
