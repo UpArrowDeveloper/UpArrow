@@ -130,5 +130,9 @@ export const commonTableCss = css`
     .image-container {
       padding: 0.8rem;
     }
+
+    .small-font-mobile {
+      font-size: 1.2rem !important;
+    }
   }
 `;

@@ -179,7 +179,7 @@ function Investors({
                     </td>
                   )}
                   <td className="more-padding">
-                    <div className="comments wrapper numbers">
+                    <div className="comments wrapper numbers small-font-mobile">
                       $
                       {Math.round(
                         investor.currentTotalStockValue + investor.cash
