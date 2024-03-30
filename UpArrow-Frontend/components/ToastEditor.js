@@ -3,11 +3,16 @@ import { Editor } from "@toast-ui/react-editor";
 import { useEffect, useRef, useState } from "react";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
-import VideoUploader from "./VideoUploader";
 import color from "../styles/color";
 import { getUploadUrl } from "../utils/file";
 
 const ToastEditorBlock = styled.div`
+  @media only screen and (max-width: 480px) {
+    .toastui-editor-popup {
+      max-width: 300px;
+      margin-left: 0px !important;
+    }
+  }
   .toastui-editor-contents {
     font-size: 1.2rem;
     font-family: "Pretendard";
@@ -107,7 +112,7 @@ const ToastEditor = ({
         ref={editorRef}
         toolbarItems={
           isMobile
-            ? [["image"], ["heading", "bold", "italic", "strike"]]
+            ? [["heading", "bold", "italic", "strike"], ["image"]]
             : [
                 ["image"],
                 ["heading", "bold", "italic", "strike"],
