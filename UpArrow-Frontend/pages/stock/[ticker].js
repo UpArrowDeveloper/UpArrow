@@ -148,6 +148,7 @@ function Stock({ stock, analysis }) {
       refetchUser();
       refetchLiveStock();
       userCurrentStockRefetch();
+      setStockOrderQuantity(0);
     },
     onError: (e) => {
       const message = e.response.data.message;
