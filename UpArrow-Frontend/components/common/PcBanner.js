@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 
 const PcBanner = () => {
+  const [booted, setBooted] = useState(false);
   const { data: apiBanners } = useQuery(["banner"], api.banner.get);
   const banners = apiBanners?.sort((a, b) => a.order - b.order);
   const [currentBannerIdx, setCurrentBannerIdx] = useState(0);
@@ -36,6 +37,9 @@ const PcBanner = () => {
     };
     handleWindowResize();
 
+    setTimeout(() => {
+      setBooted(true);
+    }, 200);
     window.addEventListener("resize", handleWindowResize);
 
     return () => {
@@ -87,6 +91,7 @@ const PcBanner = () => {
       className="banner-block"
       bannerHalfWidthRem={bannerHalfWidthRem}
       bgUrl={getThumbnailUrl(banners[currentBannerIdx].youtubeCode)}
+      duration={booted ? 0.5 : 0}
     >
       <BannerWrapper
         className="banner-wrapper"
@@ -94,6 +99,7 @@ const PcBanner = () => {
         bannerWidthRem={bannerWidthRem}
         isEven={banners.length % 2 == 0}
         bannerHeight={bannerHeight}
+        duration={booted ? 0.5 : 0}
       >
         <AngleLeftTailLine
           className="angle-left-tail-line"
@@ -231,7 +237,7 @@ const BannerBlock = styled.div`
     position: absolute;
     top: calc(50% - 2.4rem);
     left: calc(50% - ${(props) => props.bannerHalfWidthRem} - 5rem);
-    transition: left 0.5s ease-in-out;
+    transition: left ${(props) => props.duration}s ease-in-out;
     z-index: 10;
     cursor: pointer;
   }
@@ -241,7 +247,7 @@ const BannerBlock = styled.div`
     position: absolute;
     top: calc(50% - 2.4rem);
     right: calc(50% - ${(props) => props.bannerHalfWidthRem} - 5rem);
-    transition: left 0.5s ease-in-out;
+    transition: left ${(props) => props.duration}s ease-in-out;
     cursor: pointer;
   }
 
@@ -318,7 +324,7 @@ const BannerWrapper = styled.div`
         ${(props) =>
           props.isEven ? props.bannerWidthRem + "/ 2 - 4.1rem" : "0px"}
     );
-    transition: left 0.5s ease-in-out;
+    transition: left ${(props) => props.duration}s ease-in-out;
     display: flex;
     justify-content: center;
     align-items: center;
