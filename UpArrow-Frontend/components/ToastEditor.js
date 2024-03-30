@@ -105,15 +105,19 @@ const ToastEditor = ({
         hideModeSwitch={true}
         useCommandShortcut={true}
         ref={editorRef}
-        toolbarItems={[
-          ["image"],
-          ["heading", "bold", "italic", "strike"],
-          ["hr", "quote"],
-          ["ul", "ol", "task", "indent", "outdent"],
-          ["table", , "link"],
-          ["code", "codeblock"],
-          // Using Option: Customize the last button
-        ]}
+        toolbarItems={
+          isMobile
+            ? [["image"], ["heading", "bold", "italic", "strike"]]
+            : [
+                ["image"],
+                ["heading", "bold", "italic", "strike"],
+                ["hr", "quote"],
+                ["ul", "ol", "task", "indent", "outdent"],
+                ["table", , "link"],
+                ["code", "codeblock"],
+                // Using Option: Customize the last button
+              ]
+        }
         hooks={{
           addImageBlobHook: async (blob, callback) => {
             const res = await getUploadUrl(blob);

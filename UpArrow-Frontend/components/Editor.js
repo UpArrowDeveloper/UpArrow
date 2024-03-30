@@ -1,10 +1,8 @@
 import styled from "@emotion/styled";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import { env } from "../config";
 import api from "../apis";
 import { Body12Medium, HeadH1Bold } from "../styles/typography";
 import color from "../styles/color";
@@ -191,6 +189,7 @@ const Editor = ({ editData }) => {
 const EditorBlock = styled.div`
   display: flex;
   justify-content: center;
+  width: 100%;
 
   @media screen and (max-width: ${mobileWidth}) {
     display: block;
