@@ -108,7 +108,7 @@ const Editor = ({ editData }) => {
   return (
     <EditorBlock>
       <InputWrapper isOpen={searchModalOpen}>
-        <input
+        <textarea
           className="title-input"
           value={postForm.title}
           onChange={(e) =>
