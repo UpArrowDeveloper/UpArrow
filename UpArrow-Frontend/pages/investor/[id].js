@@ -19,8 +19,44 @@ import color from "../../styles/color";
 import api from "../../apis";
 import { MainLayout } from "../../Layouts";
 import { mobileWidth } from "../../styles/responsive";
-import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
+
+const InvestedStockItem = ({ company, userId }) => {
+  const { data: stockOrder } = useQuery(
+    ["stock", company._id, userId],
+    api.user.getCurrentStock(userId, company._id),
+    { enabled: !!company._id && !!userId }
+  );
+
+  return (
+    <div
+      className="stock"
+      onClick={() => {
+        router.push(`/stock/${company.ticker}`);
+      }}
+    >
+      <img className="stock-logo" src={company.logoUrl} />
+      <div className="stock-info">
+        <div className="stock-name">{company.name}</div>
+        <div className="stock-quantity">{company.quantity} shares</div>
+        <div className="stock-total-value">
+          <span style={{ color: "black" }}></span>{" "}
+          <span
+            style={{
+              color:
+                stockOrder.price * stockOrder.quantity < company.totalValue
+                  ? "green"
+                  : "red",
+            }}
+          >
+            ${numberComma(stockOrder.price * stockOrder.quantity)} → $
+            {numberComma(company.totalValue)}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export function Investor({ investor, stocksWithPrices, rank }) {
   const {
@@ -37,15 +73,9 @@ export function Investor({ investor, stocksWithPrices, rank }) {
   const {
     _id,
     cash,
-    comments,
     description,
-    email,
     followers,
     followings,
-    isAdmin,
-    likes,
-    name,
-    password,
     ideas,
     profileImageUrl,
     // purchases,
@@ -55,8 +85,6 @@ export function Investor({ investor, stocksWithPrices, rank }) {
     username,
     websiteUrl,
   } = investor;
-
-  const router = useRouter();
 
   return (
     <InvestorBlock>
@@ -85,24 +113,11 @@ export function Investor({ investor, stocksWithPrices, rank }) {
           <div className="investor-title">{username}'s Portfolio</div>
           <div className="stocks">
             {stocksWithPrices.map((company) => (
-              <div
-                className="stock"
+              <InvestedStockItem
+                company={company}
                 key={company.name}
-                onClick={() => {
-                  router.push(`/stock/${company.ticker}`);
-                }}
-              >
-                <img className="stock-logo" src={company.logoUrl} />
-                <div className="stock-info">
-                  <div className="stock-name">{company.name}</div>
-                  <div className="stock-quantity">
-                    {company.quantity} shares
-                  </div>
-                  <div className="stock-total-value">
-                    ${numberComma(company.totalValue)}
-                  </div>
-                </div>
-              </div>
+                userId={_id}
+              />
             ))}
           </div>
           <div className="view-all">View All</div>
