@@ -226,6 +226,7 @@ const InputWrapper = styled.div`
     border: none;
     ${HeadH1Bold};
     color: ${color.B13};
+    padding: 0;
 
     &:focus {
       outline: none;
@@ -286,6 +287,7 @@ const InputWrapper = styled.div`
       cursor: pointer;
       width: 3.8rem;
       height: 3.8rem;
+      padding: 0;
     }
   }
   .stock-with-search-input {
