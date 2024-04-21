@@ -191,6 +191,10 @@ const EditorBlock = styled.div`
   justify-content: center;
   width: 100%;
 
+  .toastui-editor-contents p {
+    font-size: 16px;
+  }
+
   @media screen and (max-width: ${mobileWidth}) {
     display: block;
     padding: 2rem;
