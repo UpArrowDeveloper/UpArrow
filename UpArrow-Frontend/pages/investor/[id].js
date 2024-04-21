@@ -28,6 +28,8 @@ const InvestedStockItem = ({ company, userId }) => {
     { enabled: !!company._id && !!userId }
   );
 
+  if (!stockOrder) return null;
+
   return (
     <div
       className="stock"
