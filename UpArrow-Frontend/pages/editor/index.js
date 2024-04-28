@@ -1,5 +1,6 @@
 import Editor from "../../components/Editor";
 import { MainLayout } from "../../Layouts";
+import Head from "next/head";
 
 const App = () => {
   return <Editor />;
@@ -7,9 +8,17 @@ const App = () => {
 
 function EditorPage(props) {
   return (
-    <MainLayout>
-      <App {...props} />
-    </MainLayout>
+    <>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+        ></meta>
+      </Head>
+      <MainLayout>
+        <App {...props} />
+      </MainLayout>
+    </>
   );
 }
 
