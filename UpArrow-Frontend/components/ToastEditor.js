@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Editor } from "@toast-ui/react-editor";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
 import color from "../styles/color";
@@ -50,6 +50,10 @@ const ToastEditorBlock = styled.div`
 
       left: 1rem;
     }
+    .toastui-editor-popup-add-image {
+      left: 0px !important;
+      width: 100% !important;
+    }
   }
 `;
 
@@ -66,9 +70,9 @@ const ToastEditor = ({
   const { isMobile } = useMobile();
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     editorRef.current?.getInstance()?.insertToolbarItem(
-      { groupIndex: 0, itemIndex: 1 },
+      { groupIndex: 0, itemIndex: 0 },
       {
         name: "myItem",
         tooltip: "video",
@@ -82,13 +86,13 @@ const ToastEditor = ({
         },
       }
     );
-
     editorRef.current
       .getRootElement()
       .querySelector(".video")
       .addEventListener("click", (e) => {
         setIsOpen(true);
       });
+    console.log(editorRef.current.getRootElement().querySelector(".video"));
   }, []);
 
   return (
@@ -112,7 +116,7 @@ const ToastEditor = ({
         ref={editorRef}
         toolbarItems={
           isMobile
-            ? [["heading", "bold", "italic", "strike"], ["image"]]
+            ? [["image", "heading", "bold", "italic", "strike"]]
             : [
                 ["image"],
                 ["heading", "bold", "italic", "strike"],
