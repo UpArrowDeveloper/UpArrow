@@ -20,6 +20,7 @@ import { getInvestorInvestInfo } from "../utils/investor";
 import { ChevronRightMobileIcon, NextIcon } from "../components/icons";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
+import Confetti from "../components/confetti";
 const Skeleton = dynamic(() => import("react-loading-skeleton"), {
   ssr: false,
 });
@@ -37,6 +38,7 @@ function Home({
 
   return (
     <IndexWrapper postLength={topSixIdea.length}>
+      <Confetti />
       <div className="main-items">
         <div className="header-wrapper">
           <div
