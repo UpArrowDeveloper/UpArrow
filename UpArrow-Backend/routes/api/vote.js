@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Vote = require("../../models/Vote");
+const Idea = require("../../models/Idea");
+const Order = require("../../models/Order");
+const User = require("../../models/User");
 
 // TODO : post 에서 postId 넘겨주면 agreeCount, disAgreeCount 넘겨주는 api만들기
 
@@ -27,8 +30,33 @@ router.post("/", async (req, res) => {
     isAgree,
   });
   await newVote.save();
-  // TODO : vote like 가 10 이상이면 1000$ 지급, 한번 지급되면 이후 지급 안되게 변경
-  // 증가는 order에서 특정 수익 올린 것 처럼 보이게 하기 : 주문 관리 위함.
+
+  if (isAgree) {
+    const idea = await Idea.findById(ideaId);
+    if (!idea.overTen) {
+      const votes = await Vote.find({
+        ideaId,
+        isAgree,
+      });
+      if (votes.length >= 10) {
+        await Idea.updateOne({ _id: ideaId }, { overTen: true });
+        const currentUser = await User.findById(userId);
+        await User.updateOne(
+          { _id: userId },
+          { cash: currentUser.cash + 1000 }
+        );
+
+        const newOrder = new Order({
+          userId,
+          quantity: 1,
+          type: "idea-credit",
+          price: 1000,
+        });
+        await newOrder.save();
+      }
+    }
+  }
+
   return res.json({
     message: `vote to ${isAgree ? "agree" : "disagree"}`,
   });
