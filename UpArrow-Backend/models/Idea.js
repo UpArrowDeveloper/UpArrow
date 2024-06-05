@@ -11,6 +11,7 @@ const IdeaSchema = new Schema(
     date: Date,
     commentIds: Array,
     thumbnailImageUrl: String,
+    overTen: Boolean,
   },
   { timestamps: true }
 );
