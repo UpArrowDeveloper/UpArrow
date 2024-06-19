@@ -110,6 +110,12 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+router.post("/:id/reset-over-ten", async (req, res) => {
+  const id = req.params.id;
+  await User.findOneAndUpdate({ _id: id }, { overTen: false });
+  return res.status(200).json({ message: "success" });
+});
+
 // a user getting a user data using email
 router.get("/me", validUser, async (req, res) => {
   return res.status(200).json({ user: req.user });
