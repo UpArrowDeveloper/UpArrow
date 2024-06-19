@@ -5,8 +5,6 @@ const Idea = require("../../models/Idea");
 const Order = require("../../models/Order");
 const User = require("../../models/User");
 
-// TODO : post 에서 postId 넘겨주면 agreeCount, disAgreeCount 넘겨주는 api만들기
-
 router.get("/:ideaId/idea", async (req, res) => {
   const { ideaId } = req.params;
   const votes = await Vote.find({ ideaId });
@@ -43,7 +41,7 @@ router.post("/", async (req, res) => {
         const currentUser = await User.findById(userId);
         await User.updateOne(
           { _id: userId },
-          { cash: currentUser.cash + 1000 }
+          { cash: currentUser.cash + 1000, overTen: true }
         );
 
         const newOrder = new Order({
