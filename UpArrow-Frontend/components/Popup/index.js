@@ -8,7 +8,10 @@ export const Popup = () => {
     <>
       <PopupBlock
         className={!modal.visible ? "hidden" : ""}
-        onClick={closeModal}
+        onClick={() => {
+          closeModal();
+          modal.onOutsideClick && modal.onOutsideClick();
+        }}
       />
 
       {modal.children && (
@@ -38,8 +41,8 @@ const PopupBlock = styled.div`
 const PopupWrapper = styled.div`
   position: fixed;
   z-index: 100;
-  top: 50%;
-  left: 50%;
+  top: 50vh;
+  left: 50vw;
   transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;

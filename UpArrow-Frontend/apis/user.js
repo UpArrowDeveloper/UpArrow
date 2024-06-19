@@ -21,6 +21,8 @@ const user = {
   post: (payload) => axios.post(url, payload).then((res) => res.data),
   updateById: (id, payload) =>
     axios.put(`${url}/${id}`, payload).then((res) => res.data),
+  resetOverTen: (id) =>
+    axios.post(`${url}/${id}/reset-over-ten`).then((res) => res.data),
   followUserById: (id) =>
     axios.put(`${url}/${id}/follow`).then((res) => res.data),
   deleteById: (id) => axios.delete(`${url}/${id}`).then((res) => res.data),

@@ -4,11 +4,12 @@ import modalState from "../store/modal";
 const useModal = () => {
   const [modal, setModal] = useRecoilState(modalState);
 
-  const openModal = ({ children, onConfirm }) => {
+  const openModal = ({ children, onConfirm, onOutsideClick }) => {
     setModal({
       visible: true,
       children,
       onConfirm,
+      onOutsideClick,
     });
   };
 
@@ -17,6 +18,7 @@ const useModal = () => {
       visible: false,
       children: null,
       onConfirm: () => {},
+      onOutsideClick: () => {},
     });
   };
 
