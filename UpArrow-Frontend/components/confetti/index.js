@@ -50,9 +50,10 @@ export default () => {
     openModal({
       children: ({ onConfirm }) => (
         <CongratsModal onClick={onConfirm}>
+          <h1>Congratulations!</h1>
           <h1>
-            “Congratulations! You earned $1000 (simulation money) because more
-            than 10 other users liked your investment ideas.”
+            You earned $1000 simulation money because more than 10 other users
+            liked your investment ideas.”
           </h1>
           <button onClick={() => onConfirm()}>Ok</button>
         </CongratsModal>
@@ -90,6 +91,7 @@ const CongratsModal = styled.div`
 
   h1 {
     text-align: center;
+    word-wrap: break-word;
     ${HeadH6Bold}
   }
 

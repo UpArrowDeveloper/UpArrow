@@ -21,6 +21,7 @@ TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
 
 const Layer1 = ({ stock, analysis, ideaList }) => {
+  console.log("ideaList", ideaList);
   return (
     <div className="layer-1">
       <div style={{ flex: 1 }}>
@@ -47,21 +48,30 @@ const Layer1 = ({ stock, analysis, ideaList }) => {
       <div className="insights-of-giants">
         <h6>Updates on {stock?.name}</h6>
         <div className="item-list">
-          {ideaList.reverse().map((item, index) => {
-            return (
-              <a className="item" key={index} href={item.link} target="_blank">
-                <div className="font-item" style={{ width: "100%" }}>
-                  <h4 className="bold">{item.summary}</h4>
-                  <div style={{ fontSize: 14 }}>
-                    {timeAgo.format(new Date(item.createdAt))}
+          {ideaList
+            .sort((a, b) => {
+              return new Date(b.updatedAt) - new Date(a.updatedAt);
+            })
+            .map((item, index) => {
+              return (
+                <a
+                  className="item"
+                  key={index}
+                  href={item.link}
+                  target="_blank"
+                >
+                  <div className="font-item" style={{ width: "100%" }}>
+                    <h4 className="bold">{item.summary}</h4>
+                    <div style={{ fontSize: 14 }}>
+                      {timeAgo.format(new Date(item.createdAt))}
+                    </div>
                   </div>
-                </div>
-                {item.thumbnailLink && (
-                  <img className="youtube-image" src={item.thumbnailLink} />
-                )}
-              </a>
-            );
-          })}
+                  {item.thumbnailLink && (
+                    <img className="youtube-image" src={item.thumbnailLink} />
+                  )}
+                </a>
+              );
+            })}
         </div>
         <Viewmore />
       </div>
