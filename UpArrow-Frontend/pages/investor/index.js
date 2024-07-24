@@ -136,7 +136,7 @@ function Investors({
                         </div>
                       </div>
                       <div className="title-author">
-                        <h5>{investor.name}</h5>
+                        <h5>{investor?.username || investor.name}</h5>
                       </div>
                     </div>
                   </td>
