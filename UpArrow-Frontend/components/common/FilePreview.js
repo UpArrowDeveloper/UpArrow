@@ -1,7 +1,13 @@
 import styled from "@emotion/styled";
 import React, { useEffect, useState } from "react";
 
-export default function FilePreview({ file, url, hasEmptyImage, ...props }) {
+export default function FilePreview({
+  file,
+  url,
+  hasEmptyImage,
+  isProfile = false,
+  ...props
+}) {
   const [imageUrl, setImageUrl] = useState(url);
   useEffect(() => {
     if (file) {
@@ -18,7 +24,15 @@ export default function FilePreview({ file, url, hasEmptyImage, ...props }) {
   return (
     <>
       {imageUrl ? (
-        <Img src={imageUrl} {...props} />
+        <Img
+          src={imageUrl}
+          {...props}
+          style={
+            isProfile
+              ? { width: "10rem", height: "10rem", borderRadius: "50%" }
+              : {}
+          }
+        />
       ) : hasEmptyImage ? (
         <EmptyImage className="empty-image" {...props} />
       ) : (

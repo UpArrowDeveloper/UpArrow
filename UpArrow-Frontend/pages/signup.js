@@ -72,7 +72,13 @@ export function SignupPage() {
         <h3>Please enter your basic information.</h3>
       </div>
       <form ref={formRef} className="signup-form" onSubmit={handleSubmit}>
-        <div className="file-uploader-wrapper">
+        <div
+          className="file-uploader-wrapper"
+          style={{
+            borderRadius: "50%",
+            overflow: "hidden",
+          }}
+        >
           <ProfileImageUploader
             name="profileImageUrl"
             file={profileImage}

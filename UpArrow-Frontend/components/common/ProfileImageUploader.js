@@ -1,5 +1,5 @@
-import React from 'react';
-import FilePreview from './FilePreview';
+import React from "react";
+import FilePreview from "./FilePreview";
 
 export const ProfileImageUploader = ({
   file,
@@ -11,10 +11,15 @@ export const ProfileImageUploader = ({
   return (
     <>
       <label htmlFor={name}>
-        <FilePreview hasEmptyImage={true} file={file} url={url} />
+        <FilePreview
+          isProfile={true}
+          hasEmptyImage={true}
+          file={file}
+          url={url}
+        />
       </label>
       <input
-        type='file'
+        type="file"
         id={name}
         name={name}
         hidden
