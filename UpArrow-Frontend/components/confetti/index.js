@@ -37,15 +37,18 @@ export default () => {
   const { user } = useAppUser();
   const { openModal, closeModal } = useModal();
   const [run, setRun] = useState(false);
-  const [isCelebrating, setIsCelebrating] = useState(true);
+  const [isCelebrating, setIsCelebrating] = useState(false);
 
   useEffect(() => {
-    setIsCelebrating(user?.overTen);
+    setIsCelebrating(!!user?.overTen);
   }, [user]);
 
   useEffect(() => {
+    console.log("isCelebrating", isCelebrating);
     if (!user) return;
-    if (!isCelebrating) return setRun(false);
+    if (!isCelebrating) {
+      return setRun(false);
+    }
     setRun(true);
     openModal({
       children: ({ onConfirm }) => (

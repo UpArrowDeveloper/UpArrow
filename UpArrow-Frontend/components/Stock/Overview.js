@@ -21,7 +21,6 @@ TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
 
 const Layer1 = ({ stock, analysis, ideaList }) => {
-  console.log("ideaList", ideaList);
   return (
     <div className="layer-1">
       <div style={{ flex: 1 }}>
