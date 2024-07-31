@@ -44,7 +44,6 @@ export default () => {
   }, [user]);
 
   useEffect(() => {
-    console.log("isCelebrating", isCelebrating);
     if (!user) return;
     if (!isCelebrating) {
       return setRun(false);

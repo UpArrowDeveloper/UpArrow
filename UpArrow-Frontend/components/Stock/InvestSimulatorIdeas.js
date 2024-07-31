@@ -156,17 +156,19 @@ const InvestSimulatorIdeas = ({
                 new Date(b.createdAt).getTime() -
                 new Date(a.createdAt).getTime()
             )
-            .map((idea) => (
-              <IdeaCard
-                ideaId={idea._id}
-                ideaImage={idea.thumbnailImageUrl}
-                ideaTitle={idea.title}
-                ideaAuthor={idea.username}
-                ideaDate={idea.date}
-                ideaLikes={idea.likes?.length || 0}
-                ideaStockIds={idea.stockIds}
-              />
-            ))}
+            .map((idea) => {
+              return (
+                <IdeaCard
+                  ideaId={idea._id}
+                  ideaImage={idea.thumbnailImageUrl}
+                  ideaTitle={idea.title}
+                  ideaAuthor={idea.username}
+                  ideaDate={idea.date}
+                  ideaLikes={idea.likes?.length || 0}
+                  ideaStockIds={idea.stockIds}
+                />
+              );
+            })}
 
           <Viewmore
             className="mt-5"

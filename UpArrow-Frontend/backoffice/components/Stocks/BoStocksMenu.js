@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import FilePreview from "../../../components/common/FilePreview";
 import axios from "axios";
@@ -248,6 +248,8 @@ export const BoStocksMenu = ({ stock, analysis }) => {
     setOpinions(newItems);
   };
 
+  const newDate = new Date();
+
   return (
     <BoStocksMenuBlock>
       <div className="content">
@@ -447,7 +449,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
             <h6 className="mb-8">Updates on {name}</h6>
             <div>
               {insightOfGiantsUrls.map((e, index) => (
-                <div key={e.summary} style={{ display: "flex", gap: "0.8rem" }}>
+                <div key={index} style={{ display: "flex", gap: "0.8rem" }}>
                   <Input
                     wrapperStyle={{ width: "40%" }}
                     className="mb-8"
@@ -458,6 +460,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                         insightOfGiantsUrls[index] = {
                           ...insightOfGiantsUrls[index],
                           summary: event.target.value,
+                          updatedAt: newDate,
                         };
                         return insightOfGiantsUrls;
                       });
@@ -473,6 +476,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                         insightOfGiantsUrls[index] = {
                           ...insightOfGiantsUrls[index],
                           link: event.target.value,
+                          updatedAt: newDate,
                         };
                         return insightOfGiantsUrls;
                       });
@@ -508,6 +512,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                   setInsightOfGiant((s) => ({
                     ...s,
                     summary: e.target.value,
+                    updatedAt: newDate,
                   }))
                 }
               />
@@ -520,6 +525,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                   setInsightOfGiant((s) => ({
                     ...s,
                     link: e.target.value,
+                    updatedAt: newDate,
                   }))
                 }
               />
@@ -531,6 +537,7 @@ export const BoStocksMenu = ({ stock, analysis }) => {
                   setInsightOfGiant((s) => ({
                     ...s,
                     youtubeCode: e.target.value,
+                    updatedAt: newDate,
                   }))
                 }
               ></Input>

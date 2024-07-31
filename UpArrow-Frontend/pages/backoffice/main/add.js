@@ -24,7 +24,6 @@ const BackofficeBannerAdd = () => {
   const router = useRouter();
   const getThumbnailUrl = (code) => `http://img.youtube.com/vi/${code}/0.jpg`;
   const [logoImage, setLogoImage] = useState();
-  console.log("logo image : ", logoImage);
   const submit = async () => {
     if (!logoImage) {
       alert("Please upload thumbnail image");

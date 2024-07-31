@@ -92,7 +92,6 @@ const ToastEditor = ({
       .addEventListener("click", (e) => {
         setIsOpen(true);
       });
-    console.log(editorRef.current.getRootElement().querySelector(".video"));
   }, []);
 
   return (

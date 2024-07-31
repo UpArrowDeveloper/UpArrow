@@ -36,7 +36,6 @@ const changePrice = async (id, stock) => {
     const res = await httpClient.put(`/api/v1/stock/${id}`, {
       ...stock,
     });
-    console.log("stock : ", stock);
   } catch (error) {
     console.error("change error : ", error);
   }
@@ -81,7 +80,6 @@ const parseHtml = async () => {
 
   const priceListPromises = [];
   const exchangeRate = await getCurrentExchangeRate();
-  console.log("exchangeRate : ", exchangeRate);
   stocks.forEach((stock) => {
     priceListPromises.push(getPrice(stock.ticker));
   });
@@ -102,7 +100,6 @@ const parseHtml = async () => {
     //   };
     // }, {});
     // await changePrice(priceObject);
-    console.log("res : ", result);
   } catch (error) {
     console.error(error);
   }

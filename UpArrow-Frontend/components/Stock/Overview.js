@@ -62,7 +62,7 @@ const Layer1 = ({ stock, analysis, ideaList }) => {
                   <div className="font-item" style={{ width: "100%" }}>
                     <h4 className="bold">{item.summary}</h4>
                     <div style={{ fontSize: 14 }}>
-                      {timeAgo.format(new Date(item.createdAt))}
+                      {timeAgo.format(new Date(item?.updatedAt || new Date()))}
                     </div>
                   </div>
                   {item.thumbnailLink && (

@@ -4,6 +4,7 @@ const router = express.Router();
 const Stock = require("../../models/Stock");
 const Order = require("../../models/Order");
 const Idea = require("../../models/Idea");
+const User = require("../../models/User");
 const { getStockByIds } = require("../../services/stock");
 const ObjectId = require("mongodb").ObjectId;
 
@@ -95,7 +96,17 @@ router.get("/:id/ideas", async (req, res) => {
   try {
     const id = req.params.id;
     const ideas = await Idea.find({ stockIds: { $in: [id] } });
-    return res.json(ideas);
+    const ideasWithUsername = await Promise.all(
+      ideas.map(async (idea) => {
+        const currentUser = await User.findById(idea.userId);
+        return {
+          ...idea._doc,
+          username: currentUser.username,
+          name: currentUser.name,
+        };
+      })
+    );
+    return res.json(ideasWithUsername);
   } catch (error) {
     return res.status(500).json({ message: "id error", error });
   }
@@ -200,8 +211,6 @@ router.put("/:id", async (req, res) => {
       marketCap,
     }
   );
-
-  console.log("insightOfGiantsUrls", insightOfGiantsUrls);
 
   await Analysis.findOneAndUpdate(
     { _id: stock.analysisId },

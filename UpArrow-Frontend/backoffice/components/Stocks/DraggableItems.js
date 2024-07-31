@@ -17,7 +17,6 @@ const DraggableItems = ({
   data,
   setData,
 }) => {
-  console.log("title : ", title);
   return (
     <>
       <h6 className="mb-8">{title}</h6>

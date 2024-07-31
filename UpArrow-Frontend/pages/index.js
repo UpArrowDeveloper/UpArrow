@@ -110,7 +110,6 @@ function Home({
 
         <div className="investorList">
           {investorDataList.slice(0, 10).map((investor, index) => {
-            console.log("investor", investor);
             return (
               <InvestorCard
                 key={investor._id}
