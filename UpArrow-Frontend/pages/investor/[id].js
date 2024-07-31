@@ -51,8 +51,11 @@ const InvestedStockItem = ({ company, userId }) => {
                   : "red",
             }}
           >
-            ${numberComma(stockOrder.price * stockOrder.quantity)} → $
-            {numberComma(company.totalValue)}
+            $
+            {Math.round(
+              stockOrder.price * stockOrder.quantity
+            ).toLocaleString()}{" "}
+            → ${Math.round(company.totalValue).toLocaleString()}
           </span>
         </div>
       </div>
