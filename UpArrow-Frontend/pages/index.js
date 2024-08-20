@@ -21,20 +21,31 @@ import { ChevronRightMobileIcon, NextIcon } from "../components/icons";
 import { mobileWidth } from "../styles/responsive";
 import { useMobile } from "../hooks/useMobile";
 import Confetti from "../components/confetti";
+import StockModel from "../hooks/model/Stock";
+import IdeaModel from "../hooks/model/Idea";
+import UserModel from "../hooks/model/User";
 const Skeleton = dynamic(() => import("react-loading-skeleton"), {
   ssr: false,
 });
 
-function Home({
-  stockList,
-  topSixIdea,
-  investorDataList,
-  stockRef,
-  ideaRef,
-  investorRef,
-}) {
+function Home({ stockRef, ideaRef, investorRef }) {
   const router = useRouter();
   const { isMobile } = useMobile();
+  const { data: stockList } = StockModel.useStockList();
+  const { data: topSixIdea } = IdeaModel.useIdeaList({
+    order: "desc",
+    limit: 6,
+  });
+  const { data: userList } = UserModel.useUserList();
+
+  const investorDataList =
+    userList?.sort((a, b) => {
+      const x = a.totalProfits;
+      const y = b.totalProfits;
+
+      if (x === 0 && y === 0) return 1 / y - 1 / x || 0;
+      else return y - x;
+    }) || [];
 
   return (
     <IndexWrapper postLength={topSixIdea.length}>
@@ -131,25 +142,7 @@ function Home({
 }
 
 export async function getStaticProps() {
-  const stockList = await api.stock.get();
   const investorList = await api.user.get();
-  const config = await api.config.get();
-  const banner = await api.banner.get();
-  const topSixIdea = await api.idea.get({
-    params: {
-      order: "desc",
-      limit: 6,
-    },
-  });
-  const userAddedTopSixIdea = [];
-
-  for await (const v of topSixIdea) {
-    const username = (await api.user.getById(v.userId)()).username;
-    userAddedTopSixIdea.push({
-      ...v,
-      username,
-    });
-  }
 
   const investorProfitPercentageList = await Promise.all(
     investorList.map((investor) =>
@@ -172,21 +165,9 @@ export async function getStaticProps() {
     };
   });
 
-  percentBindDataList.sort((a, b) => {
-    const x = a.totalProfits;
-    const y = b.totalProfits;
-
-    if (x === 0 && y === 0) return 1 / y - 1 / x || 0;
-    else return y - x;
-  });
-
   return {
     props: {
-      stockList,
-      topSixIdea: userAddedTopSixIdea,
       investorDataList: percentBindDataList,
-      config,
-      banner,
     },
     revalidate: 60 * 10, // In seconds
   };
@@ -232,14 +213,6 @@ const IndexWrapper = styled.div`
     & > div:active {
       background-color: rgba(0, 0, 0, 0.1);
     }
-
-    /* & > div {
-      &:not(
-          :nth-last-child(-n + ${({ postLength }) => (postLength % 2 ? 1 : 2)})
-        ) {
-        border-bottom: 0.1rem solid #d9d9d9;
-      }
-    } */
   }
 
   .investorList {
@@ -275,9 +248,6 @@ const IndexWrapper = styled.div`
         border-top: 0.5px solid rgba(0, 0, 0, 0.1);
       }
       border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .investorList {
     }
   }
 `;

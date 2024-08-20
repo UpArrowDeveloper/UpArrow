@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Idea = require("../../models/Idea");
 const { validUser } = require("../../middlewares/auth");
-var ObjectId = require("mongodb").ObjectId;
+const User = require("../../models/User");
+const ObjectId = require("mongodb").ObjectId;
 
 router.get("/", async (req, res) => {
   try {
@@ -11,7 +12,17 @@ router.get("/", async (req, res) => {
     const ideas = await Idea.find()
       .sort(order === "desc" ? "-date" : "")
       .limit(limit);
-    return res.status(200).json(ideas);
+
+    const userAddedIdeas = await Promise.all(
+      ideas.map(async (idea) => {
+        const username = (await User.findById(idea.userId)).username;
+        return {
+          ...idea._doc,
+          username,
+        };
+      })
+    );
+    return res.status(200).json(userAddedIdeas);
   } catch (error) {
     return res.status(500).json({ errorMessage: "post get error, ", error });
   }
