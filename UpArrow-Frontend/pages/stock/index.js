@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { commonListCss, commonTableCss } from "../../styles/table";
 import { mobileWidth } from "../../styles/responsive";
 import { useMobile } from "../../hooks/useMobile";
+import StockModel from "../../hooks/model/Stock";
 
 const orderOptions = ["Popular", "Trending", "Market Cap"];
 
@@ -33,18 +34,11 @@ const getSortAlgorithmByOrderOption = (orderOption) => {
 };
 function Home({ initStocks }) {
   const [orderOption, setOrderOption] = useState();
-  const [stocks, setStocks] = useState(initStocks);
+  const { data: stockList } = StockModel.useStockList();
 
   const router = useRouter();
   const { isMobile } = useMobile();
-
-  useEffect(() => {
-    const getStocks = async () => {
-      const stocksResponse = await api.stock.get();
-      setStocks(stocksResponse);
-    };
-    getStocks();
-  }, []);
+  const stocks = stocks ? stockList : initStocks;
 
   return (
     <StockBlock>

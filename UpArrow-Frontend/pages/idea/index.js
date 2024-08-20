@@ -16,6 +16,7 @@ import { MainLayout } from "../../Layouts";
 import { useMobile } from "../../hooks/useMobile";
 import IdeaCard from "../../components/IdeaCard";
 import { mobileWidth } from "../../styles/responsive";
+import IdeaModel from "../../hooks/model/Idea";
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
 
@@ -36,11 +37,12 @@ const getSortAlgorithmByOrderOption = (orderOption) => {
   }
 };
 
-function Ideas({ ideas }) {
+function Ideas({ serverIdeas }) {
+  const { data: ideaList } = IdeaModel.useIdeaListForIdeaListPage();
   const [orderOption, setOrderOption] = useState();
   const router = useRouter();
   const { isMobile } = useMobile();
-
+  const ideas = ideaList ? ideaList : serverIdeas;
   return (
     <IdeasBlock>
       <header>
