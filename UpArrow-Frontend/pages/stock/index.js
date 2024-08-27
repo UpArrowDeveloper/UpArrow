@@ -32,13 +32,14 @@ const getSortAlgorithmByOrderOption = (orderOption) => {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   }
 };
+
 function Home({ initStocks }) {
   const [orderOption, setOrderOption] = useState();
   const { data: stockList } = StockModel.useStockList();
 
   const router = useRouter();
   const { isMobile } = useMobile();
-  const stocks = stocks ? stockList : initStocks;
+  const stocks = stockList ? stockList : initStocks;
 
   return (
     <StockBlock>

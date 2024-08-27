@@ -70,8 +70,6 @@ const CommentView = ({
 };
 
 const Comment = ({ comment, commentOwner = undefined }) => {
-  const router = useRouter();
-  const ticker = router.query.ticker;
   const [username, setUsername] = useState("");
   const [investorProfilePicture, setInvestorProfilePicture] = useState("");
   const [likes, setLikes] = useState(0);
