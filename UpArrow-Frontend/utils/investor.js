@@ -1,10 +1,12 @@
 import api from "../apis";
 
 export const getInvestorProfileInfo = async (id) => {
+  console.log("ididid: ", id);
   const investor = await api.user.getById(id)();
   const orderIds = investor.orderIds;
   const orders =
     orderIds?.length > 0 ? await api.order.getByIds(orderIds.join(","))() : [];
+  console.log("investor : ", investor);
 
   const stockPurchaseInfos = orders.reduce((acc, order) => {
     if (acc[order.stockId]) {

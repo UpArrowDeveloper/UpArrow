@@ -20,6 +20,7 @@ import api from "../../apis";
 import { MainLayout } from "../../Layouts";
 import { mobileWidth } from "../../styles/responsive";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
 
 const InvestedStockItem = ({ company, userId }) => {
   const { data: stockOrder } = useQuery(
@@ -63,7 +64,49 @@ const InvestedStockItem = ({ company, userId }) => {
   );
 };
 
-export function Investor({ investor, stocksWithPrices, rank }) {
+export function Investor() {
+  const router = useRouter();
+  const id = router.query?.id;
+  const { data: investorProfileData } = useQuery(
+    ["investorProfile", id],
+    () => {
+      return getInvestorProfileInfo(id);
+    },
+    { enabled: !!id }
+  );
+  console.log("investorProfileData : ", investorProfileData);
+
+  const investor = investorProfileData?.investor;
+  const stockPurchaseInfos = investorProfileData?.stockPurchaseInfos;
+  const ideas = investorProfileData?.userIdeas;
+  const rank = investorProfileData?.userRank;
+
+  const { data: investData } = useQuery(["invest", id], () =>
+    getInvestorInvestInfo(id)
+  );
+  const totalInvestment = investData?.totalInvestment;
+  const totalProfits = investData?.totalProfits;
+  const stockIds = Object.keys(stockPurchaseInfos ?? {});
+  console.log("stockIds : ", stockIds);
+  const { data: stocks } = useQuery(
+    ["stocks-in-investor", stockIds?.length],
+    () => {
+      return stockIds.length > 0
+        ? api.stock.getByIds(stockIds.join(","))()
+        : [];
+    },
+    { enabled: !!stockIds?.length }
+  );
+
+  const stocksWithPrices =
+    stocks?.map((stock) => {
+      return {
+        ...stock,
+        ...stockPurchaseInfos[stock._id],
+        totalValue: stockPurchaseInfos[stock._id].quantity * stock.currentPrice,
+      };
+    }) || [];
+
   const {
     data,
     isLoading,
@@ -75,18 +118,17 @@ export function Investor({ investor, stocksWithPrices, rank }) {
       enabled: !!investor?.email,
     }
   );
+  console.log("investor : ", investor);
+  if (!investor) return null;
   const {
     _id,
     cash,
     description,
     followers,
     followings,
-    ideas,
     profileImageUrl,
     // purchases,
-    stockPreference,
-    totalInvestment,
-    totalProfits,
+    // stockPreference,
     username,
     websiteUrl,
   } = investor;
@@ -160,50 +202,50 @@ export default function Page(props) {
   );
 }
 
-export async function getStaticPaths() {
-  const investorList = await api.user.get();
-  const investorIds = investorList
-    .sort((a, b) => b.totalInvestment - a.totalInvestment)
-    .slice(0, 10)
-    .map((investor) => ({ params: { id: investor._id } }));
-  return {
-    paths: investorIds,
-    fallback: "blocking",
-  };
-}
+// export async function getStaticPaths() {
+//   const investorList = await api.user.get();
+//   const investorIds = investorList
+//     .sort((a, b) => b.totalInvestment - a.totalInvestment)
+//     .slice(0, 10)
+//     .map((investor) => ({ params: { id: investor._id } }));
+//   return {
+//     paths: investorIds,
+//     fallback: "blocking",
+//   };
+// }
 
-export async function getStaticProps(context) {
-  const { id } = context.params;
-  const { investor, stockPurchaseInfos, userIdeas, userRank } =
-    await getInvestorProfileInfo(id);
+// export async function getStaticProps(context) {
+//   const { id } = context.params;
+//   const { investor, stockPurchaseInfos, userIdeas, userRank } =
+//     await getInvestorProfileInfo(id);
 
-  const { totalInvestment, totalProfits } = await getInvestorInvestInfo(id);
-  const stockIds = Object.keys(stockPurchaseInfos);
+//   const { totalInvestment, totalProfits } = await getInvestorInvestInfo(id);
+//   const stockIds = Object.keys(stockPurchaseInfos);
 
-  const stocks =
-    stockIds.length > 0 ? await api.stock.getByIds(stockIds.join(","))() : [];
+//   const stocks =
+//     stockIds.length > 0 ? await api.stock.getByIds(stockIds.join(","))() : [];
 
-  const stocksWithPrices = stocks.map((stock) => {
-    return {
-      ...stock,
-      ...stockPurchaseInfos[stock._id],
-      totalValue: stockPurchaseInfos[stock._id].quantity * stock.currentPrice,
-    };
-  });
+//   const stocksWithPrices = stocks.map((stock) => {
+//     return {
+//       ...stock,
+//       ...stockPurchaseInfos[stock._id],
+//       totalValue: stockPurchaseInfos[stock._id].quantity * stock.currentPrice,
+//     };
+//   });
 
-  return {
-    props: {
-      investor: {
-        ...investor,
-        ideas: userIdeas,
-        totalInvestment,
-        totalProfits,
-      },
-      stocksWithPrices,
-      rank: userRank,
-    },
-  };
-}
+//   return {
+//     props: {
+//       investor: {
+//         ...investor,
+//         ideas: userIdeas,
+//         totalInvestment,
+//         totalProfits,
+//       },
+//       stocksWithPrices,
+//       rank: userRank,
+//     },
+//   };
+// }
 
 const InvestorBlock = styled.div`
   display: flex;
