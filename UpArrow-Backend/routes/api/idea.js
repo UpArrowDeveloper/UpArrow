@@ -5,9 +5,25 @@ const { validUser } = require("../../middlewares/auth");
 const User = require("../../models/User");
 const ObjectId = require("mongodb").ObjectId;
 
+let ideaCache = {
+  order: "desc",
+  limit: 6,
+  value: undefined,
+};
+
+setInterval(async () => {
+  ideaCache.value = undefined;
+}, 1000 * 60 * 5);
 router.get("/", async (req, res) => {
   try {
     const { order, limit } = req.query;
+    if (
+      ideaCache.value &&
+      ideaCache.order === order &&
+      ideaCache.limit === limit
+    ) {
+      return res.status(200).json(ideaCache.value);
+    }
 
     const ideas = await Idea.find()
       .sort(order === "desc" ? "-date" : "")
@@ -22,6 +38,13 @@ router.get("/", async (req, res) => {
         };
       })
     );
+    if (order === "desc" && limit === 6) {
+      ideaCache = {
+        order,
+        limit,
+        value: userAddedIdeas,
+      };
+    }
     return res.status(200).json(userAddedIdeas);
   } catch (error) {
     return res.status(500).json({ errorMessage: "post get error, ", error });
