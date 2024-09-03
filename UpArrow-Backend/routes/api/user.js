@@ -14,11 +14,180 @@ const { USER_ALREADY_EXIST, UserAlreadyExist } = require("../../error/user");
 const { validUser } = require("../../middlewares/auth");
 const { getCalculatedOrdersByUser } = require("../../services/order");
 
+let stocksCache = undefined;
+const getInvestorInvestInfo = async (id) => {
+  const _id = id;
+
+  const investor = await User.findOne({ _id });
+  stocksCache = stocksCache ? stocksCache : await Stock.find();
+  const stocks = stocksCache;
+  const orderIds = investor.orderIds;
+  const orders =
+    orderIds.length > 0
+      ? await Promise.all(orderIds.map((v) => Order.findById(v)))
+      : [];
+
+  const stockPurchaseInfos = orders.reduce((acc, order) => {
+    const isBuy = order.type === "buy";
+    if (acc[order.stockId]) {
+      return {
+        ...acc,
+        [order.stockId]: {
+          ...acc[order.stockId],
+          id: order.stockId,
+          quantity: isBuy
+            ? acc[order.stockId].quantity + order.quantity
+            : acc[order.stockId].quantity + order.quantity,
+          price: isBuy
+            ? (acc[order.stockId].price * acc[order.stockId].quantity +
+                order.price * order.quantity) /
+              (order.quantity + acc[order.stockId].quantity)
+            : (acc[order.stockId].price * acc[order.stockId].quantity -
+                order.price * order.quantity) /
+              (order.quantity + acc[order.stockId].quantity),
+        },
+      };
+    }
+    return {
+      ...acc,
+      [order.stockId]: {
+        id: order.stockId,
+        quantity: order.quantity,
+        price: (isBuy ? 1 : -1) * order.price,
+      },
+    };
+  }, {});
+
+  const totalInvestment = Object.entries(stockPurchaseInfos).reduce(
+    (acc, [key, value]) => acc + value.price * value.quantity,
+    0
+  );
+
+  const totalProfits = Object.entries(stockPurchaseInfos).reduce(
+    (acc, [key, value]) =>
+      acc +
+      (stocks.find((stock) => stock._id === key)?.currentPrice || 0) *
+        value.quantity -
+      value.price * value.quantity,
+    0
+  );
+
+  const currentTotalStockValue = Object.entries(stockPurchaseInfos).reduce(
+    (acc, [key, value]) =>
+      acc +
+      (stocks.find((stock) => stock._id === key)?.currentPrice || 0) *
+        value.quantity,
+    0
+  );
+
+  return {
+    totalInvestment,
+    totalProfits,
+    currentTotalStockValue,
+  };
+};
+
+const getProfitPercentageById = async (id) => {
+  const userId = id;
+  const user = await User.findById(userId);
+
+  const orderList = await Promise.all(
+    user.orderIds.map((orderId) => {
+      return Order.findById(orderId);
+    })
+  );
+  const stockList = await Promise.all(
+    orderList.map((order) => Stock.findById(order.stockId))
+  );
+  const finalPurchaseList = orderList
+    .filter((order, index) => {
+      return stockList[index];
+    })
+    .map((order, index) => {
+      return {
+        _id: order._id,
+        userId: order.userId,
+        stockId: order.stockId,
+        quantity: order.quantity,
+        price: order.price,
+        stock: stockList[index],
+      };
+    })
+    .reduce((acc, cur) => {
+      const stockId = cur.stockId;
+      const quantity = cur.quantity;
+      const price = cur.price;
+      const stock = cur.stock;
+      const stockIndex = acc.findIndex(
+        (loopStock) => loopStock.stock.ticker === stock.ticker
+      );
+
+      if (stockIndex === -1) {
+        return [
+          ...acc,
+          {
+            stockId,
+            quantity,
+            price,
+            stock,
+          },
+        ];
+      } else {
+        acc[stockIndex].quantity += quantity;
+        acc[stockIndex].price += price;
+        return acc;
+      }
+    }, []);
+
+  const profitPercentageList = finalPurchaseList.map((purchase) => {
+    const quantity = purchase.quantity;
+    const currentAmount = purchase.stock.currentPrice * quantity;
+    const boughtAmount = purchase.price * quantity;
+    const profitAmount = boughtAmount - currentAmount;
+    const profitPercentage = (profitAmount + currentAmount) / currentAmount;
+    return {
+      stockName: purchase.stock.name,
+      ticker: purchase.stock.ticker,
+      percent: Math.floor(profitPercentage * 10000) / 100,
+    };
+  });
+
+  return profitPercentageList;
+};
 router.get("/", async (req, res) => {
   try {
     const userList = await User.find();
     return res.status(200).json(userList);
   } catch (err) {
+    return res.status(500).json({ error: err });
+  }
+});
+
+router.get("/join", async (req, res) => {
+  try {
+    const investorList = await User.find();
+    const investorProfitPercentageList = await Promise.all(
+      investorList.map((investor) => getProfitPercentageById(investor._id))
+    );
+
+    const totalProfitAttached = [];
+    for await (const v of investorList) {
+      totalProfitAttached.push({
+        ...v._doc,
+        ...(await getInvestorInvestInfo(v._id)),
+      });
+    }
+
+    const percentBindDataList = totalProfitAttached.map((investor, index) => {
+      return {
+        ...investor,
+        percentList: investorProfitPercentageList[index],
+      };
+    });
+
+    return res.status(200).json(percentBindDataList);
+  } catch (err) {
+    console.log("err : ", err);
     return res.status(500).json({ error: err });
   }
 });

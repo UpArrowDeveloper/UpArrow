@@ -4,6 +4,7 @@ import { env } from "../config";
 const url = `${env.serverUrl}/user`;
 const user = {
   get: () => axios.get(url).then((res) => res.data),
+  joinAndGet: () => axios.get(`${url}/join`).then((res) => res.data),
   me: () => axios.get(`${url}/me`).then((res) => res.data),
   getTop3StocksById: (id) =>
     axios.get(`${url}/${id}/top3stocks`).then((res) => res.data),
