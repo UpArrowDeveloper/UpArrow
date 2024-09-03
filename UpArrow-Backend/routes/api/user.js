@@ -23,9 +23,7 @@ const getInvestorInvestInfo = async (id) => {
   const stocks = stocksCache;
   const orderIds = investor.orderIds;
   const orders =
-    orderIds.length > 0
-      ? await Promise.all(orderIds.map((v) => Order.findById(v)))
-      : [];
+    orderIds.length > 0 ? await Order.find({ _id: { $in: orderIds } }) : [];
 
   const stockPurchaseInfos = orders.reduce((acc, order) => {
     const isBuy = order.type === "buy";
@@ -91,14 +89,18 @@ const getProfitPercentageById = async (id) => {
   const userId = id;
   const user = await User.findById(userId);
 
-  const orderList = await Promise.all(
-    user.orderIds.map((orderId) => {
-      return Order.findById(orderId);
-    })
-  );
-  const stockList = await Promise.all(
-    orderList.map((order) => Stock.findById(order.stockId))
-  );
+  // const orderList = await Promise.all(
+  //   user.orderIds.map((orderId) => {
+  //     return Order.findById(orderId);
+  //   })
+  // );
+  const orderList = await Order.find({ _id: { $in: user.orderIds } });
+  // const stockList = await Promise.all(
+  //   orderList.map((order) => Stock.findById(order.stockId))
+  // );
+  const stockList = await Stock.find({
+    _id: { $in: orderList.map((order) => order.stockId) },
+  });
   const finalPurchaseList = orderList
     .filter((order, index) => {
       return stockList[index];
