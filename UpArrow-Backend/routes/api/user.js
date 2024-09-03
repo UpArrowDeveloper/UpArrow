@@ -168,7 +168,7 @@ router.get("/", async (req, res) => {
 let joinCache = undefined;
 setInterval(async () => {
   joinCache = undefined;
-}, 1000 * 60);
+}, 1000 * 60 * 10);
 router.get("/join", async (req, res) => {
   try {
     if (joinCache) {
