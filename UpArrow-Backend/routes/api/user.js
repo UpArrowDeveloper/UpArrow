@@ -165,8 +165,15 @@ router.get("/", async (req, res) => {
   }
 });
 
+let joinCache = undefined;
+setInterval(async () => {
+  joinCache = undefined;
+}, 1000 * 60);
 router.get("/join", async (req, res) => {
   try {
+    if (joinCache) {
+      return res.status(200).json(joinCache);
+    }
     const investorList = await User.find();
     const investorProfitPercentageList = await Promise.all(
       investorList.map((investor) => getProfitPercentageById(investor._id))
@@ -187,6 +194,7 @@ router.get("/join", async (req, res) => {
       };
     });
 
+    joinCache = percentBindDataList;
     return res.status(200).json(percentBindDataList);
   } catch (err) {
     console.log("err : ", err);
