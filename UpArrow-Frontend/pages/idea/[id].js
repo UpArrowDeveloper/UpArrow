@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import dynamic from "next/dynamic";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 const Viewer = dynamic(() => import("../../components/Editor/Viewer"), {
   ssr: false,
@@ -99,12 +99,43 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   const { isMobile } = useMobile();
   const [comment, setComment] = useState("");
   const { data: comments, refetch: refetchCommentCommentIds } = useQuery(
-    ["comment-commentIds", commentIds],
+    ["comment-commentIds", idea],
     api.comment.getByIdsWithUser(commentIds),
     {
-      enabled: commentIds && commentIds.length > 0,
+      enabled: idea && commentIds && commentIds.length > 0,
     }
   );
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationKey: ["comment-commentIds-mutation", idea],
+    mutationFn: async (newComment) => {
+      await api.comment.post(newComment)();
+    },
+    onMutate: (newComment) => {
+      const prevFeed = queryClient.getQueryData(["comment-commentIds", idea]);
+
+      // 새롭게 갈아끼울 feed 정보
+      const nextFeed = [...prevFeed, { ...newComment, createdAt: new Date() }];
+
+      // ['feeds', feedId] 키에 저장된 쿼리 데이터를 nextFeed로 갈아끼운다.
+      queryClient.setQueryData(["comment-commentIds", idea], nextFeed);
+
+      // prevFeed 정보와 함께 context를 반환한다.
+      return { prevFeed };
+    },
+    onError: (error, newComment, context) => {
+      console.log(error);
+
+      setComment("");
+      return { ...newComment, isAgree: !newComment.isAgree };
+    },
+    onSuccess: () => {
+      setComment("");
+      setTimeout(() => {
+        refetchIdea();
+      }, 3000);
+    },
+  });
 
   useEffect(() => {
     if (ideaIsRefetching || commentIds.length === 0) {
@@ -135,13 +166,12 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
       moveToLogin();
       return;
     }
-    await axios.post(`${env.serverUrl}/comment`, {
+    mutate({
       postId: id,
       userId: user._id,
       content: comment,
       likes: [],
     });
-    refetchIdea();
   };
 
   const [scrollTop, setScrollTop] = useState(0);
