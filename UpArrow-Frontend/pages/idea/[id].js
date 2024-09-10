@@ -99,7 +99,7 @@ export function Idea({ investor, idea: serverIdea, rank, stocksWithPrices }) {
   const { isMobile } = useMobile();
   const [comment, setComment] = useState("");
   const { data: comments, refetch: refetchCommentCommentIds } = useQuery(
-    ["comment-commentIds"],
+    ["comment-commentIds", commentIds],
     api.comment.getByIdsWithUser(commentIds),
     {
       enabled: commentIds && commentIds.length > 0,
