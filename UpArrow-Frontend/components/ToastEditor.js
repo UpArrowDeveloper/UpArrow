@@ -130,6 +130,13 @@ const ToastEditor = ({
           addImageBlobHook: async (blob, callback) => {
             const res = await getUploadUrl(blob);
             callback(res, blob.name);
+
+            editorRef.current
+              .getInstance()
+              .setHTML(
+                editorRef.current.getInstance().getHTML() +
+                  "<p><br></p><p><br></p>"
+              );
           },
         }}
       />
